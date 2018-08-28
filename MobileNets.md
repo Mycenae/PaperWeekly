@@ -261,3 +261,231 @@ Shallow MobileNet | 65.3% | 307 | 2.9
 
 ### 4.2. Model Shrinking Hyperparameters
 
+Table 6 shows the accuracy, computation and size trade offs of shrinking the MobileNet architecture with the width multiplier *α*. Accuracy drops off smoothly until the architecture is made too small at *α* = 0.25.
+
+表6展示了当用width multiplier *α*紧缩MobileNet结构时，带来的准确度、计算量和模型规模方面的折中。准确度持续下滑，直到模型结构太小为止(*α* = 0.25)。
+
+Table 6. MobileNet Width Multiplier
+
+Width Multiplier   | Accuracy | Mult-Adds | Parameters
+--- | --- | --- | ---
+1.0 MobileNet-224  | 70.6% | 569 | 4.2
+0.75 MobileNet-224 | 68.4% | 325 | 2.6
+0.5 MobileNet-224  | 63.7% | 149 | 1.3
+0.25 MobileNet-224 | 50.6% | 41  | 0.5
+
+Table 7 shows the accuracy, computation and size trade offs for different resolution multipliers by training MobileNets with reduced input resolutions. Accuracy drops off smoothly across resolution.
+
+表7所示的是训练MobileNet时用不同的resolution multiplier降低输入的分辨率后，得到的准确度、计算量和模型规模之间的折中结果。随着分辨率的降低，准确度也平滑的下降。
+
+Table 7. MobileNet Resolution
+
+Resolution | Accuracy | Mult-Adds | Parameters
+--- | --- | --- | ---
+1.0 MobileNet-224 | 70.6% | 569 | 4.2
+1.0 MobileNet-192 | 69.1% | 418 | 4.2
+1.0 MobileNet-160 | 67.2% | 290 | 4.2
+1.0 MobileNet-128 | 64.4% | 186 | 4.2
+
+Figure 4 shows the trade off between ImageNet Accuracy and computation for the 16 models made from the cross product of width multiplier *α* ∈ {1,0.75,0.5,0.25} and resolutions {224,192,160,128}. Results are log linear with a jump when models get very small at *α* = 0.25.
+
+图4所示的是用4个width multiplier *α* ∈ {1,0.75,0.5,0.25}和4种不同分辨率{224,192,160,128}的输入图像，形成的16个不同的试验，在ImageNet上的试验结果，注意准确度和计算量的关系。计算量尺度是对数轴，所以其关系是对数线性的，当模型规模变的很小(*α* = 0.25)时，准确度有一个突变。
+
+Figure 4. This figure shows the trade off between computation (Mult-Adds) and accuracy on the ImageNet benchmark. Note the log linear dependence between accuracy and computation.
+
+Figure 5 shows the trade off between ImageNet Accuracy and number of parameters for the 16 models made from the cross product of width multiplier *α* ∈ {1,0.75,0.5,0.25} and resolutions {224,192,160,128}. 
+
+图5所示的是上述16个试验中，参数数量和准确度之间的关系。
+
+Table 8 compares full MobileNet to the original GoogleNet [30] and VGG16 [27]. MobileNet is nearly as accurate as VGG16 while being 32 times smaller and 27 times less compute intensive. It is more accurate than GoogleNet while being smaller and more than 2.5 times less computation.
+
+表8比较了标准版MobileNet和GoogLeNet[30]和VGG16[27]三种算法。MobileNet与VGG16准确度几乎一样，但规模是VGG16的1/32，计算量是1/27，比GoogLeNet准确度高，但模型规模要更小，计算量也是GoogLeNet的1/2.5。
+
+Table 8. MobileNet Comparison to Popular Models
+
+Model | Accuracy | Mult-Adds | Parameters
+--- | --- | --- | ---
+1.0 MobileNet-224 | 70.6% | 569 | 4.2
+GoogleNet | 69.8% | 1550 | 6.8
+VGG 16 | 71.5% | 15300 | 138
+
+Table 9 compares a reduced MobileNet with width multiplier *α* = 0.5 and reduced resolution 160 × 160. Reduced MobileNet is 4% better than AlexNet [19] while being 45× smaller and 9.4× less compute than AlexNet. It is also 4% better than Squeezenet [12] at about the same size and 22× less computation.
+
+表9比较了缩减版MobileNet与其他模型，参数为width multiplier *α* = 0.5，分辨率160 × 160。缩减版MobileNet准确度上比AlexNet[19]高4%，但模型为其1/45，计算量是其1/9.4。与Squeezenet[12]比，准确度也高了4%，模型规模类似，但计算量为其1/22。
+
+### 4.3. Fine Grained Recognition 细粒度图像识别
+
+We train MobileNet for fine grained recognition on the Stanford Dogs dataset [17]. We extend the approach of [18] and collect an even larger but noisy training set than [18] from the web. We use the noisy web data to pretrain a fine grained dog recognition model and then fine tune the model on the Stanford Dogs training set. Results on Stanford Dogs test set are in Table 10. MobileNet can almost achieve the state of the art results from [18] at greatly reduced computation and size.
+
+我们训练MobileNet进行细粒度图像识别，数据集为Stanford Dogs数据集[17]。我们将方法[18]进行了延伸，从网上收集了一个规模更大，但噪声也更大的训练数据集。用含噪网上数据来预训练一个细粒度狗识别模型，然后对模型参数在Stanford Dogs训练数据集进行精调。在Stanford Dogs测试集上的结果放在了表10中。MobileNet几乎可以取得[18]里的最好结果，但模型规模和计算量都非常小。
+
+Table 10. MobileNet for Stanford Dogs
+
+Model | Accuracy | Mult-Adds | Parameters
+--- | --- | --- | ---
+Inception V3 [18] | 84% | 5000 | 23.2
+1.0 MobileNet-224 | 83.3% | 569 | 3.3
+0.75 MobileNet-224 | 81.9% | 325 | 1.9
+1.0 MobileNet-192 | 81.9% | 418 | 3.3
+0.75 MobileNet-192 | 80.5% | 239 | 1.9
+
+### 4.4. Large Scale Geolocalizaton
+
+PlaNet [35] casts the task of determining where on earth a photo was taken as a classification problem. The approach divides the earth into a grid of geographic cells that serve as the target classes and trains a convolutional neural network on millions of geo-tagged photos. PlaNet has been shown to successfully localize a large variety of photos and to outperform Im2GPS [6, 7] that addresses the same task.
+
+PlaNet[35]要找到一张在地球上拍的照片的实际位置，文章将其转变成了一个分类问题。这种方法将地球分割成地理单元网格，将其作为目标类别，并在数百万个附有地理信息的照片上训练一个CNN。PlaNet已经可以成功的对很大一部分图片进行定位，并超过了处理同样的问题的Im2GPS[6,7]。
+
+We re-train PlaNet using the MobileNet architecture on the same data. While the full PlaNet model based on the Inception V3 architecture [31] has 52 million parameters and 5.74 billion mult-adds. The MobileNet model has only 13 million parameters with the usual 3 million for the body and 10 million for the final layer and 0.58 Billion mult-adds. As shown in Tab. 11, the MobileNet version delivers only slightly decreased performance compared to PlaNet despite being much more compact. Moreover, it still outperforms Im2GPS by a large margin.
+
+我们用MobileNet在同样的数据上重新训练PlaNet。PlaNet是基于Inception V3[31]架构的，有5200万个参数,57.4亿次乘法加法运算；而MobileNet只有1300万个参数，常用的300万在网络主体中，1000万在最后一层，乘法加法运算只有5.8亿次乘法加法运算。如表11所示，MobileNet版本的算法与PlaNet相比性能只略微下降，但规模大大缩小，而且比Im2GPS的表现仍然好了不少。
+
+Table 11. Performance of PlaNet using the MobileNet architecture. Percentages are the fraction of the Im2GPS test dataset that were localized within a certain distance from the ground truth. The numbers for the original PlaNet model are based on an updated version that has an improved architecture and training dataset.
+
+Scale | Im2GPS [7]  | PlaNet [35] | PlaNet MobileNet
+--- | --- | --- | ---
+Continent (2500 km) | 51.9% | 77.6% | 79.3%
+Country (750 km) | 35.4% | 64.0% | 60.3%
+Region (200 km) | 32.1% | 51.1% | 45.2%
+City (25 km) | 21.9% | 31.7% | 31.7%
+Street (1 km) | 2.5% | 11.0% | 11.4%
+
+### 4.5. Face Attributes
+
+Another use-case for MobileNet is compressing large systems with unknown or esoteric training procedures. In a face attribute classification task, we demonstrate a synergistic relationship between MobileNet and distillation [9], a knowledge transfer technique for deep networks. We seek to reduce a large face attribute classifier with 75 million parameters and 1.6 billion Mult-Adds. The classifier is trained on a multi-attribute dataset similar to YFCC100M [32].
+
+MobileNet的另一个应用场景是压缩大规模的训练方法复杂的系统。在一个人脸属性分类的任务中，我们展示了MobileNet和distillation[9]的协同关系，distillation是一种深度网络的知识转移技术。我们要对一个大型人脸属性分类器进行缩小处理，其参数有7500万，乘法加法运算有16亿次，分类器在一个多属性数据集上训练，与YFCC100M[32]类似。
+
+We distill a face attribute classifier using the MobileNet architecture. Distillation [9] works by training the classifier to emulate the outputs of a larger model (The emulation quality is measured by averaging the per-attribute cross-entropy over all attributes.) instead of the ground-truth labels, hence enabling training from large (and potentially infinite) unlabeled datasets. Marrying the scalability of distillation training and the parsimonious parameterization of MobileNet, the end system not only requires no regularization (e.g. weight-decay and early-stopping), but also demonstrates enhanced performances. It is evident from Tab. 12 that the MobileNet-based classifier is resilient to aggressive model shrinking: it achieves a similar mean average precision across attributes (mean AP) as the in-house while consuming only 1% the Multi-Adds.
+
+我们用MobileNet架构distill一个人脸属性分类器。Distillation[9]的原理是训练分类器对更大模型的输出进行仿真（仿真质量通过每个属性对所有属性的交叉熵的平均来衡量），代替真值标签，所以使得从大规模（可能是无限大）无标签数据集上进行训练成为可能。将distillation训练的规模性和MobileNet参数的极少性进行结合，最终得到的系统不仅不需要正则化（比如权重衰减和早停），而且显示出了非常好的表现结果。从表12中明显可以看出，基于MobileNet的分类器对剧烈的模型缩减是很有弹性的：其所有属性(mean AP)的mean average precision是类似的，而仅有约1%的计算量。
+
+Table 12. Face attribute classification using the MobileNet architecture. Each row corresponds to a different hyper-parameter setting (width multiplier α and image resolution).
+
+Width Multiplier/Resolution | MeanAP | Mult-Adds | Parameters
+--- | --- | --- | ---
+1.0 MobileNet-224 | 88.7% | 568 | 3.2
+0.5 MobileNet-224 | 88.1% | 149 | 0.8
+0.25 MobileNet-224 | 87.2% | 45 | 0.2
+1.0 MobileNet-128 | 88.1% | 185 | 3.2
+0.5 MobileNet-128 | 87.7% | 48 | 0.8
+0.25 MobileNet-128 | 86.4% | 15 | 0.2
+Baseline | 86.9% | 1600 | 7.5
+
+### 4.6. Object Detection
+
+MobileNet can also be deployed as an effective base network in modern object detection systems. We report results for MobileNet trained for object detection on COCO data based on the recent work that won the 2016 COCO challenge [10]. In table 13, MobileNet is compared to VGG and Inception V2 [13] under both Faster-RCNN [23] and SSD [21] framework. In our experiments, SSD is evaluated with 300 input resolution (SSD 300) and Faster-RCNN is compared with both 300 and 600 input resolution (Faster-RCNN 300, Faster-RCNN 600). The Faster-RCNN model evaluates 300 RPN proposal boxes per image. The models are trained on COCO train+val excluding 8k minival images and evaluated on minival. For both frameworks, MobileNet achieves comparable results to other networks with only a fraction of computational complexity and model size.
+
+MobileNet也可以在现代目标检测系统中用作高效的基础网络。基于最近赢得了2016 COCO挑战赛的工作[10]，我们报告了MobileNet训练后用在COCO数据集上进行目标检测的任务。在表13中，将MobileNet与VGG和Inception V2[13]进行了对比，它们都是在Faster-RCNN[23]和SSD[21]的框架下的。在我们的实验中，SSD的输入图像分辨率是300(SSD 300)，Faster-RCNN的输入图像分辨率有300和600两种(Faster-RCNN 300, Faster-RCNN 600)。Faster-RCNN模型每幅图评估300 RPN proposal boxes。模型用COCO train+val 8k minival图像训练，并用在minival图像中。对于两个框架，MobileNet都有不错的结果，但计算量大为减少。
+
+Table 13. COCO object detection results comparison using different frameworks and network architectures. mAP is reported with COCO primary challenge metric (AP at IoU=0.50:0.05:0.95)
+
+Framework Resolution | Model | mAP | Mult-Adds | Parameters
+--- | --- | --- | --- | ---
+SSD 300 | deeplab-VGG | 21.1% | 34.9 | 33.1
+SSD 300 | Inception V2 | 22.0% | 3.8 | 13.7
+SSD 300 | MobileNet | 19.3% | 1.2 | 6.8
+Faster-RCNN 300 | VGG | 22.9% | 64.3 | 138.5
+Faster-RCNN 300 | Inception V2 | 15.4% | 118.2 | 13.3
+Faster-RCNN 300 | MobileNet | 16.4% | 25.2 | 6.1
+Faster-RCNN 600 | VGG | 25.7% | 149.6 | 138.5
+Faster-RCNN 600 | Inception V2 | 21.9% | 129.6 | 13.3
+Faster-RCNN 600 | Mobilenet | 19.8% | 30.5 | 6.1
+
+### 4.7. Face Embeddings
+
+The FaceNet model is a state of the art face recognition model [25]. It builds face embeddings based on the triplet loss. To build a mobile FaceNet model we use distillation to train by minimizing the squared differences of the output of FaceNet and MobileNet on the training data. Results for very small MobileNet models can be found in table 14.
+
+FaceNet模型是最新的人脸识别模型[25]，它基于triplet loss构建face embedding。我们用distillation技术训练，通过在训练数据集上最小化FaceNet和MobileNet的误差平方，构建一个mobile FaceNet模型。表14中是规模很小的MobileNet的运行结果。
+
+Table 14. MobileNet Distilled from FaceNet
+
+Model | Accuracy | Mult-Adds | Parameters
+--- | --- | --- | ---
+FaceNet [25] | 83% | 1600 | 7.5
+1.0 MobileNet-160 | 79.4% | 286 | 4.9
+1.0 MobileNet-128 | 78.3% | 185 | 5.5
+0.75 MobileNet-128 | 75.2% | 166 | 3.4
+0.75 MobileNet-128 | 72.5% | 108 | 3.8
+
+## 5. Conclusion
+
+We proposed a new model architecture called MobileNets based on depthwise separable convolutions. We investigated some of the important design decisions leading to an efficient model. We then demonstrated how to build smaller and faster MobileNets using width multiplier and resolution multiplier by trading off a reasonable amount of accuracy to reduce size and latency. We then compared different MobileNets to popular models demonstrating superior size, speed and accuracy characteristics. We concluded by demonstrating MobileNet’s effectiveness when applied to a wide variety of tasks. As a next step to help adoption and exploration of MobileNets, we plan on releasing models in TensorFlow.
+
+我们提出了一种新的模型结构，称之为MobileNets，它是基于depthwise separable convolutions的。我们研究了一些重要的设计决定，可以形成高效的模型。然后我们用width multiplier和resolution multiplier，牺牲较少的准确性，换取很小的模型规模和延迟，展示了怎样构建更小更快的MobileNets。然后我们将不同的MobileNets与几个受欢迎的模型进行了比较，结果显示模型在规模、速度和准确性上都有不同的优势。我们将MobileNet应用在很多任务中，都验证了其高效性。下一步我们准备在TensorFlow中推出模型。
+
+## References
+
+[1] M. Abadi, A. Agarwal, P. Barham, E. Brevdo, Z. Chen, C. Citro, G. S. Corrado, A. Davis, J. Dean, M. Devin, et al. Tensorflow: Large-scale machine learning on heterogeneous systems, 2015. Software available from tensorflow. org, 1, 2015. 4
+
+[2] W. Chen, J. T. Wilson, S. Tyree, K. Q. Weinberger, and Y. Chen. Compressing neural networks with the hashing trick. CoRR, abs/1504.04788, 2015. 2
+
+[3] F. Chollet. Xception: Deep learning with depthwise separable convolutions. arXiv preprint arXiv:1610.02357v2, 2016.1
+
+[4] M. Courbariaux, J.-P. David, and Y. Bengio. Training deep neural networks with low precision multiplications. arXiv preprint arXiv:1412.7024, 2014. 2
+
+[5] S. Han, H. Mao, and W. J. Dally. Deep compression: Compressing deep neural network with pruning, trained quantization and huffman coding. CoRR, abs/1510.00149, 2, 2015. 2
+
+[6] J. Hays and A. Efros. IM2GPS: estimating geographic information from a single image. In Proceedings of the IEEE International Conference on Computer Vision and Pattern Recognition, 2008. 7
+
+[7] J. Hays and A. Efros. Large-Scale Image Geolocalization. In J. Choi and G. Friedland, editors, Multimodal Location Estimation of Videos and Images. Springer, 2014. 6, 7
+
+[8] K. He, X. Zhang, S. Ren, and J. Sun. Deep residual learning for image recognition. arXiv preprint arXiv:1512.03385, 2015. 1
+
+[9] G. Hinton, O. Vinyals, and J. Dean. Distilling the knowledge in a neural network. arXiv preprint arXiv:1503.02531, 2015. 2, 7
+
+[10] J. Huang, V. Rathod, C. Sun, M. Zhu, A. Korattikara, A. Fathi, I. Fischer, Z. Wojna, Y. Song, S. Guadarrama, et al. Speed/accuracy trade-offs for modern convolutional object detectors. arXiv preprint arXiv:1611.10012, 2016. 7
+
+[11] I. Hubara, M. Courbariaux, D. Soudry, R. El-Yaniv, and Y. Bengio. Quantized neural networks: Training neural networks with low precision weights and activations. arXiv preprint arXiv:1609.07061, 2016. 2
+
+[12] F. N. Iandola, M. W. Moskewicz, K. Ashraf, S. Han, W. J. Dally, and K. Keutzer. Squeezenet: Alexnet-level accuracy with 50x fewer parameters and¡ 1mb model size. arXiv preprint arXiv:1602.07360, 2016. 1, 6
+
+[13] S. Ioffe and C. Szegedy. Batch normalization: Accelerating deep network training by reducing internal covariate shift. arXiv preprint arXiv:1502.03167, 2015. 1, 3, 7
+
+[14] M. Jaderberg, A. Vedaldi, and A. Zisserman. Speeding up convolutional neural networks with low rank expansions. arXiv preprint arXiv:1405.3866, 2014. 2
+
+[15] Y.Jia, E.Shelhamer, J.Donahue, S.Karayev, J.Long, R.Girshick, S. Guadarrama, and T. Darrell. Caffe: Convolutional architecture for fast feature embedding. arXiv preprint arXiv:1408.5093, 2014. 4
+
+[16] J. Jin, A. Dundar, and E. Culurciello. Flattened convolutional neural networks for feedforward acceleration. arXiv preprint arXiv:1412.5474, 2014. 1, 3
+
+[17] A. Khosla, N. Jayadevaprakash, B. Yao, and L. Fei-Fei. Novel dataset for fine-grained image categorization. In First Workshop on Fine-Grained Visual Categorization, IEEE Conference on Computer Vision and Pattern Recognition, Colorado Springs, CO, June 2011. 6
+
+[18] J. Krause, B. Sapp, A. Howard, H. Zhou, A. Toshev, T. Duerig, J. Philbin, and L. Fei-Fei. The unreasonable effectiveness of noisy data for fine-grained recognition. arXiv preprint arXiv:1511.06789, 2015. 6
+
+[19] A. Krizhevsky, I. Sutskever, and G. E. Hinton. Imagenet classification with deep convolutional neural networks. In Advances in neural information processing systems, pages 1097–1105, 2012. 1, 6
+
+[20] V. Lebedev, Y. Ganin, M. Rakhuba, I. Oseledets, and V. Lempitsky. Speeding-up convolutional neural networks using fine-tuned cp-decomposition. arXiv preprint arXiv:1412.6553, 2014. 2
+
+[21] W. Liu, D. Anguelov, D. Erhan, C. Szegedy, and S. Reed. Ssd: Single shot multibox detector. arXiv preprint arXiv:1512.02325, 2015. 7
+
+[22] M. Rastegari, V. Ordonez, J. Redmon, and A. Farhadi. Xnornet: Imagenet classification using binary convolutional neural networks. arXiv preprint arXiv:1603.05279, 2016. 1, 2
+
+[23] S. Ren, K. He, R. Girshick, and J. Sun. Faster r-cnn: Towards real-time object detection with region proposal networks. In Advances in neural information processing systems, pages 91–99, 2015. 7
+
+[24] O. Russakovsky, J. Deng, H. Su, J. Krause, S. Satheesh, S. Ma, Z. Huang, A. Karpathy, A. Khosla, M. Bernstein, et al. Imagenet large scale visual recognition challenge. International Journal of Computer Vision, 115(3):211–252, 2015. 1
+
+[25] F. Schroff, D. Kalenichenko, and J. Philbin. Facenet: A unified embedding for face recognition and clustering. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 815–823, 2015. 8
+
+[26] L. Sifre. Rigid-motion scattering for image classification. PhD thesis, Ph. D. thesis, 2014. 1, 3
+
+[27] K. Simonyan and A. Zisserman. Very deep convolutional networks for large-scale image recognition. arXiv preprint arXiv:1409.1556, 2014. 1, 6
+
+[28] V. Sindhwani, T. Sainath, and S. Kumar. Structured transforms for small-footprint deep learning. In Advances in Neural Information Processing Systems, pages 3088–3096, 2015. 1
+
+[29] C. Szegedy, S. Ioffe, and V. Vanhoucke. Inception-v4, inception-resnet and the impact of residual connections on learning. arXiv preprint arXiv:1602.07261, 2016. 1
+
+[30] C. Szegedy, W. Liu, Y. Jia, P. Sermanet, S. Reed, D. Anguelov, D. Erhan, V. Vanhoucke, and A. Rabinovich. Going deeper with convolutions. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, pages 1–9, 2015. 6
+
+[31] C. Szegedy, V. Vanhoucke, S. Ioffe, J. Shlens, and Z. Wojna. Rethinking the inception architecture for computer vision. arXiv preprint arXiv:1512.00567, 2015. 1, 3, 4, 7
+
+[32] B. Thomee, D. A. Shamma, G. Friedland, B. Elizalde, K. Ni, D. Poland, D. Borth, and L.-J. Li. Yfcc100m: The new data in multimedia research. Communications of the ACM, 59(2):64–73, 2016. 7
+
+[33] T. Tieleman and G. Hinton. Lecture 6.5-rmsprop: Divide the gradient by a running average of its recent magnitude. COURSERA: Neural Networks for Machine Learning, 4(2), 2012. 4
+
+[34] M. Wang, B. Liu, and H. Foroosh. Factorized convolutional neural networks. arXiv preprint arXiv:1608.04337, 2016. 1
+
+[35] T. Weyand, I. Kostrikov, and J. Philbin. PlaNet - Photo Geolocation with Convolutional Neural Networks. In European Conference on Computer 
+Vision (ECCV), 2016. 6, 7
+
+[36] J. Wu, C. Leng, Y. Wang, Q. Hu, and J. Cheng. Quantized convolutional neural networks for mobile devices. arXiv preprint arXiv:1512.06473, 2015. 1
+
+[37] Z. Yang, M. Moczulski, M. Denil, N. de Freitas, A. Smola, L. Song, and Z. Wang. Deep fried convnets. In Proceedings of the IEEE International Conference on Computer Vision, pages 1476–1483, 2015. 1
