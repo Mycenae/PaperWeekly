@@ -52,3 +52,98 @@ The architecture of our network is summarized in Figure 2. It contains eight lea
 图2所示的是我们网络的架构，包括8个学习好的层，即5个卷积层和3个全连接层，下面我们介绍一下我们网络结构中的新颖或不寻常的特征。3.1节到3.4节内容依据重要性排列，最重要的排前面。
 
 ### 3.1 ReLU Nonlinearity ReLU非线性处理
+
+The standard way to model a neuron’s output *f* as a function of its input *x* is with *f(x) = tanh(x)* or $f(x)=(1+e^{-x})^{-1}$。 In terms of training time with gradient descent, these saturating nonlinearities are much slower than the non-saturating nonlinearity *f(x) = max(0,x)*. Following Nair and Hinton [20], we refer to neurons with this nonlinearity as Rectified Linear Units (ReLUs). Deep convolutional neural networks with ReLUs train several times faster than their equivalents with tanh units. This is demonstrated in Figure 1, which shows the number of iterations required to reach 25% training error on the CIFAR-10 dataset for a particular four-layer convolutional network. This plot shows that we would not have been able to experiment with such large neural networks for this work if we had used traditional saturating neuron models.
+
+神经元输出*f*与输入*x*的标准函数是*f(x) = tanh(x)*或$f(x)=(1+e^{-x})^{-1}$。就梯度下降方法的训练时间来说，采用这种饱和性非线性关系的与非饱和非线性关系如*f(x) = max(0,x)*相比，要慢多了。我们将带有这种非线性关系的神经元叫做ReLU单元，遵循Nair and Hinton [20]的习惯。带有ReLU的深度卷积网络训练起来比相应的带tanh单元的要快几倍，如图1所示，是在CIFAR-10的数据集上训练一个特定的4层卷积网络达到25%的错误率所需的迭代次数。
+
+Figure 1: A four-layer convolutional neural network with ReLUs (solid line) reaches a 25% training error rate on CIFAR-10 six times faster than an equivalent network with tanh neurons (dashed line). The learning rates for each network were chosen independently to make training as fast as possible. No regularization of any kind was employed. The magnitude of the effect demonstrated here varies with network architecture, but networks with ReLUs consistently learn several times faster than equivalents with saturating neurons.
+
+图1. 一个采用了ReLU（实线）4层卷积神经网络在CIFAR-10数据集上训练达到25%的错误率比带有tanh神经元的相应网络（虚线）快6倍。为每个网络单独选择了学习率以使其训练速度越快越好，没采用任何正则化措施。具体的效果根据具体的网络结构不同而不同，但带有ReLU的网络一直比带有饱和性神经元的网络训练要快好几倍。
+
+We are not the first to consider alternatives to traditional neuron models in CNNs. For example, Jarrett et al.[11] claim that the nonlinearity *f(x)* = |*tanh(x)*| works particularly well with their type of contrast normalization followed by local average pooling on the Caltech-101 dataset. However, on this dataset the primary concern is preventing overfitting, so the effect they are observing is different from the accelerated ability to fit the training set which we report when using ReLUs. Faster learning has a great influence on the performance of large models trained on large datasets.
+
+我们不是第一个考虑替换CNN的传统神经元的。比如，Jarrett et al.[11]声称非线性关系*f(x)* = |*tanh(x)*|在Caltech-101数据集上使用他们的对比度归一化和局部平局pooling效果特别好。但是，在这个数据集上其首要考虑是防止过拟合，所以他们观察的这种效果与我们用ReLU来训练数据集的加速能力是不一样的。更加快速的学习对大型模型在大型数据集上训练影响非常大。
+
+### 3.2 Training on Multiple GPUs 多GPU训练
+
+A single GTX 580 GPU has only 3GB of memory, which limits the maximum size of the networks that can be trained on it. It turns out that 1.2 million training examples are enough to train networks which are too big to fit on one GPU. Therefore we spread the net across two GPUs. Current GPUs are particularly well-suited to cross-GPU parallelization, as they are able to read from and write to one another’s memory directly, without going through host machine memory. The parallelization scheme that we employ essentially puts half of the kernels (or neurons) on each GPU, with one additional trick: the GPUs communicate only in certain layers. This means that, for example, the kernels of layer 3 take input from all kernel maps in layer 2. However, kernels in layer 4 take input only from those kernel maps in layer 3 which reside on the same GPU. Choosing the pattern of connectivity is a problem for cross-validation, but this allows us to precisely tune the amount of communication until it is an acceptable fraction of the amount of computation.
+
+单个GTX 580 GPU只有3G内存，这限制了所能训练的网络的最大规模。120万样本对于训练网络是足够的，但模型太大不能再一个GPU上训练，所以我们将网络扩展到两块GPU上。现在的GPU非常适合跨GPU并行计算，因为它们可以互相直接读取或写入数据，不需要再经过主机内存。我们采用的并行化策略就是在每个GPU上放入模型的一半神经元，还有一个技巧：GPU只在某些层进行通信，比如，第3层的神经元的输入对应所有第2层的神经元的输出，但第4层的输入对应的第3层输出的神经元都在同一个GPU上。选择连接的模式对于交叉验证来说是一个问题，但这使我们可以精确的调节通信规模，直到低于计算量的某一很小百分比。
+
+The resultant architecture is somewhat similar to that of the “columnar” CNN employed by Cire¸ san et al. [5], except that our columns are not independent (see Figure 2). This scheme reduces our top-1 and top-5 error rates by 1.7% and 1.2%, respectively, as compared with a net with half as many kernels in each convolutional layer trained on one GPU. The two-GPU net takes slightly less time to train than the one-GPU net. ( The one-GPU net actually has the same number of kernels as the two-GPU net in the final convolutional layer. This is because most of the net’s parameters are in the first fully-connected layer, which takes the last convolutional layer as input. So to make the two nets have approximately the same number of parameters, we did not halve the size of the final convolutional layer (nor the fully-conneced layers which follow). Therefore this comparison is biased in favor of the one-GPU net, since it is bigger than “half the size” of the two-GPU
+net.)
+
+最后得到的架构与Cire¸ san et al. [5]采用的柱状CNN有些相似，但我们的各列不是相互独立的（见图2）。这个方案将top-1和top-5错误率分别降低了1.7%和1.2%，这是与另一个网络的训练结果比较的，这个网络在每个卷积层中，每个GPU都有一半的核心在进行计算，这个双GPU网络与单GPU网络训练相比，时间减少的很少。（单GPU网络实际上与双GPU网络在最后卷积层的核心数是一样的，这是因为网络多数的参数在第一个全连接层，这个全连接层以最后一个卷积层为输入，所以为了使两个网络参数数量大致相同，我们没有使最后的卷积层规模减半，后续的全连接层也是。所以这个对比是对单GPU网络有利的，因为这比一半规模的双GPU网络要大。）
+
+Figure 2: An illustration of the architecture of our CNN, explicitly showing the delineation of responsibilities between the two GPUs. One GPU runs the layer-parts at the top of the figure while the other runs the layer-parts at the bottom. The GPUs communicate only at certain layers. The network’s input is 150,528-dimensional, and the number of neurons in the network’s remaining layers is given by 253,440–186,624–64,896–64,896–43,264–4096–4096–1000.
+
+图2. 我们的CNN的架构示意图，明确指出了两个GPU的责任划分。一个GPU负责运行图上部的层，另一个负责运行底部的层，两个GPU只在特定的层通信。网络输入是150528维，网络其他层的神经元数为253440,186624,64896,64896,43264,4096,4096,1000。
+
+### 3.3 Local Response Normalization 局部响应归一化
+
+ReLUs have the desirable property that they do not require input normalization to prevent them from saturating. If at least some training examples produce a positive input to a ReLU, learning will happen in that neuron. However, we still find that the following local normalization scheme aids generalization. Denoting by $a^i_{x,y}$ the activity of a neuron computed by applying kernel *i* at position (*x,y*) and then applying the ReLU nonlinearity, the response-normalized activity $b^i_{x,y}$ is given by the expression
+
+ReLU有个很好的性质，就是不需要将输入归一化以防止饱和。如果有几个训练样本对一个ReLU产生了正的输入，就会在那个神经元中产生学习。但是，我们还是发现下面的局部归一化方案对泛化有帮助。将核心*i*在(*x,y*)点卷积，然后进行ReLU非线性化，得到的结果记为$a^i_{x,y}$，那么归一化的响应$b^i_{x,y}$就是
+
+$$b_{x,y}^i = \frac{a_{x,y}^i}{(k+ \alpha \sum_{j=max(0,i-n/2}^{min(N-1,i+n/2)} (a^j_{x,y})^2)^{\beta}}$$
+
+where the sum runs over *n* “adjacent” kernel maps at the same spatial position, and *N* is the total number of kernels in the layer. The ordering of the kernel maps is of course arbitrary and determined before training begins. This sort of response normalization implements a form of lateral inhibition inspired by the type found in real neurons, creating competition for big activities amongst neuron outputs computed using different kernels. The constants *k,n,α*, and *β* are hyper-parameters whose values are determined using a validation set; we used *k* = 2, *n* = 5, *α* = $10^{−4}$ , and *β* = 0.75. We applied this normalization after applying the ReLU nonlinearity in certain layers (see Section 3.5).
+
+这里求和是对在同一空域点的*n*个毗邻的核心图，*N*是整个层中核心的全部数量。核心图的顺序是任意的，在训练开始时就确定好。这种响应归一化应用了一种侧抑制机制，这是受真实神经元中发现的模式启发得到的，在用不同核心计算得到的神经元输出中的较大活动中造成竞争。常数*k,n,α* 和 *β*为超参数，其值由验证集确定，我们使用*k* = 2, *n* = 5, *α* = $10^{−4}$ , *β* = 0.75。我们在某些层中的ReLU非线性处理后，再进行这种归一化。（见3.5节）
+
+This scheme bears some resemblance to the local contrast normalization scheme of Jarrett et al. [11], but ours would be more correctly termed “brightness normalization”, since we do not subtract the mean activity. Response normalization reduces our top-1 and top-5 error rates by 1.4% and 1.2%, respectively. We also verified the effectiveness of this scheme on the CIFAR-10 dataset: a four-layer CNN achieved a 13% test error rate without normalization and 11% with normalization (We cannot describe this network in detail due to space constraints, but it is specified precisely by the code and parameter files provided here: http://code.google.com/p/cuda-convnet/).
+
+这个方案与Jarrett et al. [11]的局部对比度归一化方案有些类似，但我们的方案称为“亮度归一化”更为准确，因为我们没有减去其均值。响应归一化使我们的top-1和top-5错误率分别下降1.4%和1.2%，我们还在CIFAR-10数据集上验证了这个方案的有效性：4层CNN没有归一化时错误率13%，有归一化时11%（限于篇幅无法详细描述网络，但在代码和参数文件中描述的很具体）。
+
+### 3.4 Overlapping Pooling
+
+Pooling layers in CNNs summarize the outputs of neighboring groups of neurons in the same kernel map. Traditionally, the neighborhoods summarized by adjacent pooling units do not overlap (e.g., [17, 11, 4]). To be more precise, a pooling layer can be thought of as consisting of a grid of pooling units spaced *s* pixels apart, each summarizing a neighborhood of size *z × z* centered at the location of the pooling unit. If we set *s = z*, we obtain traditional local pooling as commonly employed in CNNs. If we set *s < z*, we obtain overlapping pooling. This is what we use throughout our network, with *s* = 2 and *z* = 3. This scheme reduces the top-1 and top-5 error rates by 0.4% and 0.3%, respectively, as compared with the non-overlapping scheme *s* = 2,*z* = 2, which produces output of equivalent dimensions. We generally observe during training that models with overlapping pooling find it slightly more difficult to overfit.
+
+CNN中的Pooling层将同一个核心图中的神经元的邻域内的输出进行处理。一般临近pooling单元的处理邻域不重叠，如[17, 11, 4]。更精确的说，pooling层可以认为是由pooling单元网格组成，每个单元有*s × s*个像素，对*z × z*大小的邻域进行处理。如果*s = z*，那就是CNN采用的传统pooling。如果*s < z*，我们就得到了重叠pooling。我们在整个网络中都应用了这个设置，*s* = 2, *z* = 3。这个方案使top-1和top-5错误率分别减少了0.4%和0.3%，这是与*s* = 2,*z* = 2的非重叠pooling方案比较得到的。我们发现在训练模型时，重叠pooling方案更难过拟合。
+
+### 3.5 Overall Architecture
+
+Now we are ready to describe the overall architecture of our CNN. As depicted in Figure 2, the net contains eight layers with weights; the first five are convolutional and the remaining three are fully-connected. The output of the last fully-connected layer is fed to a 1000-way softmax which produces a distribution over the 1000 class labels. Our network maximizes the multinomial logistic regression objective, which is equivalent to maximizing the average across training cases of the log-probability of the correct label under the prediction distribution.
+
+现在我们可以描述我们的CNN整体结构了。如图2所示，网络包含8层，都有参数，前5层为卷积层，剩下3个为全连接层。最后一个全连接层输出到一个1000路softmax层，最后得到1000个类别的输出标签。我们的网络最大化多项式logistic回归的目标函数，这与最大化所有训练案例的正确标签在预测分布下的log概率是等价的。
+
+The kernels of the second, fourth, and fifth convolutional layers are connected only to those kernel maps in the previous layer which reside on the same GPU (see Figure 2). The kernels of the third convolutional layer are connected to all kernel maps in the second layer. The neurons in the fully-connected layers are connected to all neurons in the previous layer. Response-normalization layers follow the first and second convolutional layers. Max-pooling layers, of the kind described in Section 3.4, follow both response-normalization layers as well as the fifth convolutional layer. The ReLU non-linearity is applied to the output of every convolutional and fully-connected layer.
+
+第2,4,5个卷积层的核心只与前一层在相同GPU上的核心相连（见图2），第3个卷积层的核心则与第2层所有的核心相连。全连接层与前一层所有神经元相连。响应归一化层在第1和第2卷积层后有，3.4节中提到的max-pooling层在1,2层后的响应归一化层后有，在第5层后也有。ReLU非线性处理在所有卷积层与全连接层中都有。
+
+The first convolutional layer filters the 224×224×3 input image with 96 kernels of size 11×11×3 with a stride of 4 pixels (this is the distance between the receptive field centers of neighboring neurons in a kernel map). The second convolutional layer takes as input the (response-normalized and pooled) output of the first convolutional layer and filters it with 256 kernels of size 5 × 5 × 48. The third, fourth, and fifth convolutional layers are connected to one another without any intervening pooling or normalization layers. The third convolutional layer has 384 kernels of size 3 × 3 × 256 connected to the (normalized, pooled) outputs of the second convolutional layer. The fourth convolutional layer has 384 kernels of size 3 × 3 × 192 , and the fifth convolutional layer has 256 kernels of size 3 × 3 × 192. The fully-connected layers have 4096 neurons each.
+
+第1个卷积层对224×224×3的输入图像进行滤波，共96个核心，尺寸为11×11×3，卷积步长(stride)为4个像素（这是感受野中心与邻域神经元的距离）。第2个卷积层直接以第1个卷积层的输出（经过响应归一化和pooling处理）作为输入，滤波器有256个，尺寸5×5×48。第3，4,5个卷积层依次连接，没有pooling或归一化层；第3个卷积层有384个核，尺寸3×3×256，以第2卷积层输出后经过归一化和pooling处理作为输入；第4个卷积层有384个核，尺寸3×3×192，第5个卷积层有256个核心，尺寸3×3×192。每个全连接层有4096个神经元。
+
+## 4 Reducing Overfitting 减少过拟合
+
+Our neural network architecture has 60 million parameters. Although the 1000 classes of ILSVRC make each training example impose 10 bits of constraint on the mapping from image to label, this turns out to be insufficient to learn so many parameters without considerable overfitting. Below, we describe the two primary ways in which we combat overfitting.
+
+我们的神经网络架构有6000万参数。虽然1000个类别使每个训练对象从图像到标签的映射有10个字节的约束，但这对于学习这么多参数的训练来说，还是会有相当的过拟合。下面，我们列出了两种对抗过拟合的主要方法。
+
+### 4.1 Data Augmentation 数据膨胀
+
+The easiest and most common method to reduce overfitting on image data is to artificially enlarge the dataset using label-preserving transformations (e.g., [25, 4, 5]). We employ two distinct forms of data augmentation, both of which allow transformed images to be produced from the original images with very little computation, so the transformed images do not need to be stored on disk. In our implementation, the transformed images are generated in Python code on the CPU while the GPU is training on the previous batch of images. So these data augmentation schemes are, in effect, computationally free.
+
+对图像数据减少过拟合的最简单最常见的方法就是用保留标签的变换(e.g., [25, 4, 5])人工增大数据集，我们采用了两种不同的数据膨胀方法，这两种方法都使用很小的计算量从原图像进行变换，所以不需要把变换后的图像存储到磁盘上。在我们的实现中，图像变换用python写，在CPU上处理，同时GPU在处理上一批图像。所以这种数据膨胀的方法实际上是不增加运算量的。
+
+The first form of data augmentation consists of generating image translations and horizontal reflections. We do this by extracting random 224×224 patches (and their horizontal reflections) from the 256×256 images and training our network on these extracted patches(This is the reason why the input images in Figure 2 are 224 × 224 × 3-dimensional). This increases the size of our training set by a factor of 2048, though the resulting training examples are, of course, highly interdependent. Without this scheme, our network suffers from substantial overfitting, which would have forced us to use much smaller networks. At test time, the network makes a prediction by extracting five 224 × 224 patches (the four corner patches and the center patch) as well as their horizontal reflections (hence ten patches in all), and averaging the predictions made by the network’s softmax layer on the ten patches.
+
+第一种数据膨胀方法是生成图像位移和水平翻转。我们从256×256的图像中随机截取224×224大小的图像块，然后水平翻转，在这些提取出来的图像块上训练我们的网络（这也是图2中我们的输入数据为什么是224×224×3的）。这使我们的训练集的规模膨胀了2048倍，虽然得到的训练样本是高度相关的。不用这个方案的话，我们的网络过拟合问题非常严重，这迫使我们使用小的多的网络。在测试时，网络预测是通过提取5个224×224的图像块（4个角的块和1个中心块），以及其水平翻转块，总计10块，这10块通过softmax层，然后再平均。
+
+The second form of data augmentation consists of altering the intensities of the RGB channels in training images. Specifically, we perform PCA on the set of RGB pixel values throughout the ImageNet training set. To each training image, we add multiples of the found principal components, with magnitudes proportional to the corresponding eigenvalues times a random variable drawn from a Gaussian with mean zero and standard deviation 0.1. Therefore to each RGB image pixel $I_{xy}=[I^R_{xy},I^G_{xy},I^B_{xy}]^T$ we add the following quantity:
+
+第二种图像膨胀方法是改变训练图像RGB通道的亮度。具体来说，我们对整个ImageNet训练集的RGB值做一个PCA，对每个训练图像，都加上得到的主成分的倍数，其倍数与对应特征值，乘以一个零均值方差0.1的高斯分布随机值，所以对于每个RGB图像像素$I_{xy}=[I^R_{xy},I^G_{xy},I^B_{xy}]^T$我们加上下面的值：
+
+$$[p_1,p_2,p_3][α_1λ_1 ,α_2λ_2 ,α_3λ_3]^T$$
+
+where $p_i$ and $λ_i$ are *i*th eigenvector and eigenvalue of the 3 × 3 covariance matrix of RGB pixel values, respectively, and $α_i$ is the aforementioned random variable. Each $α_i$ is drawn only once for all the pixels of a particular training image until that image is used for training again, at which point it is re-drawn. This scheme approximately captures an important property of natural images, namely, that object identity is invariant to changes in the intensity and color of the illumination. This scheme reduces the top-1 error rate by over 1%.
+
+这里$p_i$和$λ_i$分别是RGB值的3×3协方差阵的第*i*个特征矢量和特征值，$α_i$是前面提到的随机变量，对每个训练图像其所有像素都用同一个$α_i$，直到下次再用这个图像训练。这个方案抓住了自然图像的一个重要特征，即，目标个体对亮度、色彩的不变性。这个方案使top-1错误率降低1%。
+
+### 4.2 Dropout
+
+Combining the predictions of many different models is a very successful way to reduce test errors [1, 3], but it appears to be too expensive for big neural networks that already take several days to train. There is, however, a very efficient version of model combination that only costs about a factor of two during training. The recently-introduced technique, called “dropout” [10], consists of setting to zero the output of each hidden neuron with probability 0.5. The neurons which are “dropped out” in this way do not contribute to the forward pass and do not participate in backpropagation. So every time an input is presented, the neural network samples a different architecture, but all these architectures share weights. This technique reduces complex co-adaptations of neurons, since a neuron cannot rely on the presence of particular other neurons. It is, therefore, forced to learn more robust features that are useful in conjunction with many different random subsets of the other neurons. At test time, we use all the neurons but multiply their outputs by 0.5, which is a reasonable approximation to taking the geometric mean of the predictive distributions produced by the exponentially-many dropout networks.
+
+We use dropout in the first two fully-connected layers of Figure 2. Without dropout, our network exhibits substantial overfitting. Dropout roughly doubles the number of iterations required to converge.
