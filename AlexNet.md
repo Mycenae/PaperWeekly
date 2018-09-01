@@ -146,4 +146,126 @@ where $p_i$ and $λ_i$ are *i*th eigenvector and eigenvalue of the 3 × 3 covari
 
 Combining the predictions of many different models is a very successful way to reduce test errors [1, 3], but it appears to be too expensive for big neural networks that already take several days to train. There is, however, a very efficient version of model combination that only costs about a factor of two during training. The recently-introduced technique, called “dropout” [10], consists of setting to zero the output of each hidden neuron with probability 0.5. The neurons which are “dropped out” in this way do not contribute to the forward pass and do not participate in backpropagation. So every time an input is presented, the neural network samples a different architecture, but all these architectures share weights. This technique reduces complex co-adaptations of neurons, since a neuron cannot rely on the presence of particular other neurons. It is, therefore, forced to learn more robust features that are useful in conjunction with many different random subsets of the other neurons. At test time, we use all the neurons but multiply their outputs by 0.5, which is a reasonable approximation to taking the geometric mean of the predictive distributions produced by the exponentially-many dropout networks.
 
+将不同模型的预测组合起来可以有效的减少测试错误[1,3]，但这对于要花好几天来训练的大型神经网络来说似乎代价太过高昂。有一种很有效的模型组合方法，训练中代价大概是两倍吧。最近提出的技术，称为dropout[10]，使每个神经元的输出以0.5的概率置零。这样被dropout的神经元对前向传播不起作用，也不参与反向传播。所以每次给定输入后，神经网络抽样出一种不同的架构，但所有这些架构共享权重。这种技术减少了神经元之间复杂的互相适应，因为一个神经元不能依靠特定其他神经元的存在。所以，必须学习更加鲁棒的特征，在与其他神经元的很多随机子集的组合中也可以有用。在测试时，我们将所有神经元的输出乘以0.5，因为dropout网络数量为指数级的，这是对其预测分布的几何均值的一个合理近似。
+
 We use dropout in the first two fully-connected layers of Figure 2. Without dropout, our network exhibits substantial overfitting. Dropout roughly doubles the number of iterations required to converge.
+
+我们在图2的前两个全连接层使用dropout，没有dropout的话，我们的网络表现出严重的过拟合，dropout大约将收敛需要的迭代数增加了一倍。
+
+## 5 Details of learning
+
+We trained our models using stochastic gradient descent with a batch size of 128 examples, momentum of 0.9, and weight decay of 0.0005. We found that this small amount of weight decay was important for the model to learn. In other words, weight decay here is not merely a regularizer: it reduces the model’s training error. The update rule for weight *w* was
+
+我们用随机梯度下降法训练模型，batch size为128样本，momentum为0.9，weight decay为0.0005。我们发现这种很小的weight decay对于模型学习来说很重要，换句话说，weight decay不仅仅是正则化措施，它可以减少模型的训练错误。权重*w*的更新规则为
+
+$$v_{i+1}:=0.9 \cdot v_i - 0.0005 \cdot \epsilon \cdot w_i - \epsilon \cdot <\frac{∂L}{∂w} \vert _{w_i}>_{D_i}$$
+$$w_{i+1}:=w_i+v_{i+1}$$
+
+where *i* is the iteration index, *v* is the momentum variable, $\epsilon$ is the learning rate, and $<\frac{∂L}{∂w} \vert _{w_i}>_{D_i}$ is the average over the *i*th batch $D_i$ of the derivative of the objective with respect to *w*, evaluated at $w_i$.
+
+这里*i*是迭代次数索引，*v*是momentum变量，$\epsilon$是学习率，$<\frac{∂L}{∂w} \vert _{w_i}>_{D_i}$是目标函数*L*对*w*求导在$w_i$点的值，并在整个第*i*个batch上求平均。
+
+We initialized the weights in each layer from a zero-mean Gaussian distribution with standard deviation 0.01. We initialized the neuron biases in the second, fourth, and fifth convolutional layers, as well as in the fully-connected hidden layers, with the constant 1. This initialization accelerates the early stages of learning by providing the ReLUs with positive inputs. We initialized the neuron biases in the remaining layers with the constant 0.
+
+我们用零均值标准差0.01高斯分布的随机数初始化各层的权重。我们用常数1初始化第2,4,5卷积层的神经元偏置，以及全连接隐藏层。这个初始化加速了初期的学习，因为给ReLU提供了正的输入。我们在其他层以0值初始化神经元偏置。
+
+We used an equal learning rate for all layers, which we adjusted manually throughout training. The heuristic which we followed was to divide the learning rate by 10 when the validation error rate stopped improving with the current learning rate. The learning rate was initialized at 0.01 and reduced three times prior to termination. We trained the network for roughly 90 cycles through the training set of 1.2 million images, which took five to six days on two NVIDIA GTX 580 3GB GPUs.
+
+我们在所有层上所用的学习速度是一样的，这是在训练过程中手动调整得到的。我们遵循的规则是以目前的学习率不能再改进验证错误率时，就把学习率除以10。学习率初始值是0.01，在结束前数值降低了3次。我们在120万幅图上大约用了90个循环训练网络，这在2块NVIDIA GTX 580 3GB GPU上用了5到6天。
+
+## 6 Results
+
+Our results on ILSVRC-2010 are summarized in Table 1. Our network achieves top-1 and top-5 test set error rates of 37.5% and 17.0% (The error rates without averaging predictions over ten patches as described in Section 4.1 are 39.0% and 18.3%.). The best performance achieved during the ILSVRC-2010 competition was 47.1% and 28.2% with an approach hat averages the predictions produced from six sparse-coding models trained on different features [2], and since then the best published results are 45.7% and 25.7% with an approach that averages the predictions of two classifiers trained on Fisher Vectors (FVs) computed from two types of densely-sampled features [24].
+
+我们在ILSVRC-2010上的结果如表1所示，我们网络的top-1和top-5测试集错误率为37.5%和17.5%（像4.1节，预测结果没有在10图像块上平均得到的错误率，为39.0%和18.3%）。ILSVRC-2010上取得的最好成绩是47.1%和28.2%，其方法是将在不同特征上训练得出的6个稀疏编码模型的预测结果进行平均[2]，比赛过后的工作得到的最好结果是45.7%和25.7%，方法是用两个Fisher Vectors训练得到的分类器的预测结果平均，Fisher Vector是从两种稠密抽样的特征计算得到的[24]。
+
+Table 1: Comparison of results on ILSVRC-2010 test set. In italics are best results achieved by others.
+
+表1 ILSVRC-2010测试集上的结果对比，斜体是别人得到的最好结果
+
+Model | Top-1 | Top-5
+--- | --- | ---
+*Sparse coding [2]* | *47.1%* | *28.2%*
+*SIFT + FVs [24]* | *45.7%* | *25.7%*
+CNN | 37.5% | 17.0%
+
+We also entered our model in the ILSVRC-2012 competition and report our results in Table 2. Since the ILSVRC-2012 test set labels are not publicly available, we cannot report test error rates for all the models that we tried. In the remainder of this paragraph, we use validation and test error rates interchangeably because in our experience they do not differ by more than 0.1% (see Table 2). The CNN described in this paper achieves a top-5 error rate of 18.2%. Averaging the predictions of five similar CNNs gives an error rate of 16.4%. Training one CNN, with an extra sixth convolutional layer over the last pooling layer, to classify the entire ImageNet Fall 2011 release (15M images, 22K categories), and then “fine-tuning” it on ILSVRC-2012 gives an error rate of 16.6%. Averaging the predictions of two CNNs that were pre-trained on the entire Fall 2011 release with the aforementioned five CNNs gives an error rate of 15.3%. The second-best contest entry achieved an error rate of 26.2% with an approach that averages the predictions of several classifiers trained on FVs computed from different types of densely-sampled features [7].
+
+我们参加了ILSVRC-2012比赛，取得的结果如表2所示。由于ILSVRC-2012测试集的标签并不是公开可用的，我们不能给出尝试的所有模型的错误率。在本段剩下的部分，我们交替使用验证错误率和测试错误率，因为以我们的经验，其差值不会超过0.1%（见表2）。本文方法取得了top-5错误率18.2%的结果。对5个类似的CNN的预测结果进行平均，得到的错误率为16.4%。再训练一个CNN，在最后的pooling层后多加第6个卷积层，然后对整个ImageNet 2011秋季发布版（1500万图像，2.2万类别）进行分类，然后在数据集上精调参数，得到的错误率为16.6%。在整个2011秋季版数据集上预训练两个CNN，然后与前面提到的5个CNN平均，得到的错误率为15.3%。次好的参赛结果错误率为26.2%，其方法是对几个在FV上训练得到的分类器的预测平均，FV是从不同种类的稠密抽样特征计算得到的[7]。
+
+Table 2: Comparison of error rates on ILSVRC-2012 validation and test sets. In italics are best results achieved by others. Models with an asterisk* were “pre-trained” to classify the entire ImageNet 2011 Fall release. See Section 6 for details.
+
+表2 在ILSVRC验证集和测试集上的错误率对比。斜体表示是别人的最好结果，带星号的是预训练后对整个ImageNet 2011秋季发布版进行分类的结果。详见第6部分。
+
+Model | Top-1 (val) | Top-5 (val) | Top-5 (test)
+--- | --- | --- | ---
+*SIFT + FVs [7]* | — | — | *26.2%*
+1 CNN | 40.7% | 18.2% | —
+5 CNNs | 38.1% | 16.4% | 16.4%
+1 CNN* | 39.0% | 16.6% | —
+7 CNNs* | 36.7% | 15.4% | 15.3%
+
+Finally, we also report our error rates on the Fall 2009 version of ImageNet with 10,184 categories and 8.9 million images. On this dataset we follow the convention in the literature of using half of the images for training and half for testing. Since there is no established test set, our split necessarily differs from the splits used by previous authors, but this does not affect the results appreciably. Our top-1 and top-5 error rates on this dataset are 67.4% and 40.9%, attained by the net described above but with an additional, sixth convolutional layer over the last pooling layer. The best published results on this dataset are 78.1% and 60.9% [19].
+
+最后，我们还对2009年秋季版的ImageNet做了试验，其有890万图像，10184个类别。在这个数据集上，我们依据习惯，一半图像用作训练，一半图像用作测试。由于没有固定的测试集，所以我们的数据集分割与以前作者的分割肯定不同，但这不会显著影响结果。我们的top-1和top-5错误率为67.4%和40.9%，采用的是上述的网络结构，但在最后的pooling层后添加了第6个卷积层。已经发布出来的最好结果是78.1%和60.9%。
+
+### 6.1 Qualitative Evaluations 定性评估
+
+Figure 3 shows the convolutional kernels learned by the network’s two data-connected layers. The network has learned a variety of frequency- and orientation-selective kernels, as well as various colored blobs. Notice the specialization exhibited by the two GPUs, a result of the restricted connectivity described in Section 3.5. The kernels on GPU 1 are largely color-agnostic, while the kernels on on GPU 2 are largely color-specific. This kind of specialization occurs during every run and is independent of any particular random weight initialization (modulo a renumbering of the GPUs).
+
+图3所示的是网络的卷积层学到的卷积核。网络学到了一组频率选择性和方向选择性核心，还有不同颜色的块。注意两个GPU表现出的特别之处，这是3.5中提到的连接限定方案的结果。GPU 1上的核心大多与颜色无关，而GPU 2上的核心大多有特定的颜色。这种特点每次运行都会出现，而且与权值初始化的方式无关（除非GPU重新排序）。
+
+Figure 3: 96 convolutional kernels of size 11×11×3 learned by the first convolutional layer on the 224×224×3 input images. The top 48 kernels were learned on GPU 1 while the bottom 48 kernels were learned on GPU 2. See Section 6.1 for details.
+
+图3 第一个卷积层学习得到的96个11×11×3大小的卷积核，输入图像大小224×224×3。上面48个核在GPU 1上学习，下面48核在GPU 2上学习。详见6.1节。
+
+In the left panel of Figure 4 we qualitatively assess what the network has learned by computing its top-5 predictions on eight test images. Notice that even off-center objects, such as the mite in the top-left, can be recognized by the net. Most of the top-5 labels appear reasonable. For example, only other types of cat are considered plausible labels for the leopard. In some cases (grille, cherry) there is genuine ambiguity about the intended focus of the photograph.
+
+图4左边我们给8幅图计算top-5预测，从而定性的评估网络学习到了什么。注意即使是偏离中心的物体，比如左上的小虫子图像，也可以通过网络识别出来。大多top-5标签是合理的，比如对于豹子图像，只预测其可能是其他类型的猫。在一些情况下（汽车散热器的护栅，樱桃）才对图像的焦点产生了疑义。
+
+Another way to probe the network’s visual knowledge is to consider the feature activations induced by an image at the last, 4096-dimensional hidden layer. If two images produce feature activation vectors with a small Euclidean separation, we can say that the higher levels of the neural network consider them to be similar. Figure 4 shows five images from the test set and the six images from the training set that are most similar to each of them according to this measure. Notice that at the pixel level, the retrieved training images are generally not close in L2 to the query images in the first column. For example, the retrieved dogs and elephants appear in a variety of poses. We present the results for many more test images in the supplementary material.
+
+另一种可视化网络的方法是考虑在最后的4096维隐藏层中由图像带来的特征激活。如果两个图像生成的特征激活向量在欧式空间中距离很小，我们可以说更高层的神经网络认为它们是类似的。图4所示的测试集中的5幅图，和根据这种度量，在训练集中与每幅图最类似的6幅图。注意在像素层级上，得到的训练图像在L2距离上与第一列的查询图像并不接近。例如，得到的狗和大象的图像其姿态各不相同。我们在补充材料中给出了更多测试图像的结果。
+
+Computing similarity by using Euclidean distance between two 4096-dimensional, real-valued vectors is inefficient, but it could be made efficient by training an auto-encoder to compress these vectors to short binary codes. This should produce a much better image retrieval method than applying auto-encoders to the raw pixels [14], which does not make use of image labels and hence has a tendency to retrieve images with similar patterns of edges, whether or not they are semantically similar.
+
+通过计算两个4096维的实值向量的欧式距离来计算相似性是不够的，但可以通过训练一个auto-encoder来压缩这些向量成短的二进制编码，这样就可以了。与将auto-encoder直接应用于原始像素[14]相比，这应当能产生一个好的多的图像检索方法，[14]没有利用图像的标签，所以倾向于检索有类似边缘模式的图像，而与图像是否在语义上类似则无关。
+
+## 7 Discussion
+
+Our results show that a large, deep convolutional neural network is capable of achieving record-breaking results on a highly challenging dataset using purely supervised learning. It is notable that our network’s performance degrades if a single convolutional layer is removed. For example, removing any of the middle layers results in a loss of about 2% for the top-1 performance of the network. So the depth really is important for achieving our results.
+
+我们结果说明一个大型深度卷积神经网络是可以在一个非常有挑战的数据集上采用纯监督学习取得破纪录的结果的。值得注意，我们的网络如果去掉任何一个卷积层，其表现都会变差。比如，去掉中间任何一层，都会导致top-1性能降低2%，所以我们能取得这样的结果，深度是很重要的。
+
+To simplify our experiments, we did not use any unsupervised pre-training even though we expect that it will help, especially if we obtain enough computational power to significantly increase the size of the network without obtaining a corresponding increase in the amount of labeled data. Thus far, our results have improved as we have made our network larger and trained it longer but we still have many orders of magnitude to go in order to match the infero-temporal pathway of the human visual system. Ultimately we would like to use very large and deep convolutional nets on video sequences where the temporal structure provides very helpful information that is missing or far less obvious in static images.
+
+为了简化我们的试验，我们不使用任何无监督的预训练，虽然我们认为这会有帮助，尤其是，如果我们的计算能力足够，可以显著增加网络规模，而没有在标记数据规模上获得相应的增加。迄今为止，我们的网络规模变大，训练时间变长，所以结果得到了改进，但我们距离人眼视觉系统的能力还有很多个数量级的差距。最终我们会用规模非常大非常深的卷积网络对视频序列进行处理，其中的时间结构可以提供很多信息，这在静态图像中是没有的，或者非常不明显。
+
+## References
+
+- [1] R.M.BellandY.Koren. Lessonsfromthenetflixprizechallenge. ACMSIGKDDExplorationsNewsletter, 9(2):75–79, 2007.
+- [2] A. Berg, J. Deng, and L. Fei-Fei. Large scale visual recognition challenge 2010. www.image-net.org/challenges. 2010.
+- [3] L. Breiman. Random forests. Machine learning, 45(1):5–32, 2001.
+- [4] D. Cire¸ san, U. Meier, and J. Schmidhuber. Multi-column deep neural networks for image classification. Arxiv preprint arXiv:1202.2745, 2012.
+- [5] D.C. Cire¸ san, U. Meier, J. Masci, L.M. Gambardella, and J. Schmidhuber. High-performance neural networks for visual object classification. Arxiv preprint arXiv:1102.0183, 2011.
+- [6] J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei. ImageNet: A Large-Scale Hierarchical Image Database. In CVPR09, 2009.
+- [7] J. Deng, A. Berg, S. Satheesh, H. Su, A. Khosla, and L. Fei-Fei. ILSVRC-2012, 2012. URL http://www.image-net.org/challenges/LSVRC/2012/.
+- [8] L. Fei-Fei, R. Fergus, and P. Perona. Learning generative visual models from few training examples: An incremental bayesian approach tested on 101 object categories. Computer Vision and Image Understanding, 106(1):59–70, 2007.
+- [9] G. Griffin, A. Holub, and P. Perona. Caltech-256 object category dataset. Technical Report 7694, California Institute of Technology, 2007. URL http://authors.library.caltech.edu/7694.
+- [10] G.E. Hinton, N. Srivastava, A. Krizhevsky, I. Sutskever, and R.R. Salakhutdinov. Improving neural networks by preventing co-adaptation of feature detectors. arXiv preprint arXiv:1207.0580, 2012.
+- [11] K. Jarrett, K. Kavukcuoglu, M. A. Ranzato, and Y. LeCun. What is the best multi-stage architecture for object recognition? In International Conference on Computer Vision, pages 2146–2153. IEEE, 2009.
+- [12] A. Krizhevsky. Learning multiple layers of features from tiny images. Master’s thesis, Department of Computer Science, University of Toronto, 2009.
+- [13] A. Krizhevsky. Convolutional deep belief networks on cifar-10. Unpublished manuscript, 2010.
+- [14] A. Krizhevsky and G.E. Hinton. Using very deep autoencoders for content-based image retrieval. In ESANN, 2011.
+- [15] Y. Le Cun, B. Boser, J.S. Denker, D. Henderson, R.E. Howard, W. Hubbard, L.D. Jackel, et al. Handwritten digit recognition with a back-propagation network. In Advances in neural information processing systems, 1990.
+- [16] Y. LeCun, F.J. Huang, and L. Bottou. Learning methods for generic object recognition with invariance to pose and lighting. In Computer Vision and Pattern Recognition, 2004. CVPR 2004. Proceedings of the 2004 IEEE Computer Society Conference on, volume 2, pages II–97. IEEE, 2004.
+- [17] Y. LeCun, K. Kavukcuoglu, and C. Farabet. Convolutional networks and applications in vision. In Circuits and Systems (ISCAS), Proceedings of 2010 IEEE International Symposium on, pages 253–256. IEEE, 2010.
+- [18] H. Lee, R. Grosse, R. Ranganath, and A.Y. Ng. Convolutional deep belief networks for scalable unsupervised learning of hierarchical representations. In Proceedings of the 26th Annual International Conference on Machine Learning, pages 609–616. ACM, 2009.
+- [19] T. Mensink, J. Verbeek, F. Perronnin, and G. Csurka. Metric Learning for Large Scale Image Classification: Generalizing to New Classes at Near-Zero Cost. In ECCV - European Conference on Computer Vision, Florence, Italy, October 2012.
+- [20] V. Nair and G. E. Hinton. Rectified linear units improve restricted boltzmann machines. In Proc. 27th International Conference on Machine Learning, 2010.
+- [21] N. Pinto, D.D. Cox, and J.J. DiCarlo. Why is real-world visual object recognition hard? PLoS computational biology, 4(1):e27, 2008.
+- [22] N. Pinto, D. Doukhan, J.J. DiCarlo, and D.D. Cox. A high-throughput screening approach to discovering good forms of biologically inspired visual representation. PLoS computational biology, 5(11):e1000579, 2009.
+- [23] B.C. Russell, A. Torralba, K.P. Murphy, and W.T. Freeman. Labelme: a database and web-based tool for image annotation. International journal of computer vision, 77(1):157–173, 2008.
+- [24] J. Sánchez and F. Perronnin. High-dimensional signature compression for large-scale image classification. In Computer Vision and Pattern Recognition(CVPR),2011 IEEE Conference on, pages 1665–1672.IEEE, 2011.
+- [25] P.Y. Simard, D. Steinkraus, and J.C. Platt. Best practices for convolutional neural networks applied to visual document analysis. In Proceedings of the Seventh International Conference on Document Analysis and Recognition, volume 2, pages 958–962, 2003.
+- [26] S.C. Turaga, J.F. Murray, V. Jain, F. Roth, M. Helmstaedter, K. Briggman, W. Denk, and H.S. Seung. Convolutional networks can learn to generate affinity graphs for image segmentation. Neural Computation, 22(2):511–538, 2010.
