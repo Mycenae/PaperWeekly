@@ -243,7 +243,7 @@ To simplify our experiments, we did not use any unsupervised pre-training even t
 
 ## References
 
-- [1] R.M.BellandY.Koren. Lessonsfromthenetflixprizechallenge. ACMSIGKDDExplorationsNewsletter, 9(2):75–79, 2007.
+- [1] R. M. Bell and Y. Koren. Lessons from the netflix prize challenge. ACM SIGKDD Explorations Newsletter, 9(2):75–79, 2007.
 - [2] A. Berg, J. Deng, and L. Fei-Fei. Large scale visual recognition challenge 2010. www.image-net.org/challenges. 2010.
 - [3] L. Breiman. Random forests. Machine learning, 45(1):5–32, 2001.
 - [4] D. Cire¸ san, U. Meier, and J. Schmidhuber. Multi-column deep neural networks for image classification. Arxiv preprint arXiv:1202.2745, 2012.
