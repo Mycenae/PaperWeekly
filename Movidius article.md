@@ -19,7 +19,7 @@ Running Deep Learning models efficiently on low capacity graph processors is ver
 
 **We can simply think of Movidius NCS as a GPU running on USB (Graphics Processing Unit)**. However, training of the model is not performed on this unit, the trained model works optimally on the unit and is intended to be used in physical environments for testing purposes.
 
-**我们可以将Movidius NCS简单的想象成USB供电的GPU。**但模型的训练不是在这个部件上面进行的，训练好的模型最适合在这上面运行，可以在物理环境中用作测试。
+**我们可以将Movidius NCS简单的想象成USB供电的GPU**。但模型的训练不是在这个部件上面进行的，训练好的模型最适合在这上面运行，可以在物理环境中用作测试。
 
 - We can use with Ubuntu 16.04 or Raspberry Pi 3 Raspbian Stretch.
 - It supports two DNN frameworks (TensorFlow and Caffe).
