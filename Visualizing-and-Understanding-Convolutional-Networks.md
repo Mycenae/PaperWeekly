@@ -175,7 +175,11 @@ Random | 0.107 ± 0.017 | 0.073 ± 0.014
 
 This dataset consists of 1.3M/50k/100k training/validation/test examples, spread over 1000 categories. Table 2 shows our results on this dataset.
 
+这个数据集由130万/5万/10万 训练/验证/测试样本组成，分布在1000个类别中。表2是我们的网络在这个数据集上得到的结果。
+
 Table 2. ImageNet 2012 classification error rates. The ∗ indicates models that were trained on both ImageNet 2011 and 2012 training sets.
+
+表2. ImageNet 2012分类错误率，*表示模型在ImageNet 2011和2012两个训练集上进行训练。
 
 Error % | Val Top-1 | Val Top-5 | Test Top-5
 --- | --- | --- | ---
@@ -192,10 +196,15 @@ Our replication of (Krizhevsky et al., 2012), 1 convnet | 40.5 | 18.1 | −−
 
 Using the exact architecture specified in (Krizhevsky et al., 2012), we attempt to replicate their result on the validation set. We achieve an error rate within 0.1% of their reported value on the ImageNet 2012 validation set.
 
-Next we analyze the performance of our model with the architectural changes outlined in Section 4.1 (7×7 filters in layer 1 and stride 2 convolutions in layers 1 & 2). This model, shown in Fig. 3, significantly outperforms the architecture of (Krizhevsky et al., 2012), beating their single model result by 1.7% (test top-5). When we combine multiple models, we obtain a test error of 14.8%, the best published performance
-on this dataset (This performance has been surpassed in the recent Imagenet 2013 competition (http://www.image-net.org/challenges/LSVRC/2013/results.php), despite only using the 2012 training set). We note that this error is almost half that of the top non-convnet entry in the ImageNet 2012 classification challenge, which obtained 26.2% error (Gunji et al., 2012).
+采用(Krizhevsky et al., 2012)一致的架构，我们希望在验证数据集上复制他们的结果，我们在ImageNet 2012验证集上得到的结果，与他们论文的结果相差不到0.1%。
+
+Next we analyze the performance of our model with the architectural changes outlined in Section 4.1 (7×7 filters in layer 1 and stride 2 convolutions in layers 1 & 2). This model, shown in Fig. 3, significantly outperforms the architecture of (Krizhevsky et al., 2012), beating their single model result by 1.7% (test top-5). When we combine multiple models, we obtain a test error of 14.8%, the best published performance on this dataset (This performance has been surpassed in the recent Imagenet 2013 competition http://www.image-net.org/challenges/LSVRC/2013/results.php, despite only using the 2012 training set). We note that this error is almost half that of the top non-convnet entry in the ImageNet 2012 classification challenge, which obtained 26.2% error (Gunji et al., 2012).
+
+下面我们分析我们的模型根据4.1节所述的架构变化（第1层为7×7滤波器，第1,2层卷积步长为2）进行修改后的性能。如图3所示，这个模型明显比(Krizhevsky et al., 2012)的模型性能要好，在测试集上的top-5错误率比他们的单个模型少了1.7%。当我们结合多个模型时，我们得到了测试错误率14.8%，这是在这个数据集上发布出来的最好表现（这个表现在最近的ImageNet 2013挑战赛中被超过了，http://www.image-net.org/challenges/LSVRC/2013/results.php，但他们使用的只是2012训练集）。注意这个错误率几乎是ImageNet 2012分类赛中非卷积网络方法的一半，也就是(Gunji et al., 2012)得到的26.2%的错误率。
 
 **Varying ImageNet Model Sizes**: In Table 3, we first explore the architecture of (Krizhevsky et al., 2012) by adjusting the size of layers, or removing them entirely. In each case, the model is trained from scratch with the revised architecture. Removing the fully connected layers (6,7) only gives a slight increase in error. This is surprising, given that they contain the majority of model parameters. Removing two of the middle convolutional layers also makes a relatively small different to the error rate. However, removing both the middle convolution layers and the fully connected layers yields a model with only 4 layers whose performance is dramatically worse. This would suggest that the overall depth of the model is important for obtaining good performance. In Table 3, we modify our model, shown in Fig. 3. Changing the size of the fully connected layers makes little difference to performance (same for model of (Krizhevsky et al., 2012)). However, increasing the size of the middle convolution layers goes give a useful gain in performance. But increasing these, while also enlarging the fully connected layers results in overfitting.
+
+**变换ImageNet模型规模**: 在表3中，我们首先研究(Krizhevsky et al., 2012)模型，调整层的大小，或整个去掉一些层。在每种情况下，模型都用修正的框架从头训练。去掉全连接层(6,7)错误率只增长了一点点，这很令人惊讶，因为这两层的参数占整个模型参数总量的大部分。去掉中间的两个卷积层，错误率增长也是相对较小的。但是，去掉中间卷积层的同时，也去掉全连接层，得到的模型只有4层，其结果就非常差了。这说明，模型的总体深度对于结果是非常重要的。在表3中，我们修改了模型，如图3所示。修改全连接层的大小对于结果影响很小，这对于模型(Krizhevsky et al., 2012)也是一样的。但是，增加中间卷积层的大小，使结果表现好了不少。但这样的增加，也会增加全连接层输出结果的过拟合。
 
 Table 3. ImageNet 2012 classification error rates with various architectural changes to the model of (Krizhevsky et al., 2012) and our model (see Fig. 3).
 
@@ -214,15 +223,99 @@ Adjust layers 6,7: 8192 units | 22.0 | 38.8 | 17.0
 Adjust layers 3,4,5: 512,1024,512 maps | 18.8 | 37.5 | 16.0
 Adjust layers 6,7: 8192 units and Layers 3,4,5: 512,1024,512 maps | 10.0 | 38.3 | 16.9
 
-### 5.2. Feature Generalization
+### 5.2. Feature Generalization 特征泛化
 
-### 5.3. Feature Analysis
+The experiments above show the importance of the convolutional part of our ImageNet model in obtaining state-of-the-art performance. This is supported by the visualizations of Fig. 2 which show the complex invariances learned in the convolutional layers. We now explore the ability of these feature extraction layers to generalize to other datasets, namely Caltech-101 (Fei-fei et al., 2006), Caltech-256 (Griffin et al., 2006) and PASCAL VOC 2012. To do this, we keep layers  1-7 of our ImageNet-trained model fixed and train a new softmax classifier on top (for the appropriate number of classes) using the training images of the new dataset. Since the softmax contains relatively few parameters, it can be trained quickly from a relatively small number of examples, as is the case for certain datasets.
+
+上面的试验说明了我们的ImageNet模型中的卷积层对于取得目前这样的最好结果的重要性。图2的可视化效果也支持这个结论，在卷积层中学习到了很复杂的不变性。我们现在研究这些特征提取层的能力，将其泛化到其他数据集上，即Caltech-101 (Fei-fei et al., 2006), Caltech-256 (Griffin et al., 2006)和PASCAL VOC 2012。我们在ImageNet训练得到的模型将保持1-7层固定不变，在最上面训练一个新的softmax分类器（因为类别数目改变了），使用的当然是新数据集的训练图像。由于softmax层参数相对较少，所以训练可以用相对较少的样本很快的进行。
+
+The classifiers used by our model (a softmax) and other approaches (typically a linear SVM) are of similar complexity, thus the experiments compare our feature representation, learned from ImageNet, with the hand-crafted features used by other methods. It is important to note that both our feature representation and the hand-crafted features are designed using images beyond the Caltech and PASCAL training sets. For example, the hyper-parameters in HOG descriptors were determined through systematic experiments on a pedestrian dataset (Dalal & Triggs, 2005). We also try a second strategy of training a model from scratch, i.e. resetting layers 1-7 to random values and train them, as well as the softmax, on the training images of the dataset.
+
+我们的模型所用的分类器(softmax)与其他方法（一般是个线性SVM）复杂度是类似的，所以在试验中，我们从ImageNet中学到的特征表示，将与其他方法手工加工的特征进行比较。注意，我们的特征表示与手工加工的特征都不是根据试验中的Caltech和PASCAL训练集设计的。比如，HOG描述子的超参数是通过在一个行人数据库(Dalal & Triggs, 2005)的系统性试验确定的。我们还试验了另一种从头训练模型的策略，即，在训练图像上，重设1-7层和softmax层的参数为随机数，然后训练。
+
+One complication is that some of the Caltech datasets have some images that are also in the ImageNet training data. Using normalized correlation, we identified these few “overlap” images (For Caltech-101, we found 44 out of 9,144 total images in common, with a maximum overlap of 10 for any given class. For Caltech-256, we found 243 out of 30,607 total images in common, with a maximum overlap of 18 for any given class) and removed them from our Imagenet training set and then retrained our Imagenet models, so avoiding the possibility of train/test contamination.
+
+有个比较复杂的地方在于，一些Caltech数据集中的图像，也包括在在ImageNet训练集中。使用归一化相关系数，我们识别出了这些少数重叠图像（在Caltech-101，我们从9144幅图像中找到了44幅一样的，每个类中最多重复10张；对于Caltech-256，我们在30607幅图像中找到了243幅重复的，每个类中最多重复18张），并将这些图像从ImageNet训练集中移除，然后重新训练我们的ImageNet模型，这样就避免了训练集/测试集污染的问题。
+
+**Caltech-101**: We follow the procedure of (Fei-fei et al., 2006) and randomly select 15 or 30 images per class for training and test on up to 50 images per class reporting the average of the per-class accuracies in Table 4, using 5 train/test folds. Training took 17 minutes for 30 images/class. The pre-trained model beats the best reported result for 30 images/class from (Bo et al., 2013) by 2.2%. The convnet model trained from scratch however does terribly, only achieving 46.5%.
+
+**Caltech-101**: 我们遵循(Fei-fei et al., 2006)的过程，每类随机挑选15或30幅图进行训练，每类选最多50幅图进行测试，表4中是每类的平均准确率，使用了5个训练/测试循环。训练30图每类花费17分钟，预训练模型超过了发布出来的最好结果2.2%，即(Bo et al., 2013) 30图每类的结果。从头训练的卷积网络模型表现反而很糟，只有46.5%。
+
+Table 4. Caltech-101 classification accuracy for our convnet models, against two leading alternate approaches.
+
+表4. 我们convnet模型以及其他两种领先方法在Caltech-101上的分类准确率
+
+Train | 15/class | 30/class
+--- | --- | ---
+(Bo et al., 2013) | − | 81.4 ± 0.33
+(Jianchao et al., 2009) | 73.2 | 84.3
+Non-pretrained convnet | 22.8 ± 1.5 | 46.5 ± 1.7
+ImageNet-pretrained convnet | 83.8 ± 0.5 | 86.5 ± 0.5
+
+**Caltech-256**: We follow the procedure of (Griffin et al., 2006), selecting 15, 30, 45, or 60 training images per class, reporting the average of the per-class accuracies in Table 5. Our ImageNet-pretrained model beats the current state-of-the-art results obtained by Bo et al. (Bo et al., 2013) by a significant margin: 74.2% vs 55.2% for 60 training images/class. However, as with Caltech-101, the model trained from scratch does poorly. In Fig. 9, we explore the “one-shot learning” (Fei-fei et al., 2006) regime. With our pre-trained model, just 6 Caltech-256 training images are needed to beat the leading method using 10 times as many images. This shows the power of the ImageNet feature extractor.
+
+**Caltech-256**: 我们遵循(Griffin et al., 2006)的过程，每类中选择15,30,45或60个训练图像，表5中是每类的平均准确率。我们在ImageNet上预训练的模型大大超过了(Bo et al., 2013)的目前最好结果（每类60训练图像），74.2%对55.2%。但是，就像在Caltech-101数据集上一样，从头训练的convnet表现一样不好。在图9中，我们研究了(Fei-fei et al., 2006)的“one-shot learning”方法。用我们的预训练模型，只需要6幅Caltech-256训练图像，就超过了用60幅训练图像的最好方法。这说明了ImageNet特征提取器的强大之处。
+
+Table 5. Caltech 256 classification accuracies 分类准确率
+
+Train | 15/class | 30/class | 45/class | 60/class
+--- | --- | --- | --- | ---
+(Sohn et al., 2011) | 35.1 | 42.1 | 45.7 | 47.9
+(Bo et al., 2013) | 40.5 ± 0.4 | 48.0 ± 0.2 | 51.9 ± 0.2 | 55.2 ± 0.3
+Non-pretr. | 9.0 ± 1.4 | 22.5 ± 0.7 | 31.2 ± 0.5 | 38.8 ± 1.4
+ImageNet-pretr. | 65.7 ± 0.2 | 70.6 ± 0.2 | 72.7 ± 0.4 | 74.2 ± 0.3
+
+**PASCAL 2012**: We used the standard training and validation images to train a 20-way softmax on top of the ImageNet-pretrained convnet. This is not ideal, as PASCAL images can contain multiple objects and our model just provides a single exclusive prediction for each image. Table 6 shows the results on the test set. The PASCAL and ImageNet images are quite different in nature, the former being full scenes unlike the latter. This may explain our mean performance being 3.2% lower than the leading (Yan et al., 2012) result, however we do beat them on 5 classes, sometimes by large margins.
+
+**PASCAL 2012**: 我们在ImageNet预训练convnet的最顶层用标准训练图像集和验证图像集来训练一个20路softmax分类器。PASCAL图像集每幅图包含多个目标，但我们的模型对每幅图只给出一个预测，所以这不是最理想的情况。表6给出了测试集上的结果。PASCAL和ImageNet图像集本质上很不一样，前一个是全景的，后一个不是。这可以解释我们的平均表现比最好的结果(Yan et al., 2012)低3.2%，但我们还是在5类情况中表现胜出，有时候优势还比较大。
+
+Table 6. PASCAL 2012 classification results, comparing our Imagenet-pretrained convnet against the leading two methods ([A]= (Sande et al., 2012) and [B] = (Yan et al., 2012)).
+
+Acc % | [A] | [B] | Ours | Acc % | [A] | [B] | Ours
+--- | --- | --- | --- | --- | --- | --- | --- 
+Airplane | 92.0 | 97.3 | 96.0 | Dining tab | 63.2 | 77.8 | 67.7
+Bicycle | 74.2 | 84.2 | 77.1 | Dog | 68.9 | 83.0 | 87.8
+Bird | 73.0 | 80.8 | 88.4 | Horse | 78.2 | 87.5 | 86.0
+Boat | 77.5 | 85.3 | 85.5 | Motorbike | 81.0 | 90.1 | 85.1
+Bottle | 54.3 | 60.8 | 55.8 | Person | 91.6 | 95.0 | 90.9
+Bus | 85.2 | 89.9 | 85.8 | Potted pl | 55.9 | 57.8 | 52.2
+Car | 81.9 | 86.8 | 78.6 | Sheep | 69.4 | 79.2 | 83.6
+Cat | 76.4 | 89.3 | 91.2 | Sofa | 65.4 | 73.4 | 61.1
+Chair | 65.2 | 75.4 | 65.0 | Train | 86.7 | 94.5 | 91.8
+Cow | 63.2 | 77.8 | 74.4 | Tv | 77.4 | 80.7 | 76.1
+Mean | 74.3 | 82.2 | 79.0 | # won | 0 | 15 | 5
+
+### 5.3. Feature Analysis 特征分析
+
+We explore how discriminative the features in each layer of our Imagenet-pretrained model are. We do this by varying the number of layers retained from the ImageNet model and place either a linear SVM or softmax classifier on top. Table 7 shows results on Caltech-101 and Caltech-256. For both datasets, a steady improvement can be seen as we ascend the model, with best results being obtained by using all layers. This supports the premise that as the feature hierarchies become deeper, they learn increasingly powerful features.
+
+我们研究了ImageNet预训练模型中每一层的特征的区别能力有多大。我们改变ImageNet预训练模型的层数，在最上层放置一线性SVM或softmax分类器。表7给出了Caltech-101和Caltech-256上的结果。对于两个数据集来说，当我们增加层数时，结果逐渐变好，最好的结果就是使用所有层的结果。这支持了我们的假设，即，随着特征层级变深，可以学到越来越强大的特征。
+
+Table 7. Analysis of the discriminative information contained in each layer of feature maps within our ImageNet-pretrained convnet. We train either a linear SVM or softmax on features from different layers (as indicated in brackets) from the convnet. Higher layers generally produce
+more discriminative features.
+
+表7. 我们的ImageNet预训练模型每一层的特征图中的区别性信息分析。我们训练了线性SVM或softmax作为convnet不同层数的分类器，层数越多，特征区分性越强。
+
+ | | Cal-101(30/class) | Cal-256(60/class)
+ --- | --- | ---
+SVM (1) | 44.8 ± 0.7 | 24.6 ± 0.4
+SVM (2) | 66.2 ± 0.5 | 39.6 ± 0.3
+SVM (3) | 72.3 ± 0.4 | 46.0 ± 0.3
+SVM (4) | 76.6 ± 0.4 | 51.3 ± 0.1
+SVM (5) | 86.2 ± 0.8 | 65.6 ± 0.3
+SVM (7) | 85.5 ± 0.4 | 71.7 ± 0.2
+Softmax (5) | 82.9 ± 0.4 | 65.7 ± 0.5
+Softmax (7) | 85.4 ± 0.4 | 72.6 ± 0.1
 
 ## 6. Discussion
 
 We explored large convolutional neural network models, trained for image classification, in a number ways. First, we presented a novel way to visualize the activity within the model. This reveals the features to be far from random, uninterpretable patterns. Rather, they show many intuitively desirable properties such as compositionality, increasing invariance and class discrimination as we ascend the layers. We also showed how these visualization can be used to debug problems with the model to obtain better results, for example improving on Krizhevsky et al. ’s (Krizhevsky et al., 2012) impressive ImageNet 2012 result. We then demonstrated through a series of occlusion experiments that the model, while trained for classification, is highly sensitive to local structure in the image and is not just using broad scene context. An ablation study on the model revealed that having a minimum depth to the network, rather than any individual section, is vital to the model’s performance.
 
+我们研究了大型卷积神经网络模型，以几种方式训练后进行图像分类。首先，我们提出了一种可视化模型内部活动的新方法。这揭示了其特征远不是随机、不可解释的模式，而表现出很多直观上很理想的性质比如组合性，不断增加的不变性和类区分能力（随着层数增加而增加）。我们还给出了这些可视化结果可以怎样用于发现解决模型中的问题，得到更好的结果，比如明显改善了(Krizhevsky et al., 2012)在ImageNet 2012上的结果。然后我们通过一些列遮挡试验展示了为分类训练得到的模型对图像局部特征是非常敏感的，并不只使用了广泛的场景上下文。对模型的剥离试验说明了模型有一个最低深度，这对模型性能是关键的。
+
 Finally, we showed how the ImageNet trained model can generalize well to other datasets. For Caltech-101 and Caltech-256, the datasets are similar enough that we can beat the best reported results, in the latter case by a significant margin. This result brings into question to utility of benchmarks with small (i.e. < $10^4$ ) training sets. Our convnet model generalized less well to the PASCAL data, perhaps suffering from dataset bias (Torralba & Efros, 2011), although it was still within 3.2% of the best reported result, despite no tuning for the task. For example, our performance might improve if a different loss function was used that permitted multiple objects per image. This would naturally enable the networks to tackle the object detection as well.
+
+最后，我们给出了ImageNet预训练模型可以泛化到其他数据集上的结果。对Caltech-101和Caltech-256，数据集类似，我们在与最好的结果对比中胜出，在后者中胜出非常多。这个结果提出了小训练集(即< $10^4$ )的测试问题。我们的卷积网络模型在PASCAL数据集上泛化效果略差一些，可能是由于数据集的不同(Torralba & Efros, 2011)，与最好结果相差在3.2%以内，对于这个任务来说也没有任何模型调整。比如，采用另一种每幅图中有多个目标的损失函数可能可以改善表现。这很自然的可以使网络可以处理目标检测。
 
 ## Acknowledgments
 
