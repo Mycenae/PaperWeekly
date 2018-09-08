@@ -38,11 +38,20 @@ $$E = -\sum_k t_k log y_k$$
 4. 通过OrderedDict存储神经网络各层的参数等信息，程序写出来特别简洁易懂；
 
 ## ch6 与学习相关的技巧
-1. 参数更新方法：SGD, Momentum, AdaGrad, Adam; AdaGrad即adaptive grad, 对大幅更新过的参数，降低其后续更细幅度；Adam结合了Momentum和AdaGrad；
+1. 参数更新方法：SGD, Momentum, AdaGrad, Adam; AdaGrad即adaptive grad, 对大幅更新过的参数，降低其后续更新幅度；Adam结合了Momentum和AdaGrad；
 2. 权重初始值：Xavier初始值，标准差为$1/\sqrt{n}$，*n*为上一层节点数；ReLU激活函数配He初始值，标准差为$\sqrt{2/n}$；
 3. Batch Normalization: 在学习时以mini-batch为单位，按照mini-batch进行归一化，即是数据称为零均值单位方差，Batch Norm操作可以放在激活函数前或后；
 4. Regularization: 权值衰减weight decay, 即对大的权重进行惩罚，即在损失函数中加入权值的L2范数作为惩罚项；
 5. Hyper parameter: 验证数据是为了优化超参数，选出一个好的超参数取值范围；
 
 ## ch7 卷积神经网络
+1. An example of CNN: input-> Conv->ReLU->Pooling-> Conv->ReLU->Pooling-> Conv->ReLU-> Affine->ReLU-> Affine->Softmax->Output;
+2. Mul-Add: 乘积累加运算，指一个卷积运算中所有的乘积与累加作为一个运算单位；
+3. 4 dimensions data in batch 3D convolution: input, batch-size × channel × height × width; filter, filter-num × channel × filter-height × filter-width; output, batch-size × fiter-num × output-height × output-width;  output-height = (height + 2 * padding - filter-height)/stride + 1, output-width = (width + 2 * padding - filter-width)/stride + 1;
+4. 使用im2col实现convolution层和pooling层，im2col将卷积运算转换成大型矩阵乘积，对于GPU来说进行大型矩阵运算特别方便，有进行专门优化过的库cuDNN；
 
+## ch8 深度学习
+1. 网络加深的好处：(a)参数数量变少，5×5的一层拆分成3×3的2层，参数由25减少到18；(b)学习效率提高，网络分层学习图像不同的特征，更深的层学习到的不变特征更高级；
+2. VGG, 连续应用卷积层；GoogLeNet, 以横向Inception结构为构件组成网络；ResNet by Mircosoft, 引入了快捷结构使网络加深的同时准确度不断提高；
+3. 迁移学习transfer learning在深度学习中的应用：将在别的数据集上训练好的网络拿到新的数据集上进行精调；
+4. 目标检测，R-CNN, faster R-CNN；图像分割，FCN；NIC, neural image caption;
