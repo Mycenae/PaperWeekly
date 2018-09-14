@@ -258,10 +258,147 @@ When training with Batch Normalization, a training example is seen in conjunctio
 
 ## 4 Experiments
 
-###4.1 Activations over time
+### 4.1 Activations over time
 
-To verify the effects of internal covariate shift on training, and the ability of Batch Normalization to combat it, we considered the problem of predictingthe digit class on the MNIST dataset (LeCun et al., 1998a). We used a very simple network, with a 28x28 binary image as input, and 3 fully-connected hidden layers with 100 activations each. Each hidden layer computes y = g(Wu+b) with sigmoid nonlinearity, and the weights W initialized to small random Gaussian values. The last hidden layer is followed by a fully-connected layer with 10 activations (one per class) and cross-entropy loss. We trained the network for 50000 steps, with 60 examples per mini-batch. We added Batch Normalization to each hidden layer of the network, as in Sec. 3.1. We were interested in the comparison between the baseline and batch-normalized networks, rather than achieving the state of the art performanceon MNIST (which the described architecture does not).
+To verify the effects of internal covariate shift on training, and the ability of Batch Normalization to combat it, we considered the problem of predicting the digit class on the MNIST dataset (LeCun et al., 1998a). We used a very simple network, with a 28x28 binary image as input, and 3 fully-connected hidden layers with 100 activations each. Each hidden layer computes y = g(Wu+b) with sigmoid nonlinearity, and the weights W initialized to small random Gaussian values. The last hidden layer is followed by a fully-connected layer with 10 activations (one per class) and cross-entropy loss. We trained the network for 50000 steps, with 60 examples per mini-batch. We added Batch Normalization to each hidden layer of the network, as in Sec. 3.1. We were interested in the comparison between the baseline and batch-normalized networks, rather than achieving the state of the art performanceon MNIST (which the described architecture does not).
 
-Figure 1(a) shows the fraction of correct predictions by the two networks on held-out test data, as training progresses. The batch-normalized network enjoys the higher test accuracy. To investigate why, we studied inputs to the sigmoid, in the original network N and batch-normalized network $N^{tr}_{BN}$ (Alg.2) over the course of training. In Fig.1 (b,c) we show,for one typical activation from the last hidden layer of each network, how its distribution evolves. The distributions in the original network change significantly over time, both in their mean and the variance, which complicates the training of the subsequent layers. In contrast, the distributions in the batch-normalized network are much more stable as training progresses, which aids the training.
+为验证internal covariate shift在训练中的作用，以及BN对抗的能力，我们在MNIST数据集上进行试验。我们用了很简单一个玩过，输入为28×28二值图像，有3个隐藏全连接层，每层100个激活。在每个隐藏层计算y = g(Wu+b)以及sigmoid非线性处理，权值W初始化为小的随机高斯分布值。最后一个隐藏层是一个10激活值的全连接网络以及交叉熵损失函数。我们训练网络50000步，每个mini-batch 60个样本。如3.1节所述，我们为每个隐藏层增加BN变换。我们感兴趣的是，原始模型和加入BN变换模型的比较，而不是取得多好的识别效果。
+
+Figure 1(a) shows the fraction of correct predictions by the two networks on held-out test data, as training progresses. The batch-normalized network enjoys the higher test accuracy. To investigate why, we studied inputs to the sigmoid, in the original network N and batch-normalized network $N^{tr}_{BN}$ (Alg.2) over the course of training. In Fig.1 (b,c) we show, for one typical activation from the last hidden layer of each network, how its distribution evolves. The distributions in the original network change significantly over time, both in their mean and the variance, which complicates the training of the subsequent layers. In contrast, the distributions in the batch-normalized network are much more stable as training progresses, which aids the training.
+
+图1(a)展示了两个网络在测试数据上的预测结果。BN网络测试准确率高一些。为探明原因，我们研究了在原始网络N和BN网络$N^{tr}_{BN}$（算法2）中，在训练过程中，sigmoid函数的输入。如图1(b,c)所示，每个网络最后一个隐藏层中一个典型的激活，其分布是如何演化的。原网络的分布波动很大，包括均值和方差，这使后续层的训练更加复杂。形成对比的是，BN网络的分布则稳定的多，这对训练有帮助。
 
 Figure 1: (a) The test accuracy of the MNIST network trained with and without Batch Normalization, vs. the number of training steps. Batch Normalization helps the network train faster and achieve higher accuracy. (b,c) The evolution of input distributions to a typical sigmoid, over the course of training, shown as {15,50,85}th percentiles. Batch Normalization makes the distribution more stable and reduces the internal covariate shift.
+
+图1：(a)原网络与BN网络在MNIST数据集上的测试准确率，横轴是训练迭代步数；BN变换帮助网络更快的训练并得到更高的准确度；(b,c)一个典型的sigmoid函数输入分布在训练过程中的演化。BN使分布更稳定，减少了internal covariate shift。
+
+### 4.2 ImageNet classification
+
+We applied Batch Normalization to a new variant of the Inception network (Szegedy et al., 2014), trained on the ImageNet classification task (Russakovsky et al., 2014). The network has a large number of convolutional and pooling layers, with a softmax layer to predict the image class, out of 1000 possibilities. Convolutional layers use ReLU as the nonlinearity. The main difference to the network described in (Szegedy et al., 2014) is that the 5 × 5 convolutional layers are replaced by two consecutive layers of 3 × 3 convolutions with up to 128 filters. The network contains 13.6M parameters, and, other than the top softmax layer, has no fully-connected layers. More details are given in the Appendix. We refer to this model as Inception in the rest of the text. The model was trained using a version of Stochastic Gradient Descent with momentum(Sutskever et al.,2013), using the mini-batch size of 32. The training was performed using a large-scale, distributed architecture (similar to (Dean et al., 2012)). All
+networks are evaluated as training progresses by computing the validation accuracy @1, i.e. the probability of predicting the correct label out of 1000 possibilities, on a held-out set, using a single crop per image.
+
+我们将BN变换应用到Inception网络的一种新变体上，在ImageNet分类任务中训练。网络的卷积层和pooling层很多，用softmax层来预测1000个图像类别。卷积层用ReLU非线性处理。与Inception网络的主要区别是5×5卷积层替换成了2个连续的3×3卷积层，128滤波器。网络包括13.6M参数，除了最后的softmax层，没有其他全连接层。更多细节见附录。下文中我们将模型称为Inception模型。模型训练用带有动量的SGD，mini-batch大小为32。训练采用的是一种大型分布式架构。所有网络的评估是通过计算验证正确率。
+
+In our experiments, we evaluated several modifications of Inception with Batch Normalization. In all cases, Batch Normalization was applied to the input of each nonlinearity, in a convolutional way, as described in section 3.2, while keeping the rest of the architecture constant.
+
+在我们的试验中，我们评估Inception的几个BN修正。在所有情况下，BN都是应用在每个非线性处理模块的输入中，以卷积的方式，如3.2节所述，而同时保持架构其他部分为常数。
+
+#### 4.2.1 Accelerating BN Networks
+
+Simply adding Batch Normalization to a network does not take full advantage of our method. To do so, we further changed the network and its training parameters, as follows:
+
+仅仅将BN变换加入到网络中不能充分发挥我们方法的长处。我们进一步修改网络及其训练参数，如下：
+
+Increase learning rate. In a batch-normalized model, we have been able to achieve a training speedup from higher learning rates, with no ill side effects (Sec. 3.3).
+
+增大学习速率。在BN模型中，我们可以采用更高的学习速率进行加速训练，而不会有什么副作用（如3.3节所述）。
+
+Remove Dropout. As described in Sec. 3.4, Batch Normalization fulfills some of the same goals as Dropout. Removing Dropout from Modified BN-Inception speeds up training, without increasing overfitting.
+
+移除Dropout。如3.4节所述，BN变换可以实现Dropout的一些功能，所以可以移除dropout操作来加速训练，不会增加过拟合。
+
+Reduce the L2 weight regularization. While in Inception an L2 loss on the model parameters controls overfitting, in Modified BN-Inception the weight of this loss is reduced by a factor of 5. We find that this improves the accuracy on the held-out validation data.
+
+减少L2权值正则化。在Inception中，模型参数的L2损失控制着过拟合，在修正的BN Inception网络中，权值L2正则化的系数可以减小（除以5）。我们发现这可以提高在验证数据集上的准确度。
+
+Accelerate the learning rate decay. In training Inception, learning rate was decayed exponentially. Because our network trains faster than Inception, we lower the learning rate 6 times faster.
+
+加速学习速率衰减。在训练Inception过程中，学习速率以指数级速度衰减。因为我们的网络比Inception训练的更快，学习速度下降的速度为6倍。
+
+Remove Local Response Normalization. While Inception and other networks (Srivastava et al., 2014) benefit from it, we found that with Batch Normalization it is not necessary.
+
+移除局部响应归一化。带有BN变换的网络不再需要LRN(local response normalization)。
+
+Shuffle training examples more thoroughly. We enabled within-shard shuffling of the training data, which prevents the same examples from always appearing in a mini-batch together. This led to about 1% improvements in the validation accuracy, which is consistent with the view of Batch Normalization as a regularizer (Sec. 3.4): the randomization inherent in our method should be most beneficial when it affects an example differently each time it is seen.
+
+更彻底的打乱训练样本的顺序。我们对训练数据采用了within-shard打乱顺序法，这防止同样的样本一直出现在同一个mini-batch中。这带来了大约1%的验证准确率提升，也说明了BN可以作为正则化使用：我们方法内在的随机性当每次遇到同一个样本时产生不同的影响，这样才最有益处。
+
+Reduce the photometric distortions. Because batch-normalized networks train faster and observe each training example fewer times, we let the trainer focus on more “real” images by distorting them less.
+
+减少光学扭曲变形。因为BN网络训练更快，处理每个样本的次数更少，所以我们对图像的变形也更少一些，使网络尽量处理更真实的图片。
+
+#### 4.2.2 Single-Network Classification
+
+We evaluated the following networks, all trained on the ILSVRC2012 training data, and tested on the validation data:
+
+我们评价以下网络，都在ILSVRC-2012训练集上进行训练，在验证集上进行测试：
+
+Inception : the network described at the beginning of Section 4.2, trained with the initial learning rate of 0.0015.
+
+Inception模型：网络在4.2节介绍，采用学习速率0.0015.
+
+BN-Baseline : Same as Inception with Batch Normalization before each nonlinearity.
+
+BN基准模型：与Inception模型相同，但是在非线性处理前使用了BN变换。
+
+BN-x5 : Inception with Batch Normalization and the modifications in Sec. 4.2.1. The initial learning rate was increased by a factor of 5, to 0.0075. The same learning rate increase with original Inception caused the model parameters to reach machine infinity.
+
+BN-x5模型：带有BN变换的Inception，并进行了4.2.1节的修改。初始学习速率增加了5倍，即0.0075. 原始Inception模型中学习速率进行相同的增加会导致模型参数达到无穷大。
+
+BN-x30 : Like BN-x5 , but with the initial learning rate 0.045 (30 times that of Inception).
+
+BN-x30模型：和BN-x5类似，初始学习速率为30倍，即0.045.
+
+BN-x5-Sigmoid : Like BN-x5 , but with sigmoid nonlinearity $g(x) = \frac {1}{1+exp(−x)}$ instead of ReLU. We also attempted to train the original Inception with sigmoid, but the model remained at the accuracy equivalent to chance.
+
+BN-x5-Sigmoid模型：与BN-x5类似，但采用sigmoid非线性处理，即$g(x) = \frac {1}{1+exp(−x)}$，不用ReLU。我们还用sigmoid函数训练原始Inception模型，但模型的正确率没有改变。
+
+In Figure 2, we show the validation accuracy of the networks, as a function of the number of training steps. Inception reached the accuracy of 72.2% after 31M training steps. The Figure 3 shows, for each network, the number of training steps required to reach the same 72.2% accuracy, as well as the maximum validation accuracy reached by the network and the number of steps to reach it.
+
+在图2中，我们展示了网络在验证集上的正确率，横轴为训练步数。Inception经过了31M迭代达到了72.2%的正确率。如图3所示，对于每个网络，达到72.2%所需的训练步数，以及可以达到的最大验证准确率，和需要的步数。
+
+Figure 2: Single crop validation accuracy of Inception and its batch-normalized variants, vs. the number of training steps.
+
+Figure 3: For Inception and the batch-normalized variants, the number of training steps required to reach the maximum accuracy of Inception (72.2%), and the maximum accuracy achieved by the network.
+
+Model | Steps to 72.2% | Max accuracy
+--- | --- | ---
+Inception | 31.0M | 72.2%
+BN-Baseline | 13.3M | 72.7%
+BN-x5 | 2.1M | 73.0%
+BN-x30 | 2.7M | 74.8%
+BN-x5-Sigmoid | | 69.8%
+
+By only using Batch Normalization ( BN-Baseline ), we match the accuracy of Inception in less than half the number of training steps. By applying the modifications in Sec. 4.2.1, we significantly increase the training speed of the network. BN-x5 needs 14 times fewer steps than Inception to reach the 72.2% accuracy. Interestingly, increasing the learning rate further ( BN-x30 ) causes the model to train somewhat slower initially, but allows it to reach a higher final accuracy. It reaches 74.8% after 6M steps, i.e. 5 times fewer steps than required by Inception to reach 72.2%.
+
+仅仅使用BN变换的模型，达到Inception模型的准确率使用的训练步数不到其一半。使用4.2.1节的修正，极大了增加了网络训练速度。BN-x5模型达到Inception 72.2%的准确率只需要1/14的步数。有趣的是，进一步增大学习速率(BN-30)一开始却减慢了学习了速率，但最后达到了更高的准确率。在6M迭代后达到了74.8%，是Inception达到72.2%迭代数的1/5.
+
+We also verified that the reduction in internal covariate shift allows deep networks with Batch Normalization to be trained when sigmoid is used as the nonlinearity, despite the well-known difficulty of training such networks. Indeed, BN-x5-Sigmoid achieves the accuracy of 69.8%. Without Batch Normalization, Inception with sigmoid never achieves better than 1/1000 accuracy.
+
+我们还验证了internal covariate shift的减少情况，这使BN深度网络可以用sigmoid作为非线性处理，尽管训练这种网络难度很大。确实，BN-x5-Sigmoid取得了69.8%的准确率。没有BN变换，sigmoid Inception准确率不会超过0.1%。
+
+#### 4.2.3 Ensemble Classification
+
+The current reported best results on the ImageNet Large Scale Visual Recognition Competition are reached by the Deep Image ensemble of traditional models (Wu et al., 2015) and the ensemble model of (He et al., 2015). The latter reports the top-5 error of 4.94%, as evaluated by the ILSVRC server. Here we report a top-5 validation error of 4.9%, and test error of 4.82% (according to the ILSVRC server). This improves upon the previous best result, and exceeds the estimated accuracy of human raters according to (Russakovsky et al., 2014).
+
+ILSVRC的最好结果是由(Wu et al., 2015)和(He et al., 2015)的集成方法达到的。后者top-5错误率为4.94%。这里我们得到的top-5验证错误率为4.9%，测试错误率为4.82%。
+
+For our ensemble, we used 6 networks. Each was based on BN-x30, modified via some of the following: increased initial weights in the convolutional layers; using Dropout (with the Dropout probability of 5% or 10%, vs. 40% for the original Inception); and using non-convolutional, per-activation Batch Normalization with last hidden layers of the model. Each network achieved its maximum accuracy after about 6M training steps. The ensemble prediction was based on the arithmetic average of class probabilities predicted by the constituent networks. The details of ensemble and multicrop inference are similar to (Szegedy et al., 2014).
+
+我们的集成模型用了6个网络。每个都是基于BN-x30的，修正方法如下：卷积层增大初始权值；使用dropout（dropout 概率5%或10%，原始Inception算法为40%）；在最后一层隐藏层使用非卷积、预激活BN。每个网络在6M训练步数后达到最佳准确率。集成模型预测是基于构成网络的预测概率的代数平均。集成模型和多剪切块推理的细节与(Szegedy et al., 2014)类似。
+
+We demonstrate in Fig. 4 that batch normalization allows us to set new state-of-the-art by a healthy margin on the ImageNet classification challenge benchmarks.
+
+我们在图4中给出我们的BN模型在ImageNet分类挑战基准测试中得到了最新的最好结果。
+
+## 5 Conclusion
+
+We have presented a novel mechanism for dramatically accelerating the training of deep networks. It is based on the premise that covariate shift, which is known to complicate the training of machine learning systems, also applies to sub-networks and layers, and removing it from internal activations of the network may aid in training. Our proposed method draws its power from normalizing activations, and from incorporating this normalization in the network architecture itself. This ensures that the normalization is appropriately handled by any optimization method that is being used to train the network. To enable stochastic optimization methods commonly used in deep network training, we perform the normalization for each mini-batch, and backpropagate the gradients through the normalization parameters. Batch Normalization adds only two extra parameters per activation, and in doing so preserves the representation ability of the network. We presented an algorithm for constructing,training, and performing inference with batch-normalized networks. The resulting networks can be trained with saturating nonlinearities, are more tolerant to increased training rates, and often do not require Dropout for regularization.
+
+我们提出了一种能极大加速深度网络训练的新方法。这是基于如下假设，即covariate shift会使机器学习系统的学习变得复杂，也使得响应的子网络和层的学习变复杂，如果能从内部激活中去除covariate shift，可以有助于训练。我们提出的方法对激活进行归一化，将这种归一化整合进网络架构中。这确保了优化方法可以合适的处理归一化。为运用训练普通网络中常用的SGD优化方法，我们使用mini-batch归一化，反向传播梯度可以经过归一化参数。BN变换每个激活只增加2个参数，这样还可以保持网络的表示能力。我们提出一种构建、训练网络及推理的BN网络的方法。得到的网络可以使用饱和非线性处理来进行训练，可以增大学习速率，经常不需要dropout这种正则化手段。
+
+Merely adding Batch Normalization to a state-of-the-art image classification model yields a substantial speedup in training. By further increasing the learning rates, removing Dropout, and applying other modifications afforded by Batch Normalization, we reach the previous state of the art with only a small fraction of training steps – and then beat the state of the art in single-network image classification. Furthermore, by combining multiple models trained with Batch Normalization, we perform better than the best known system on ImageNet, by a significant margin.
+
+对现有最好的图像分类模型增加BN结构，可以得到一个加速的网络。进一步加大学习速率，去除dropout，应用其他修正，我们达到现有的最好效果只需要原训练步数的很小一部分，增加训练步骤还可以取得更好的分类效果。更进一步，将多个BN模型组合起来，我们超过了现有ImageNet上最好的结果很多。
+
+Interestingly, our method bears similarity to the standardization layer of (Gülc ¸ehre & Bengio, 2013), though the two methods stem from very different goals, and perform different tasks. The goal of Batch Normalization is to achieve a stable distribution of activation values throughout training, and in our experiments we apply it before the nonlinearity since that is where matching the first and second moments is more likely to result in a stable distribution. On the contrary, (Gülc ¸ehre & Bengio, 2013) apply the standardization layer to the output of the nonlinearity, which results in sparser activations. In our large-scale image classification experiments, we have not observed the nonlinearity inputs to be sparse, neither with nor without Batch Normalization. Other notable differentiating characteristics of Batch Normalization include the learned scale and shift that allow the BN transform to represent identity (the standardization layer did not require this since it was followed by the learned linear transform that, conceptually, absorbs the necessary scale and shift), handling of convolutional layers, deterministic inference that does not depend on the mini-batch, and batch-normalizing each convolutional layer in the network.
+
+有趣的是，我们的方法与(Gülc ¸ehre & Bengio, 2013)的标准化层有类似之处，但这两种方法的目标不一样，进行的任务也不一样。BN的目标是让激活的分布在训练的过程中更加稳定，我们的试验中将其应用在非线性处理之前，因为那是最初匹配进行的时候，更可能得到稳定的分布。相反，(Gülc ¸ehre & Bengio, 2013)将标准化层应用在非线性处理的输出上，这得到了更稀疏的激活。在我们的大规模图像分类试验中，我们没有观察到稀疏的非线性输入，有没有BN都没观察到。BN的其他显著区别包括学习尺度和位移参数，这可以使BN成为恒等变换，BN还可以处理卷积层。
+
+In this work, we have not explored the full range of possibilities that Batch Normalization potentially enables. Our future work includes applications of our method to Recurrent Neural Networks (Pascanu et al., 2013), where the internal covariate shift and the vanishing or exploding gradients may be especially severe, and which would allow us to more thoroughly test the hypothesis that normalization improves gradient propagation(Sec. 3.3). We plan to investigate whether Batch Normalization can help with domain adaptation, in its traditional sense – i.e. whether the normalization performed by the network would allow it to more easily generalize to new data distributions, perhaps with just a recomputation of the population means and variances (Alg. 2). Finally, we believe that further theoretical analysis of the algorithm would allow still more improvements and applications.
+
+本文中，我们没有探讨BN所有的可能性。未来我们将应用到RNN，那里的internal covariate shift和梯度消失/爆炸问题很严重，更进一步测试归一化是不是能改进梯度传播（3.3节）。我们计划研究BN是否可以帮助domain adaptation，即网络的归一化是不是可以更容易的泛化到其他数据分布，或许只是重新计算一下样本的均值和方差（算法2）。最后，我们相信进一步的理论分析可以得到更多改进。
+
+## References
+
+## Appendix
