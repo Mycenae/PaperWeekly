@@ -17,3 +17,9 @@ Books:
 
 1. [深度学习入门：基于Python的理论与实现](http://www.ituring.com.cn/book/1921)
 2. [解析卷积神经网络—深度学习实践手册](http://lamda.nju.edu.cn/weixs/book/CNN_book.html)
+
+Links:
+
+1. [Keras](https://keras.io/zh/)
+2. [movidius](https://developer.movidius.com/)
+3. [feature map](https://stats.stackexchange.com/questions/291820/what-is-the-definition-of-a-feature-map-aka-activation-map-in-a-convolutio)
