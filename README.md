@@ -23,3 +23,5 @@ Links:
 1. [Keras](https://keras.io/zh/)
 2. [movidius](https://developer.movidius.com/)
 3. [feature map](https://stats.stackexchange.com/questions/291820/what-is-the-definition-of-a-feature-map-aka-activation-map-in-a-convolutio)
+4. [tensorflow dataset](https://www.tensorflow.org/guide/datasets)
+5. [tensorflow estimator](https://www.tensorflow.org/guide/estimators)
