@@ -362,6 +362,8 @@ with tf.Session() as sess:
 
 TensorFlow includes tools that can help you to understand the code in a graph. The graph visualizer is a component of TensorBoard that renders the structure of your graph visually in a browser. The easiest way to create a visualization is to pass a `tf.Graph` when creating the `tf.summary.FileWriter`:
 
+TensorFlow中有工具可以帮助你理解图中的代码。图可视化器是TensorFlow的一个组件，可以在浏览器中可视化展示图的结构。创建一个可视化最简单的方法是创建`tf.summary.FileWriter`的时候传入一个`tf.Graph`作为参数：
+
 ```
 # Build your graph.
 x = tf.constant([[37.0, -23.0], [1.0, 4.0]])
@@ -385,23 +387,35 @@ with tf.Session() as sess:
 
 > Note: If you are using a `tf.estimator.Estimator`, the graph (and any summaries) will be logged automatically to the model_dir that you specified when creating the estimator.
 
+> 注意：如果你在使用`tf.estimator.Estimator`，那么在创建estimator的时候，会自动将图以及摘要记录在指定的model_dir。
+
 You can then open the log in tensorboard, navigate to the "Graph" tab, and see a high-level visualization of your graph's structure. Note that a typical TensorFlow graph---especially training graphs with automatically computed gradients---has too many nodes to visualize at once. The graph visualizer makes use of name scopes to group related operations into "super" nodes. You can click on the orange "+" button on any of these super nodes to expand the subgraph inside.
+
+可以在TensorBoard中打开log，导航到Graph标签，就可以看到图结构的高层可视化效果。注意一个典型的TensorFlow图会有很多节点，一次可能看不完，尤其是那些自动计算梯度的训练图。图可视化器使用名称范围将相关的操作归类成一个超级节点。可以点击超级节点上橙色的加号按钮来展开子图的内部。
 
 ![Image](https://www.tensorflow.org/images/mnist_deep.png)
 
-For more information about visualizing your TensorFlow application with TensorBoard, see the TensorBoard guide.
+For more information about visualizing your TensorFlow application with TensorBoard, see the TensorBoard guide. 更多关于用TensorBorad可视化TensorFlow应用的信息，详见TensorBoard的指南文档。
 
 ## Programming with multiple graphs 多图编程
 
 > Note: When training a model, a common way of organizing your code is to use one graph for training your model, and a separate graph for evaluating or performing inference with a trained model. In many cases, the inference graph will be different from the training graph: for example, techniques like dropout and batch normalization use different operations in each case. Furthermore, by default utilities like `tf.train.Saver` use the names of `tf.Variable` objects (which have names based on an underlying `tf.Operation`) to identify each variable in a saved checkpoint. When programming this way, you can either use completely separate Python processes to build and execute the graphs, or you can use multiple graphs in the same process. This section describes how to use multiple graphs in the same process.
 
+> 注意：训练模型时，常用的组织代码的方式是用一个图来训练模型，另一个图用训练好的模型来评估或执行推理过程。在很多情况下，推理图与训练图会不一样：比如，dropout和批归一化在每种情况使用不同的操作。更进一步，默认情况下，`tf.train.Saver`这样的工具使用`tf.Variable`对象（其名称基于相关的`tf.Operation`）来识别保存的checkpoint中的每个变量。当这样编程时，既可以完全使用Python进程构建和执行图，也可以在同一进程中使用多图。本节描述一下怎样在同一进程中使用多图。
+
 As noted above, TensorFlow provides a "default graph" that is implicitly passed to all API functions in the same context. For many applications, a single graph is sufficient. However, TensorFlow also provides methods for manipulating the default graph, which can be useful in more advanced use cases. For example:
+
+如前所述，TensorFlow有一个默认图，在同一上下文中会隐式的作为参数传入所有API函数。对于很多应用，一个图是不够用的。但是，TensorFlow还有很多方法操作默认图，在很多高级案例中很有用，比如：
 
 - A `tf.Graph` defines the namespace for `tf.Operation` objects: each operation in a single graph must have a unique name. TensorFlow will "uniquify" the names of operations by appending "_1", "_2", and so on to their names if the requested name is already taken. Using multiple explicitly created graphs gives you more control over what name is given to each operation.
 
+- 一个`tf.Graph`定义了`tf.Operation`对象的命名空间：一个图中的每个操作都有唯一的名称。TensorFlow会将操作的名称唯一化，如果已有一样的名称，那么现有名称就加上"_1", "_2"等的后缀。使用显式创建的多图可以更好的掌控每个操作的名称。
+
 - The default graph stores information about every `tf.Operation` and `tf.Tensor` that was ever added to it. If your program creates a large number of unconnected subgraphs, it may be more efficient to use a different `tf.Graph` to build each subgraph, so that unrelated state can be garbage collected.
 
-You can install a different `tf.Graph` as the default graph, using the `tf.Graph.as_default` context manager:
+- 默认图存储了其中每个`tf.Operation`和`tf.Tensor`的信息。如果程序创建了大量不相连的子图，那么使用不同的`tf.Graph`来创建每个子图更为有效，这样不相关的状态可以单独进行垃圾清理。
+
+You can install a different `tf.Graph` as the default graph, using the `tf.Graph.as_default` context manager: 可以将不同的`tf.Graph`作为默认图，只需使用`tf.Graph.as_default`上下文管理器：
 
 ```
 g_1 = tf.Graph()
