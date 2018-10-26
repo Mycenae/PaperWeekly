@@ -2,6 +2,8 @@
 
 The meaning of translation is to read, slowly, with concentration, to understand.
 
+## Deep learning models and algorithms
+
 Model name | Published time | arxiv link
 --- | --- | ---
 AlexNet | 2012 | [nips link](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)
@@ -16,12 +18,19 @@ ResNet V1 | 2015 | [1512.03385](https://arxiv.org/abs/1512.03385)
 FaceNet | 2015 | [1503.03832](https://arxiv.org/abs/1503.03832)
 MobileNet | 2017 | [1704.04861](https://arxiv.org/abs/1704.04861)
 
-Books:
+## Object Detetion models and algorithms
+
+Model name | Published time | arXiv link
+--- | --- | ---
+SelectiveSearch | 2012 | [personal link](www.huppelen.nl/publications/selectiveSearchDraft.pdf)
+RCNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
+
+## Books:
 
 1. [深度学习入门：基于Python的理论与实现](http://www.ituring.com.cn/book/1921)
 2. [解析卷积神经网络—深度学习实践手册](http://lamda.nju.edu.cn/weixs/book/CNN_book.html)
 
-Links:
+## Links:
 
 1. [Keras](https://keras.io/zh/)
 2. [movidius](https://developer.movidius.com/)
