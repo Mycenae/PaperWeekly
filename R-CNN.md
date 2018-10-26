@@ -1,0 +1,206 @@
+# Rich feature hierarchies for accurate object detection and semantic segmentation 利用层次性富特征进行准确目标检测及语义分割
+
+Ross Girshick et al. UC Berkeley
+
+## Abstract 摘要
+
+Object detection performance, as measured on the canonical PASCAL VOC dataset, has plateaued in the last few years. The best-performing methods are complex ensemble systems that typically combine multiple low-level image features with high-level context. In this paper, we propose a simple and scalable detection algorithm that improves mean average precision (mAP) by more than 30% relative to the previous best result on VOC 2012—achieving a mAP of 53.3%. Our approach combines two key insights: (1) one can apply high-capacity convolutional neural networks (CNNs) to bottom-up region proposals in order to localize and segment objects and (2) when labeled training data is scarce, supervised pre-training for an auxiliary task, followed by domain-specific fine-tuning, yields a significant performance boost. Since we combine region proposals with CNNs, we call our method R-CNN: Regions with CNN features. We also compare R-CNN to OverFeat, a recently proposed sliding-window detector based on a similar CNN architecture. We find that R-CNN outperforms OverFeat by a large margin on the 200-class ILSVRC2013 detection dataset. Source code for the complete system is available at http://www.cs.berkeley.edu/˜rbg/rcnn.
+
+目标检测的性能一般由权威的PASCAL VOC数据集衡量，在过去几年中一直都没有很大进展。最好的方法一般都是将多个底层图像特征与高层上下文进行组合形成的复杂集成系统。在本文中，我们提出一种简单并可扩展的检测算法，与之前在VOC 2012上的最好结果相比，我们的mAP提升了30%以上，达到了53.3%。我们的方法结合了两种关键思想：(1)将高性能的卷积神经网络CNNs应用于自下而上的候选区域中，以定位并分割目标；(2)当有标签的训练数据不足时，先对辅助任务进行有监督的预训练，随后进行领域相关的精调，可以得到性能的显著提升。由于我们将候选区域与CNN结合，我们称此方法为R-CNN：带有CNN特征的区域。我们还将R-CNN与OverFeat方法进行比较，OverFeat是近期提出的一种基于类似的CNN架构的滑窗检测器。我们发现在200类的ILSVRC2013检测数据集上，R-CNN远超OverFeat的性能。全部系统的源码见http://www.cs.berkeley.edu/˜rbg/rcnn.
+
+## 1. Introduction 引言
+
+Features matter. The last decade of progress on various visual recognition tasks has been based considerably on the use of SIFT [29] and HOG [7]. But if we look at performance on the canonical visual recognition task, PASCAL VOC object detection [15], it is generally acknowledged that progress has been slow during 2010-2012, with small gains obtained by building ensemble systems and employing minor variants of successful methods.
+
+特征很重要。过去十年中多种视觉识别任务大多是基于SIFT和HOG特征的。但如果我们看看在权威视觉识别任务，即PASCAL VOC目标检测，中的表现，大家普遍承认在2010-2012年的进步是缓慢的，基本都是构建集成系统和成功方法的微小改变得到的进展。
+
+SIFT and HOG are blockwise orientation histograms, a representation we could associate roughly with complex cells in V1, the first cortical area in the primate visual pathway. But we also know that recognition occurs several stages downstream, which suggests that there might be hierarchical, multi-stage processes for computing features that are even more informative for visual recognition.
+
+SIFT和HOG是分块的方向直方图，这种表示可以大致与V1区域的复杂细胞联系起来，V1区域即在原始视觉通道的第一皮质区域。但我们还知道，识别的动作发生在几个阶段依次进行，这意味着对视觉识别更有信息量的特征计算可能是层次式的、多阶段的过程。
+
+Fukushima’s “neocognitron” [19], a biologically-inspired hierarchical and shift-invariant model for pattern recognition, was an early attempt at just such a process. The neocognitron, however, lacked a supervised training algorithm. Building on Rumelhart et al. [33], LeCun et al. [26] showed that stochastic gradient descent via back-propagation was effective for training convolutional neural networks (CNNs), a class of models that extend the neocognitron.
+
+Fukushima的“神经感知机”[19]是一种受生物学启发的层次性平移不变的模式识别模型，是这种过程的早期尝试。但神经感知机缺少有监督训练算法。在Rumelhart et al. [33]的基础上，LeCun et al. [26]展示了通过反向传播的随机梯度下降对于训练CNNs非常有效，CNNs是神经感知机的延伸模型。
+
+CNNs saw heavy use in the 1990s (e.g., [27]), but then fell out of fashion with the rise of support vector machines. In 2012, Krizhevsky et al. [25] rekindled interest in CNNs by showing substantially higher image classification accuracy on the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) [9, 10]. Their success resulted from training a large CNN on 1.2 million labeled images, together with a few twists on LeCun’s CNN (e.g., max(x,0) rectifying non-linearities and “dropout” regularization).
+
+在1990s CNNs得到大量应用，如[27]，但很快被支持矢量机的风头盖过。在2012年，Krizhevsky et al. [25]在ILSVRC-2012上得到了图像分类准确率的极大提升[9,10]，从而重新点燃了CNNs的兴趣。他们的成功是在120万有标签的图像上训练大型CNN得到的，另外还在LeCun的CNN上进行了一些小的改进，即使用了ReLU激活函数和dropout正则化。
+
+The significance of the ImageNet result was vigorously debated during the ILSVRC 2012 workshop. The central issue can be distilled to the following: To what extent do the CNN classification results on ImageNet generalize to object detection results on the PASCAL VOC Challenge?
+
+ImageNet结果的重要性在ILSVRC 2012 workshop上受到了热烈的辩论。提炼出的中心问题如下：CNN在ImageNet上的分类结果能在多大程度上泛化到PASCAL VOC挑战的目标检测结果上？
+
+We answer this question by bridging the gap between image classification and object detection. This paper is the first to show that a CNN can lead to dramatically higher object detection performance on PASCAL VOC as compared to systems based on simpler HOG-like features. To achieve this result, we focused on two problems: localizing objects with a deep network and training a high-capacity model with only a small quantity of annotated detection data.
+
+我们在图像分类与目标检测之间架起了桥梁，从而回答了这个问题。本文第一个展示了CNN可以带来PASCAL VOC上目标检测性能的极大提高，这是与HOG类的相对简单特征构成的系统相比。为得到这个结果，我们聚焦在两个问题上：用深度网络定位目标，和仅用较少的标记检测数据来训练大容量模型。
+
+Unlike image classification, detection requires localizing (likely many) objects within an image. One approach frames localization as a regression problem. However, work from Szegedy et al. [38], concurrent with our own, indicates that this strategy may not fare well in practice (they report a mAP of 30.5% on VOC 2007 compared to the 58.5% achieved by our method). An alternative is to build a sliding-window detector. CNNs have been used in this way for at least two decades, typically on constrained object categories, such as faces [32, 40] and pedestrians [35]. In order to maintain high spatial resolution, these CNNs typically only have two convolutional and pooling layers. We also considered adopting a sliding-window approach. However, units high up in our network, which has five convolutional layers, have very large receptive fields (195 × 195 pixels) and strides (32×32 pixels) in the input image, which makes precise localization within the sliding-window paradigm an open technical challenge.
+
+与图像分类不同，检测需要在图像中定位目标（很可能是很多个目标）。有一种方法将定位视为一个回归问题。但Szegedy et al. [38]的工作表明这种策略在实际情况中不一定有很好的表现，这与我们的工作是同时的（他们在VOC 2007上得到的mAP为30.5%，而我们的结果为58.5%）。另一种方法是构建一个滑窗检测器。这种方法使用CNNs已经有至少20年了，典型的是在特定的目标类别中，如人脸检测[32,40]和行人检测[35]。为保持高空间分辨率，这些CNN一般只有两个卷积层和pooling层。我们也采用滑窗的方法。但是，我们的网络中节点非常多，有5个卷积层，输入图像感受野非常大(195×195像素)，步长也很大(32×32像素)，这使滑窗方案的精确定位成为尚未解决的技术挑战。
+
+Instead, we solve the CNN localization problem by operating within the “recognition using regions” paradigm [21], which has been successful for both object detection [39] and semantic segmentation [5]. At test time, our method generates around 2000 category-independent region proposals for the input image, extracts a fixed-length feature vector from each proposal using a CNN, and then classifies each region with category-specific linear SVMs. We use a simple technique (affine image warping) to compute a fixed-size CNN input from each region proposal, regardless of the region’s shape. Figure 1 presents an overview of our method and highlights some of our results. Since our system combines region proposals with CNNs, we dub the method R-CNN: Regions with CNN features.
+
+我们则在“使用区域的识别”方案[21]中解决了CNN的定位问题，这对于目标检测[39]和语义分割[5]都很成功。在测试时，我们的方法对输入图像产生了大约2000个类别无关的候选区域，用CNN对每个候选区域都提取出一个定长的特征向量，然后用特定类别的线性SVMs对每个区域进行分类。无论候选区域形状如何，我们使用了一种简单技术（仿射图像变形）来从每个候选区域中计算固定大小的CNN输入。图1是我们的方法的概览，并突出强调了我们得到的一些结果。因为我们的模型将候选区域与CNN结合起来，我们称此方法为R-CNN: CNN特征的区域。
+
+Figure 1: Object detection system overview. Our system (1) takes an input image, (2) extracts around 2000 bottom-up region proposals, (3) computes features for each proposal using a large convolutional neural network (CNN), and then (4) classifies each region using class-specific linear SVMs. R-CNN achieves a mean average precision (mAP) of 53.7% on PASCAL VOC 2010. For comparison, [39] reports 35.1% mAP using the same region proposals, but with a spatial pyramid and bag-of-visual-words approach. The popular deformable part models perform at 33.4%. On the 200-class ILSVRC2013 detection dataset, R-CNN’s mAP is 31.4%, a large improvement over OverFeat [34], which had the previous best result at 24.3%.
+
+图1：目标检测模型概览。我们的模型主要分以下几个步骤，(1)接收输入图像，(2)提取出约2000个自下而上的候选区域，(3)对每个候选区域，用大型CNN计算特征，(4)用类别特定的线性SVMs对每个区域进行分类。R-CNN在PASCAL VOC 2010上得到了53.7% mAP，作为比较，[39]用同样的候选区域法，但用了空域金字塔和bag-of-visual-words方法，得到了35.1% mAP，流行的DPM模型得到33.4% mAP。在含有200类的ILSVRC2013检测数据集上，R-CNN得到了31.4% mAP，与之前得到最好结果的OverFeat[34]方法(24.3% mAP)相比改进很多。
+
+In this updated version of this paper, we provide a head-to-head comparison of R-CNN and the recently proposed OverFeat [34] detection system by running R-CNN on the 200-class ILSVRC2013 detection dataset. OverFeat uses a sliding-window CNN for detection and until now was the best performing method on ILSVRC2013 detection. We show that R-CNN significantly outperforms OverFeat, with a mAP of 31.4% versus 24.3%.
+
+在本文的此次更新中，我们给出了R-CNN与最近提出的OverFeat[34]检测模型的直接对比，即在200类的ILSVRC2013检测数据集上运行R-CNN模型。OverFeat使用了滑窗CNN进行检测，之前是ILSVRC2013检测任务的最佳表现模型。我们的结果显示，R-CNN明显优于OverFeat，mAP的对比为31.4%对24.3%。
+
+A second challenge faced in detection is that labeled data is scarce and the amount currently available is insufficient for training a large CNN. The conventional solution to this problem is to use unsupervised pre-training, followed by supervised fine-tuning (e.g., [35]). The second principle contribution of this paper is to show that supervised pre-training on a large auxiliary dataset (ILSVRC), followed by domain-specific fine-tuning on a small dataset (PASCAL), is an effective paradigm for learning high-capacity CNNs when data is scarce. In our experiments, fine-tuning for detection improves mAP performance by 8 percentage points. After fine-tuning, our system achieves a mAP of 54% on VOC 2010 compared to 33% for the highly-tuned, HOG-based deformable part model (DPM) [17, 20]. We also point readers to contemporaneous work by Donahue et al. [12], who show that Krizhevsky’s CNN can be used (without fine-tuning) as a blackbox feature extractor, yielding excellent performance on several recognition tasks including scene classification, fine-grained sub-categorization, and domain adaptation.
+
+检测中面临的第二个挑战是有标签的数据是很稀少的，现有可用的数量是不足以训练一个大型CNN的。解决这个问题的传统方法是先使用无监督预训练，然后进行有监督的精调，如[35]。本文的第二个主要贡献是得出了如下结论，在数据缺少时，首先在大型辅助数据集(ILSVRC)上进行有监督的预训练，然后在一个小数据集(PASCAL)上进行领域相关的精调，是一种有效的方法，可以学习得到大容量CNNs。在我们的试验中，对检测任务的精调改进了mAP大约8个百分点。精调之后，我们的系统在VOC 2010上得到的mAP为54%，与之相比基于HOG特征的高度调谐DPM模型得到的结果为33% mAP。我们还向读者指出，同期Donahue et al. [12]的工作，说明Krizhevsky的CNN（未精调）可以用作黑盒特征提取器，在几个识别任务，包括场景分类、细粒度子分类和领域适应，都得到了极好的表现。
+
+Our system is also quite efficient. The only class-specific computations are a reasonably small matrix-vector product and greedy non-maximum suppression. This computational property follows from features that are shared across all categories and that are also two orders of magnitude lower-dimensional than previously used region features (cf. [39]).
+
+我们的模型也很高效。唯一的与类别有关的计算是一个相对较小的矩阵-矢量乘积，和贪婪非最大抑制。这种计算遵从所有类别共享特征的性质，与之前使用的区域特征相比，计算量低了两个等级[39]。
+
+Understanding the failure modes of our approach is also critical for improving it, and so we report results from the detection analysis tool of Hoiem et al. [23]. As an immediate consequence of this analysis, we demonstrate that a simple bounding-box regression method significantly reduces mislocalizations, which are the dominant error mode.
+
+理解我们方法中的失败模式对改进是很重要的，所以我们用Hoiem et al. [23]的检测分析工具给出了结果。这个分析立刻得到了一个结果，我们证明了简单的边界框回归就可以明显减少错误定位，而这是主要的错误模式。
+
+Before developing technical details, we note that because R-CNN operates on regions it is natural to extend it to the task of semantic segmentation. With minor modifications, we also achieve competitive results on the PASCAL VOC segmentation task, with an average segmentation accuracy of 47.9% on the VOC 2011 test set.
+
+在进入技术细节之前，我们要注意，由于R-CNN是作用于区域上的，将其延伸至语义分割的任务是很自然的。只需要很少修改，我们就可以在PASCAL VOC分割任务中得到很好的结果，在VOC 2011测试集上的平均分割准确率为47.9%。
+
+## 2. Object detection with R-CNN 采用R-CNN的目标检测
+
+Our object detection system consists of three modules. The first generates category-independent region proposals. These proposals define the set of candidate detections available to our detector. The second module is a large convolutional neural network that extracts a fixed-length feature vector from each region. The third module is a set of classspecific linear SVMs. In this section, we present our design decisions for each module, describe their test-time usage, detail how their parameters are learned, and show detection results on PASCAL VOC 2010-12 and on ILSVRC2013.
+
+我们的目标检测模型包括三个模块。第一个生成类别无关的候选区域，这些候选区域定义了我们检测器的候选被检测集。第二个模块是一个大型CNN，从每个区域中提取出固定长度的特征向量。第三个模块是特定类别的线性SVMs集。在这部分中，我们给出每个模块的设计决策，描述它们测试时的用处，详述参数如何学习，并展示了在PASCAL VOC 2010-12和ILSVRC2013的检测结果。
+
+### 2.1. Module design 模块设计
+
+**Region proposals**. A variety of recent papers offer methods for generating category-independent region proposals. Examples include: objectness [1], selective search [39], category-independent object proposals [14], constrained parametric min-cuts (CPMC) [5], multi-scale combinatorial grouping [3], and Cires an et al. [6], who detect mitotic cells by applying a CNN to regularly-spaced square crops, which are a special case of region proposals. While R-CNN is agnostic to the particular region proposal method, we use selective search to enable a controlled comparison with prior detection work (e.g., [39, 41]).
+
+**候选区域**。近期有几篇文章都给出了生成类别无关的候选区域的方法。如，objectness [1], selective search [39], category-independent object proposals [14], constrained parametric min-cuts (CPMC) [5], multi-scale combinatorial grouping [3], and Cires an et al. [6], 他将CNN应用于规则摆放的方形组图来检测有丝分裂细胞，这实际上是候选区域的特例。R-CNN与特定的候选区域法无关，我们使用selective search法方便与之前的其他检测工作进行比较[39,41]。
+
+**Feature extraction**. We extract a 4096-dimensional feature vector from each region proposal using the Caffe [24] implementation of the CNN described by Krizhevsky et al. [25]. Features are computed by forward propagating a mean-subtracted 227×227 RGB image through five convolutional layers and two fully connected layers. We refer readers to [24, 25] for more network architecture details.
+
+**特征提取**。我们从每个区域中提取一个4096维的特征向量，使用的是Caffe[24]实现的Krizhevsky et al. [25]CNN模型。特征计算方法是将减去均值的227×227 RGB图像输入至5个卷积层和2个全连接层的网络。[24,25]包括更多的网络架构细节。
+
+In order to compute features for a region proposal, we must first convert the image data in that region into a form that is compatible with the CNN (its architecture requires inputs of a fixed 227 × 227 pixel size). Of the many possible transformations of our arbitrary-shaped regions, we opt for the simplest. Regardless of the size or aspect ratio of the candidate region, we warp all pixels in a tight bounding box around it to the required size. Prior to warping, we dilate the tight bounding box so that at the warped size there are exactly p pixels of warped image context around the original box (we use p = 16). Figure 2 shows a random sampling of warped training regions. Alternatives to warping are discussed in Appendix A.
+
+为计算一个候选区域的特征，我们首先需要将区域图像转换为与CNN兼容的形式（CNN的架构需要输入图像为227×227像素大小）。对我们的任意形状的区域，可以有很多种变换，我们选择了最简单的。不管候选区域的纵横比，我们将所有像素变形放入一个需求大小的边界框。变形之前，我们将边界框进行扩大，这样原边界框中的内容有p个像素的上下文，我们用p=16。图2所示的是任选的变形后训练区域。附录A讨论了变形的替代选项。
+
+### 2.2. Test-time detection 测试时检测
+
+At test time, we run selective search on the test image to extract around 2000 region proposals (we use selective search’s “fast mode” in all experiments). We warp each proposal and forward propagate it through the CNN in order to compute features. Then, for each class, we score each extracted feature vector using the SVM trained for that class. Given all scored regions in an image, we apply a greedy non-maximum suppression (for each class independently) that rejects a region if it has an intersection-over-union (IoU) overlap with a higher scoring selected region larger than a learned threshold.
+
+在测试时，我们在测试图像上使用selective search方法来提取大约2000个候选区域（我们在所有试验中都使用selective search的快速模式）。我们将每个区域变形并送入CNN计算特征。然后，对于每个类别，我们都用那个类别训练出的SVM对提取出的特征进行计算得分。一幅图像中所有区域的得分都计算后，我们用贪婪非最大值抑制（对每个类分别应用），如果其与更高得分区域的IoU重叠超过一个学习得到的阈值，那就拒绝这个区域。
+
+**Run-time analysis**. Two properties make detection efficient. First, all CNN parameters are shared across all categories. Second, the feature vectors computed by the CNN are low-dimensional when compared to other common approaches, such as spatial pyramids with bag-of-visual-word encodings. The features used in the UVA detection system [39], for example, are two orders of magnitude larger than ours (360k vs. 4k-dimensional).
+
+**运行时分析**。检测高效是两个性质的原因。第一，所有类别都使用同样的CNN参数。第二，与其他常用方法相比，CNN计算得到的特征向量维数较低，如bag-of-visual-word编码的空间金字塔法。UVA检测模型[39]中使用的特征比我们高出两个数量级(360k vs. 4k)。
+
+The result of such sharing is that the time spent computing region proposals and features (13s/image on a GPU or 53s/image on a CPU) is amortized over all classes. The only class-specific computations are dot products between features and SVM weights and non-maximum suppression. In practice, all dot products for an image are batched into a single matrix-matrix product. The feature matrix is typically 2000×4096 and the SVM weight matrix is 4096×N, where N is the number of classes.
+
+这种权值共享的结果是，计算候选区域和特征的耗费时间（GPU上13秒/图像，CPU上53秒/图像）在所有类别中均摊了。唯一与类别有关的运算是特征与SVM权值间的点乘，和非最大值抑制。在实践中，一幅图像的所有点乘进行批次处理，只要计算一次矩阵-矩阵乘积。
+
+This analysis shows that R-CNN can scale to thousands of object classes without resorting to approximate techniques, such as hashing. Even if there were 100k classes, the resulting matrix multiplication takes only 10 seconds on a modern multi-core CPU. This efficiency is not merely the result of using region proposals and shared features. The UVA system, due to its high-dimensional features, would be two orders of magnitude slower while requiring 134GB of memory just to store 100k linear predictors, compared to just 1.5GB for our lower-dimensional features.
+
+这种分析说明，R-CNN可以扩展到数千种目标类别，而不用借助于哈希这样的近似技术。即使有100k个类别，得到的矩阵乘积在现代的多核CPU上也只需10秒左右。这种效率不只是使用了候选区域和共享权值的结果。UVA系统，由于其高维特征，会慢两个数量级，而且需要134G内存存储100k个线性预测期，我们的低维特征只需要1.5G。
+
+It is also interesting to contrast R-CNN with the recent work from Dean et al. on scalable detection using DPMs and hashing [8]. They report a mAP of around 16% on VOC 2007 at a run-time of 5 minutes per image when introducing 10k distractor classes. With our approach, 10k detectors can run in about a minute on a CPU, and because no approximations are made mAP would remain at 59% (Section 3.2).
+
+将R-CNN与最近Dean et al.在使用DPM和哈希的可扩展检测工作[8]相比较也很有趣。他们在VOC 2007上得到的mAP为约16%，当引入10k错误诱导类别时，每幅图像运行时间5分钟。而我们的方法，10k检测器在CPU上运行约1分钟，而由于没有近似，mAP应当还是59%（3.2节）。
+
+### 2.3. Training 训练
+
+**Supervised pre-training**. We discriminatively pre-trained the CNN on a large auxiliary dataset (ILSVRC2012 classification) using image-level annotations only (bounding-box labels are not available for this data). Pre-training was performed using the open source Caffe CNN library [24]. In brief, our CNN nearly matches the performance of Krizhevsky et al. [25], obtaining a top-1 error rate 2.2 percentage points higher on the ILSVRC2012 classification validation set. This discrepancy is due to simplifications in the training process.
+
+**监督预训练**。我们在大型辅助数据集(ILSVRC2012分类数据集)上只使用图像级别的标注来预训练CNN（边界框标签在此数据上不可用）。预训练使用开源Caffe CNN库[24]来进行。简要来说，我们的CNN几乎与Krizhevsky et al. [25]性能相同，在ILSVRC2012分类验证数据集上的top-1错误率只高了2.2%。这个差异是由于训练过程的简化导致的。
+
+**Domain-specific fine-tuning**. To adapt our CNN to the new task (detection) and the new domain (warped proposal windows), we continue stochastic gradient descent (SGD) training of the CNN parameters using only warped region proposals. Aside from replacing the CNN’s ImageNet-specific 1000-way classification layer with a randomly initialized (N + 1)-way classification layer (where N is the number of object classes, plus 1 for background), the CNN architecture is unchanged. For VOC, N = 20 and for ILSVRC2013, N = 200. We treat all region proposals with ≥ 0.5 IoU overlap with a ground-truth box as positives for that box’s class and the rest as negatives. We start SGD at a learning rate of 0.001 (1/10th of the initial pre-training rate), which allows fine-tuning to make progress while not clobbering the initialization. In each SGD iteration, we uniformly sample 32 positive windows (over all classes) and 96 background windows to construct a mini-batch of size 128. We bias the sampling towards positive windows because they are extremely rare compared to background.
+
+**领域特定的精调**。为使我们的CNN适应新任务（检测）和新领域（变形候选窗口），我们只用变形候选区域继续随机梯度下降训练CNN参数。CNN的结构变化只在于，我们将ImageNet特定的1000路分类层，替换成了随机初始化的N+1路分类层，这里N是目标类别数，加1是为背景准备的。对于VOC，N=20，对于ILSVRC2013，N=200。对与真值框重叠度IoU ≥ 0.5的所有候选区域，我们都认为是这个类的正样本，剩下的就是负样本。我们的SGD学习速率为0.001（初始预训练率的1/10），这使精调得以进展，而且不会破坏初始化。在每个SGD循环中，我们统一取32个正样本窗口（在所有类别中）和96个背景窗口来构成一个大小128的mini-batch。我们的取样偏向于正样本窗口，因为与背景相比，正样本窗口很稀少。
+
+**Object category classifiers**. Consider training a binary classifier to detect cars. It’s clear that an image region tightly enclosing a car should be a positive example. Similarly, it’s clear that a background region, which has nothing to do with cars, should be a negative example. Less clear is how to label a region that partially overlaps a car. We resolve this issue with an IoU overlap threshold, below which regions are defined as negatives. The overlap threshold, 0.3, was selected by a grid search over {0,0.1,...,0.5} on a validation set. We found that selecting this threshold carefully is important. Setting it to 0.5, as in [39], decreased mAP by 5 points. Similarly, setting it to 0 decreased mAP by 4 points. Positive examples are defined simply to be the ground-truth bounding boxes for each class.
+
+**目标类别分类器**。考虑训练一个二值分类器来检测汽车的情况。一个紧贴着包含汽车的图像区域很明确是一个正样本；类似的，与汽车毫无关系的背景区域也很明确是一个负样本；如果一个区域与汽车部分重叠的情况则不那么明确。我们通过IoU重叠阈值来解决这个问题，低于这个阈值的就认为是负样本。重叠阈值设定为0.3，这是在验证集上逐个验证集合{0,0.1,...,0.5}得到的，要小心的选择这个阈值，这很重要。如果像[39]中一样设为0.5，那么我们的mAP结果要降低5%。类似的，设置为0使mAP降低4%。正样本定义为每个类别的真值边界框。
+
+Once features are extracted and training labels are applied, we optimize one linear SVM per class. Since the training data is too large to fit in memory, we adopt the standard hard negative mining method [17, 37]. Hard negative mining converges quickly and in practice mAP stops increasing after only a single pass over all images.
+
+一旦特征提取完毕，训练标签也应用了，我们对每个类优化一个线性SVM。由于训练数据太大不能全装载入内存，我们采用标准的hard negative mining method [17,37]。Hard negative mining很快就收敛，在实际情况中，在所有图像都循环过一遍后，mAP就停止增长了。
+
+In Appendix B we discuss why the positive and negative examples are defined differently in fine-tuning versus SVM training. We also discuss the trade-offs involved in training detection SVMs rather than simply using the outputs from the final softmax layer of the fine-tuned CNN.
+
+在附录B中我们讨论了为什么在精调和SVM训练中正样本和负样本的定义不同。我们还讨论了训练检测SVM，而不是仅仅使用精调的CNN中最后的softmax层的输出，其中牵扯到的折中。
+
+### 2.4. Results on PASCAL VOC 2010-12
+
+Following the PASCAL VOC best practices [15], we validated all design decisions and hyperparameters on the VOC 2007 dataset (Section 3.2). For final results on the VOC 2010-12 datasets, we fine-tuned the CNN on VOC 2012 train and optimized our detection SVMs on VOC 2012 trainval. We submitted test results to the evaluation server only once for each of the two major algorithm variants (with and without bounding-box regression).
+
+我们遵从PASCAL VOC最好实践[15]的做法，在VOC 2007数据集上验证了所有的设计决定和超参数（3.2节）。为得到在VOC 2010-12数据集的最终结果，我们在VOC 2012训练数据集上精调CNN，在VOC 2012 训练+验证数据集上优化我们的检测SVMs。我们对两种主要算法变体（带有和不带有边界框回归）的测试结果每种只提交到评估服务器一次。
+
+Table 1 shows complete results on VOC 2010. We compare our method against four strong baselines, including SegDPM [18], which combines DPM detectors with the output of a semantic segmentation system [4] and uses additional inter-detector context and image-classifier rescoring. The most germane comparison is to the UVA system from Uijlings et al. [39], since our systems use the same region proposal algorithm. To classify regions, their method builds a four-level spatial pyramid and populates it with densely sampled SIFT, Extended OpponentSIFT, and RGB-SIFT descriptors, each vector quantized with 4000-word codebooks. Classification is performed with a histogram intersection kernel SVM. Compared to their multi-feature, non-linear kernel SVM approach, we achieve a large improvement in mAP, from 35.1% to 53.7% mAP, while also being much faster (Section 2.2). Our method achieves similar performance (53.3% mAP) on VOC 2011/12 test.
+
+表1所示的是VOC 2010的完全结果。我们将我们的算法与四种强基准进行了比较，包括SegDPM[18]，其结合了DPM检测器和一个语义分割系统[4]的输出，使用额外的内检测器上下文和图像分类器重新评分。最贴切的对比是与Uijlings et al. [39]的UVA系统的对比，因为我们的系统用的是一样的候选区域算法。为对区域分类，他们的方法构建了一个四层空域金字塔，用密集采样的SIFT、扩展OpponentSIFT和RGB-SIFT描述子填充，每个向量用4000-word codebooks量化。分类采用的是直方图交集核SVM。与他们的多特征、非线性核SVM方法相比，我们在mAP上有很大改进，从35.1%到53.7%，而且还更快了（2.2节）。我们的方法在VOC 2011/12测试集上得到了类似的表现。
+
+Table 1: Detection average precision (%) on VOC 2010 test. R-CNN is most directly comparable to UVA and Regionlets since all methods use selective search region proposals. Bounding-box regression (BB) is described in Section C. At publication time, SegDPM was the top-performer on the PASCAL VOC leaderboard. † DPM and SegDPM use context rescoring not used by the other methods.
+
+表1：在VOC 2010测试集上的检测平均精度(%)。R-CNN与UVA和Regionlets最具可比性，因为这几种方法都使用selective search进行区域候选。边界框回归(BB)在C节叙述。在发表时，SegDPM是PASCAL VOC排行榜上的表现最佳模型。† DPM和SegDPM使用上下文重评分，别的方法没有使用。
+
+VOC 2010 test | person plant sheep sofa train tv et al. 20 classes | mAP
+--- | --- | ---
+DPM v5 [20] † | 47.7 10.8 34.2 20.7 43.8 38.3 | 33.4
+UVA [39] | 32.9 15.3 41.1 31.8 47.0 44.8 | 35.1
+Regionlets [41] | 43.5 14.3 43.9 32.6 54.0 45.9 | 39.7
+SegDPM [18] † | 47.1 14.8 38.7 35.0 52.8 43.1 | 40.4
+R-CNN | 53.6 26.7 56.5 38.1 52.8 50.2 | 50.2
+R-CNN BB | 58.1 29.5 59.4 39.3 61.2 52.4 | 53.7
+
+### 2.5. Results on ILSVRC2013 detection
+
+We ran R-CNN on the 200-class ILSVRC2013 detection dataset using the same system hyperparameters that we used for PASCAL VOC. We followed the same protocol of submitting test results to the ILSVRC2013 evaluation server only twice, once with and once without bounding-box regression.
+
+我们在200类的ILSVRC2013检测数据集上运行R-CNN，使用的是和PASCAL VOC一样的系统超参数。我们遵循提交测试结果给ILSVRC2013评估服务器的协议，提交了两次，一次有边界框回归，一次没有边界框回归。
+
+Figure 3 compares R-CNN to the entries in the ILSVRC 2013 competition and to the post-competition OverFeat result [34]. R-CNN achieves a mAP of 31.4%, which is significantly ahead of the second-best result of 24.3% from OverFeat. To give a sense of the AP distribution over classes, box plots are also presented and a table of per-class APs follows at the end of the paper in Table 8. Most of the competing submissions (OverFeat, NEC-MU, UvA-Euvision, Toronto A, and UIUC-IFP) used convolutional neural networks, indicating that there is significant nuance in how CNNs can be applied to object detection, leading to greatly varying outcomes.
+
+图3将R-CNN与其他ILSVRC 2013竞赛参赛者进行了比较，也和赛后的OverFeat[34]结果进行了比较。R-CNN取得了31.4%的mAP，远远超过第二名OverFeat的24.3%。为直观感受类别间的AP分布，我们绘出了箱线图，在文章最后的表8给出了每个类别的AP值。大多数参赛的提交算法(OverFeat, NEC-MU, UvA-Euvision, Toronto A, and UIUC-IFP)使用了卷积神经网络，表明CNN应用于目标检测的方式差别明显，导致结果也很多样。
+
+Figure 3: (Left) Mean average precision on the ILSVRC2013 detection test set. Methods preceeded by * use outside training data (images and labels from the ILSVRC classification dataset in all cases). (Right) Box plots for the 200 average precision values per method. A box plot for the post-competition OverFeat result is not shown because per-class APs are not yet available (per-class APs for R-CNN are in Table 8 and also included in the tech report source uploaded to arXiv.org; see R-CNN-ILSVRC2013-APs.txt). The red line marks the median AP, the box bottom and top are the 25th and 75th percentiles. The whiskers extend to the min and max AP of each method. Each AP is plotted as a green dot over the whiskers (best viewed digitally with zoom).
+
+图3：（左）在ILSVRC2013检测测试集上的mAP结果。用星号标记的使用了外部训练数据（各种情况下的ILSVRC分类数据集的图像和标签）。（右）每种方法的200类平均准确率值箱线图。赛后的OverFeat结果缺少，因为每类的AP值还不可用（R-CNN的每类AP值在表8中，也在上传到arXiv.org上的科技报告源中，见R-CNN-ILSVRC2013-APs.txt）。红线表明了AP中值，箱底和顶部是25%和75%值。每种方法的线条延伸至AP最小值和最高值。每个AP都画作一个线条上的绿点（最好在电子档上放大观察）。
+
+In Section 4, we give an overview of the ILSVRC2013 detection dataset and provide details about choices that we made when running R-CNN on it.
+
+在第4节中，我们给出了ILSVRC2013检测数据集的概览，并详述了在数据集上运行R-CNN时做出的选择。
+
+## 3. Visualization, ablation, and modes of error 可视化、简化测试和错误模式
+
+### 3.1. Visualizing learned features 可视化学习到的特征
+
+First-layer filters can be visualized directly and are easy to understand [25]. They capture oriented edges and opponent colors. Understanding the subsequent layers is more challenging. Zeiler and Fergus present a visually attractive deconvolutional approach in [42]. We propose a simple (and complementary) non-parametric method that directly shows what the network learned.
+
+第一层滤波器可以直接可视化，易于理解[25]。捕获的是方向性的边缘和opponent colors。理解后面的层更有挑战性。Zeiler and Fergus给出了可视化效果较好的解卷积方法[42]。我们提出一种简单的（补充性的）非参数方法，直接展示出网络学习到的是什么。
+
+The idea is to single out a particular unit (feature) in the network and use it as if it were an object detector in its own right. That is, we compute the unit’s activations on a large set of held-out region proposals (about 10 million), sort the proposals from highest to lowest activation, perform non-maximum suppression, and then display the top-scoring regions. Our method lets the selected unit “speak for itself” by showing exactly which inputs it fires on. We avoid averaging in order to see different visual modes and gain insight into the invariances computed by the unit.
+
+其思想是选出网络中的一个特殊单元（特征），将其作为一个独立的目标检测器来使用。也就是，我们在大型留存候选区域集（约1000万个）上计算这个单元的激活值，将候选区域按激活值从高到低排序，进行非最大抑制处理，然后显示出最高评分的区域。我们的方法让这个选中的单元“为自己代言”，展示对哪个输入影响最大。我们没有平均，这样可以看到不同的视觉模式，得到这个单元计算的不变性。
+
+We visualize units from layer pool 5 , which is the max-pooled output of the network’s fifth and final convolutional layer. The pool 5 feature map is 6 × 6 × 256 = 9216-dimensional. Ignoring boundary effects, each pool 5 unit has a receptive field of 195×195 pixels in the original 227×227 pixel input. A central pool 5 unit has a nearly global view, while one near the edge has a smaller, clipped support.
+
+我们可视化pool 5层的单元，即网络第5层、最后一个卷积层的max-pooled输出。pool 5特征图维数为6 × 6 × 256 = 9216。忽略边缘效应，每个pool 5单元的感受野为原始227×227输入像素中的195×195像素。中心处的pool 5单元几乎有全局视野，而边缘处的单元则有更小一些的剪切过的范围。
+
+Each row in Figure 4 displays the top 16 activations for a pool 5 unit from a CNN that we fine-tuned on VOC 2007 trainval. Six of the 256 functionally unique units are visualized (Appendix D includes more). These units were selected to show a representative sample of what the network learns. In the second row, we see a unit that fires on dog faces and dot arrays. The unit corresponding to the third row is a red blob detector. There are also detectors for human faces and more abstract patterns such as text and triangular structures with windows. The network appears to learn a representation that combines a small number of class-tuned features together with a distributed representation of shape, texture, color, and material properties. The subsequent fully connected layer fc 6 has the ability to model a large set of compositions of these rich features.
+
+图4中的每行显示了一个pool 5单元的最高的16个激活值，这个单元处于我们在VOC 2007训练验证集上精调过的CNN中。256个功能独特单元中的6个进行了可视化（附录D中包括更多）。选中这些单元展示了网络学习到了什么代表性的样本。在第二行中，我们看到单元学习到的是狗脸和点阵列。第三行对应的单元是一个红色团状物检测器。也有人脸检测器和更抽象的模式检测器，如文字和带窗的三角形结构。网络似乎学到了一种表示，这种表示结合了少数与类别相关的特征，和形状、纹理、颜色、材质性质的分布表示。后面的全连接层fc 6的能力是对这些丰富特征的合成的集合进行建模。
+
+Figure 4: Top regions for six pool 5 units. Receptive fields and activation values are drawn in white. Some units are aligned to concepts, such as people (row 1) or text (4). Other units capture texture and material properties, such as dot arrays (2) and specular reflections (6).
+
+图4：六个pool 5单元的最高响应区域。感受野和激活值用白色表示。一些单元表示概念，如人（第1行）或文字（第4行）。其他单元捕捉纹理或材质性质，比如点阵(2)和镜面反射(6)。
+
+### 3.2. Ablation studies 简化测试研究
+
+**Performance layer-by-layer, without fine-tuning**. To understand which layers are critical for detection performance, we analyzed results on the VOC 2007 dataset for each of the CNN’s last three layers. Layer pool 5 was briefly described in Section 3.1. The final two layers are summarized below.
+
+Layer fc 6 is fully connected to pool 5 . To compute features, it multiplies a 4096×9216 weight matrix by the pool 5 feature map (reshaped as a 9216-dimensional vector) and then adds a vector of biases. This intermediate vector is component-wise half-wave rectified (x ← max(0,x)).
+
+Layer fc 7 is the final layer of the network. It is implemented by multiplying the features computed by fc 6 by a 4096 × 4096 weight matrix, and similarly adding a vector of biases and applying half-wave rectification.
+
+We start by looking at results from the CNN without fine-tuning on PASCAL, i.e. all CNN parameters were pre-trained on ILSVRC 2012 only. Analyzing performance layer-by-layer (Table 2 rows 1-3) reveals that features from fc 7 generalize worse than features from fc 6 . This means that 29%, or about 16.8 million, of the CNN’s parameters can be removed without degrading mAP. More surprising is that removing both fc 7 and fc 6 produces quite good results even though pool 5 features are computed using only 6% of the CNN’s parameters. Much of the CNN’s representational power comes from its convolutional layers, rather than from the much larger densely connected layers. This finding suggests potential utility in computing a dense feature map, in the sense of HOG, of an arbitrary-sized image by using only the convolutional layers of the CNN. This representation would enable experimentation with sliding-window detectors, including DPM, on top of pool 5 features.
