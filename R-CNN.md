@@ -199,8 +199,114 @@ Figure 4: Top regions for six pool 5 units. Receptive fields and activation valu
 
 **Performance layer-by-layer, without fine-tuning**. To understand which layers are critical for detection performance, we analyzed results on the VOC 2007 dataset for each of the CNN’s last three layers. Layer pool 5 was briefly described in Section 3.1. The final two layers are summarized below.
 
+**逐层性能研究，不含精调**。为理解哪些层对于检测表现是重要的，我们分析了在VOC 2007数据集上CNN最后3层每层的结果。pool 5层在3.1节进行了简述。最后2层总结如下。
+
 Layer fc 6 is fully connected to pool 5 . To compute features, it multiplies a 4096×9216 weight matrix by the pool 5 feature map (reshaped as a 9216-dimensional vector) and then adds a vector of biases. This intermediate vector is component-wise half-wave rectified (x ← max(0,x)).
+
+fc 6层与pool 5层全连接。为计算特征，将4096×9216的权值矩阵与pool 5层的特征图（重整为9216维的矢量）相乘，然后加上一个偏置矢量。这个中间矢量又逐个元素进行了半波整流，即ReLU激活。
 
 Layer fc 7 is the final layer of the network. It is implemented by multiplying the features computed by fc 6 by a 4096 × 4096 weight matrix, and similarly adding a vector of biases and applying half-wave rectification.
 
+fc 7层是网络的最后一层。将fc 6计算得到的特征与4096×4096的权值矩阵相乘，类似的，也加上一个偏置矢量，进行半波整流。
+
 We start by looking at results from the CNN without fine-tuning on PASCAL, i.e. all CNN parameters were pre-trained on ILSVRC 2012 only. Analyzing performance layer-by-layer (Table 2 rows 1-3) reveals that features from fc 7 generalize worse than features from fc 6 . This means that 29%, or about 16.8 million, of the CNN’s parameters can be removed without degrading mAP. More surprising is that removing both fc 7 and fc 6 produces quite good results even though pool 5 features are computed using only 6% of the CNN’s parameters. Much of the CNN’s representational power comes from its convolutional layers, rather than from the much larger densely connected layers. This finding suggests potential utility in computing a dense feature map, in the sense of HOG, of an arbitrary-sized image by using only the convolutional layers of the CNN. This representation would enable experimentation with sliding-window detectors, including DPM, on top of pool 5 features.
+
+我们首先观察没有经过PASCAL精调的CNN的结果，即所有的CNN参数都是只由ILSVRC 2012预训练的。逐层分析性能（见表2行1-3）发现fc 7层的特征泛化能力比fc 6的特征泛化能力要差。这意味着CNN参数的29%，也就是1680万参数，可以从网络中去除，而不影响mAP。更令人惊讶的是，去掉fc 7和fc 6层也可以得到不错的结果，而pool 5层的特征是只用了整个网络6%的参数计算得到的。也就是说，CNN的大部分表示能力是从卷积层计算得到的，而不是从密集连接的全连接层计算得到的。这个发现说明，可以只使用CNN的卷积层来计算任意形状图像的密集特征图（相较于HOG来说）。这种表示可以在pool 5层特征的基础上采用滑窗检测器进行试验，包括DPM方法。
+
+**Performance layer-by-layer, with fine-tuning**. We now look at results from our CNN after having fine-tuned its parameters on VOC 2007 trainval. The improvement is striking (Table 2 rows 4-6): fine-tuning increases mAP by 8.0 percentage points to 54.2%. The boost from fine-tuning is much larger for fc 6 and fc 7 than for pool 5 , which suggests that the pool 5 features learned from ImageNet are general and that most of the improvement is gained from learning domain-specific non-linear classifiers on top of them.
+
+**逐层性能研究，含有精调**。我们现在看看经过VOC 2007训练验证集精调的CNN的结果。其改进是惊人的（表2行4-6）：精调使mAP上升了8个百分点，到了54.2%。精调带来的提升对于fc 6和fc 7层，比对pool 5层要大的多，这意味着从ImageNet学到的pool 5特征是一般性的，大部分的改进是在此基础上学习领域相关的非线性分类器得到的。
+
+**Comparison to recent feature learning methods**. Relatively few feature learning methods have been tried on PASCAL VOC detection. We look at two recent approaches that build on deformable part models. For reference, we also include results for the standard HOG-based DPM [20].
+
+**与最近的特征学习方法的对比**。在PASCAL VOC检测中只进行过相对少数特征学习方法。我们看看两种最近在DPM上建立的方法。作为参考，我们也包括了标准的基于HOG的DPM[20]的结果。
+
+The first DPM feature learning method, DPM ST [28], augments HOG features with histograms of “sketch token” probabilities. Intuitively, a sketch token is a tight distribution of contours passing through the center of an image patch. Sketch token probabilities are computed at each pixel by a random forest that was trained to classify 35×35 pixel patches into one of 150 sketch tokens or background.
+
+第一个DPM特征学习方法，DPM ST[28]，用“sketch token”概率直方图来增强HOG特征。直观上，sketch token是经过图像块中心的轮廓分布。在每个像素上用随机森林计算sktch token概率，随机森林是训练后用于将35×35像素块分类成150个sketch token中的一个或背景。
+
+The second method, DPM HSC [31], replaces HOG with histograms of sparse codes (HSC). To compute an HSC, sparse code activations are solved for at each pixel using a learned dictionary of 100 7 × 7 pixel (grayscale) atoms. The resulting activations are rectified in three ways (full and both half-waves), spatially pooled, unit $L_2$ normalized, and then power transformed ($x ← sign(x)|x|^α$).
+
+第二种方法，DPM HSC[31]，将HOG替换为稀疏码直方图(HSC)。计算HSC的方法是，用学习到的100个7×3像素（灰度）原子字典在每个像素处求解稀疏码激活。得到的激活值经过三种方法整流（全波整流和两种半波整流），空间上pool操作，对每个单元进行$L_2$归一化，最后进行幂变换($x ← sign(x)|x|^α$)。
+
+All R-CNN variants strongly outperform the three DPM baselines (Table 2 rows 8-10), including the two that use feature learning. Compared to the latest version of DPM, which uses only HOG features, our mAP is more than 20 percentage points higher: 54.2% vs. 33.7%—a 61% relative improvement. The combination of HOG and sketch tokens yields 2.5 mAP points over HOG alone, while HSC improves over HOG by 4 mAP points (when compared internally to their private DPM baselines—both use non-public implementations of DPM that underperform the open source version [20]). These methods achieve mAPs of 29.1% and 34.3%, respectively.
+
+所有R-CNN变体的表现都比这三种DPM基准方法好很多（表2行8-10），包括使用特征学习的两种方法。与最新版的只使用HOG特征的DPM比较，我们的mAP高出了20%：54.2% vs. 33.7%，相对改进61%。HOG和sketch token结合得到了2.5%的mAP提升，HSC改进了4%的mAP（当内部与他们的不公开的DPM基准比较时，两种用了非公开的DPM实现比开源版本都要差一点[20]）。这些方法分别得到了29.1%和34.3%的mAP。
+
+Table 2: Detection average precision (%) on VOC 2007 test. Rows 1-3 show R-CNN performance without fine-tuning. Rows 4-6 show results for the CNN pre-trained on ILSVRC 2012 and then fine-tuned (FT) on VOC 2007 trainval. Row 7 includes a simple bounding-box regression (BB) stage that reduces localization errors (Section C). Rows 8-10 present DPM methods as a strong baseline. The first uses only HOG, while the next two use different feature learning approaches to augment or replace HOG.
+
+表2：在VOC 2007测试集上的检测平均准确度(%)。1-3行是没有精调的R-CNN的结果，4-6行是在ILSVRC-2012预训练，然后在VOC 2007训练验证集精调的R-CNN的结果。第7行是包含了一个简单的边界框回归(BB)阶段的算法，减少了定位错误率（C节）。8-10行将DPM方法作为强基准。第一种只用HOG，后面两种用了不同的特征学习方法来增强或替换HOG。
+
+VOC 2007 test | person plant sheep sofa train tv et al. 20 classes | mAP
+--- | --- | ---
+R-CNN pool 5 | 42.4 23.4 46.1 36.7 51.3 55.7 | 44.2
+R-CNN fc 6 | 44.6 25.6 48.3 34.0 53.1 58.0 | 46.2
+R-CNN fc 7 | 43.3 23.3 48.1 35.3 51.0 57.4 | 44.7
+R-CNN FT pool 5 | 45.8 28.1 50.8 40.6 53.1 56.4 | 47.3
+R-CNN FT fc 6 | 52.2 31.3 55.0 50.0 57.7 63.0 | 53.1
+R-CNN FT fc 7 | 54.2 31.5 52.8 48.9 57.9 64.7 | 54.2
+R-CNN FT fc 7 BB | 58.7 33.4 62.9 51.1 62.5 64.8 | 58.5
+DPM v5 [20] | 43.2 12.0 21.1 36.1 46.0 43.5 | 33.7
+DPM ST [28] | 32.4 13.3 15.9 22.8 46.2 44.9 | 29.1
+DPM HSC [31] | 39.9 12.4 23.5 34.4 47.4 45.2 | 34.3
+
+### 3.3. Network architectures 网络架构
+
+Most results in this paper use the network architecture from Krizhevsky et al. [25]. However, we have found that the choice of architecture has a large effect on R-CNN detection performance. In Table 3 we show results on VOC 2007 test using the 16-layer deep network recently proposed by Simonyan and Zisserman [43]. This network was one of the top performers in the recent ILSVRC 2014 classification challenge. The network has a homogeneous structure consisting of 13 layers of 3 × 3 convolution kernels, with five max pooling layers interspersed, and topped with three fully-connected layers. We refer to this network as “O-Net” for OxfordNet and the baseline as “T-Net” for TorontoNet.
+
+本文的多数结果使用Krizhevsky et al. [25]的网络架构。但我们发现网络架构的选择对R-CNN检测性能有很大影响。在表3中我们给出在VOC 2007测试集上使用Simonyan and Zisserman [43]提出的16层深度网络的结果。这个网络是最近的ILSVRC 2014分类挑战赛的最好表现者之一。这个网络有13个同样结构的3×3卷积核的卷积层，中间散布着5个max pooling层，最后是三层全连接层。我们将这个OxfordNet简称为O-Net，TorontoNet简称为T-Net。
+
+To use O-Net in R-CNN, we downloaded the publicly available pre-trained network weights for the VGG ILSVRC 16 layers model from the Caffe Model Zoo. We then fine-tuned the network using the same protocol as we used for T-Net. The only difference was to use smaller mini-batches (24 examples) as required in order to fit within GPU memory. The results in Table 3 show that R-CNN with O-Net substantially outperforms R-CNN with T-Net, increasing mAP from 58.5% to 66.0%. However there is a considerable drawback in terms of compute time, with the forward pass of O-Net taking roughly 7 times longer than T-Net.
+
+为在R-CNN中使用O-Net，我们从Caffe模型库中下载了公开的VGG16网络预训练权重。然后用与T-Net中使用的相同的协议来精调网络。唯一的区别是使用小一些的mini-batch（24样本），这是由于GPU内存的原因。表3的结果说明，使用O-Net的R-CNN明显优于使用T-Net的，mAP由58.5%增加到了66.0%。但是计算时间大大增加，O-Net的时间是T-Net时间的7倍。
+
+Table 3: Detection average precision (%) on VOC 2007 test for two different CNN architectures. The first two rows are results from Table 2 using Krizhevsky et al.’s architecture (T-Net). Rows three and four use the recently proposed 16-layer architecture from Simonyan and Zisserman (O-Net) [43].
+
+表3：两种不同CNN架构在VOC 2007测试集上的检测平均准确率(%)。前两行是表2使用Krizhevsky et al.架构(T-Net)的结果。第3、4行使用了最近Simonyan and Zisserman (O-Net) [43]提出的16层架构。
+
+VOC 2007 test | person plant sheep sofa train tv et al. 20 classes | mAP
+--- | --- | ---
+R-CNN T-Net | 54.2 31.5 52.8 48.9 57.9 64.7 | 54.2
+R-CNN T-Net BB | 58.7 33.4 62.9 51.1 62.5 64.8 | 58.5
+R-CNN O-Net | 59.3 35.7 62.1 64.0 66.5 71.2 | 62.2
+R-CNN O-Net BB | 64.2 35.6 66.8 67.2 70.4 71.1 | 66.0
+
+### 3.4. Detection error analysis 检测错误分析
+
+We applied the excellent detection analysis tool from Hoiem et al. [23] in order to reveal our method’s error modes, understand how fine-tuning changes them, and to see how our error types compare with DPM. A full summary of the analysis tool is beyond the scope of this paper and we encourage readers to consult [23] to understand some finer details (such as “normalized AP”). Since the analysis is best absorbed in the context of the associated plots, we present the discussion within the captions of Figure 5 and Figure 6.
+
+我们使用了优秀的Hoiem et al. [23]检测分析工具来检查我们方法的错误模式，理解精调使怎样改变它们的，并研究我们的错误类型与DPM的有何不同。分析工具的完整总结不是本文的任务，推荐读者参考[23]来理解详情（比如归一化AP）。由于分析结果与相关的图上下文一起更好理解，我们将讨论放在图5和图6的标题中。
+
+Figure 5: Distribution of top-ranked false positive (FP) types. Each plot shows the evolving distribution of FP types as more FPs are considered in order of decreasing score. Each FP is categorized into 1 of 4 types: Loc—poor localization (a detection with an IoU overlap with the correct class between 0.1 and 0.5, or a duplicate); Sim—confusion with a similar category; Oth—confusion with a dissimilar object category; BG—a FP that fired on background. Compared with DPM (see [23]), significantly more of our errors result from poor localization, rather than confusion with background or other object classes, indicating that the CNN features are much more discriminative than HOG. Loose localization likely results from our use of bottom-up region proposals and the positional invariance learned from pre-training the CNN for whole-image classification. Column three shows how our simple bounding-box regression method fixes many localization errors.
+
+图5：最多的false positive类型分布。每个图都展示了当按照递减的评分考虑更多的FP时，FP类型分布的演化情况。每个FP都是下面4类中的一种：Loc - 定位不准确（与正确类别的IoU重叠在0.1到0.5之间的检测结果，或重复检测结果）；Sim - 与类似的类别混淆；Oth - 与不相似的类别混淆；BG - 将背景识别为目标的检测结果。与DPM[23]相比，我们的错误结果更多的是由于定位不准确的原因，而不是与背景混淆或其他目标类别混淆，这表明CNN特征比HOG特征更具有分辨能力。定位不准确很可能是由于我们使用了自下而上的候选区域，以及预训练的CNN是为整图分类的，从中也学到了位置不变性。第3列是我们的简单边界框回归方法怎样修正了很多定位错误的。
+
+Figure 6: Sensitivity to object characteristics. Each plot shows the mean (over classes) normalized AP (see [23]) for the highest and lowest performing subsets within six different object characteristics (occlusion, truncation, bounding-box area, aspect ratio, viewpoint, part visibility). We show plots for our method (R-CNN) with and without fine-tuning (FT) and bounding-box regression (BB) as well as for DPM voc-release5. Overall, fine-tuning does not reduce sensitivity (the difference between max and min), but does substantially improve both the highest and lowest performing subsets for nearly all characteristics. This indicates that fine-tuning does more than simply improve the lowest performing subsets for aspect ratio and bounding-box area, as one might conjecture based on how we warp network inputs. Instead, fine-tuning improves robustness for all characteristics including occlusion, truncation, viewpoint, and part visibility.
+
+图6：对目标特征的敏感度。每个图都展示了6个不同目标特性的最高和最低表现的子集的平均（在所有类别中）归一化AP[23]，分别是遮挡、截断、、边界框区域、纵横比、视角和部分可见性。我们给出了我们的方法(R-CNN)精调的、未精调的和带有边界框回归(BB)的，和DPM voc-release5的结果图。总体上来说，精调对所有图像特质都不会降低其敏感度，但的确改进了最高和最低表现值。这表明精调不仅仅改进了纵横比子集和边界框区域子集的最低表现，因为可能会基于我们怎样将网络输入变形来进行推断。相反，精调改进了所有特质图像的鲁棒性，包括遮挡、截断、视角和部分可见性。
+
+### 3.5. Bounding-box regression 边界框回归
+
+Based on the error analysis, we implemented a simple method to reduce localization errors. Inspired by the bounding-box regression employed in DPM [17], we train a linear regression model to predict a new detection window given the pool 5 features for a selective search region proposal. Full details are given in Appendix C. Results in Table 1, Table 2, and Figure 5 show that this simple approach fixes a large number of mislocalized detections, boosting mAP by 3 to 4 points.
+
+在错误分析的基础上，我们实现了一个简单的方法来减少定位错误。受DPM[17]中使用的边界框回归方法的启发，我们训练了一个线性回归模型，为selective search的候选区域，在给定pool 5层特征的情况下，预测新的检测窗口。详见附录C。表1、表2和图5的结果显示，这种简单方法解决大量的错误定位的检测问题，将mAP提升了3到4个百分点。
+
+### 3.6. Qualitative results 定量结果
+
+Qualitative detection results on ILSVRC2013 are presented in Figure 8 and Figure 9 at the end of the paper. Each image was sampled randomly from the val 2 set and all detections from all detectors with a precision greater than 0.5 are shown. Note that these are not curated and give a realistic impression of the detectors in action. More qualitative results are presented in Figure 10 and Figure 11, but these have been curated. We selected each image because it contained interesting, surprising, or amusing results. Here, also, all detections at precision greater than 0.5 are shown.
+
+在ILSVRC2013的定量检测结果在文末图8和图9中给出。每个图像都是随机从val 2集中取样的，所有检测器的所有检测精度大于0.5的都进行了展示。注意这些结果没有受到引导，给出了实际使用的检测器的实际印象。更多量化结果在图10和图11中给出，但这些结果是引导过的。每个图像都是经过选择的，因为包含了吸引人的、令人惊讶的或有趣的结果。这里一样，所有检测结果精度大于0.5的才展示出来。
+
+## 4. The ILSVRC2013 detection dataset 检测数据集
+
+In Section 2 we presented results on the ILSVRC2013 detection dataset. This dataset is less homogeneous than PASCAL VOC, requiring choices about how to use it. Since these decisions are non-trivial, we cover them in this section.
+
+在第2节中，我们给出了在ILSVRC2013检测数据集上的结果。这个数据集比PASCAL VOC同质性略差，取决于怎样使用它。因为这些决策都不是细枝末节，所以我们在这一节详述。
+
+### 4.1. Dataset overview 数据集概览
+
+The ILSVRC2013 detection dataset is split into three sets: train (395,918), val (20,121), and test (40,152), where the number of images in each set is in parentheses. The val and test splits are drawn from the same image distribution. These images are scene-like and similar in complexity (number of objects, amount of clutter, pose variability, etc.) to PASCAL VOC images. The val and test splits are exhaustively annotated, meaning that in each image all instances from all 200 classes are labeled with bounding boxes. The train set, in contrast, is drawn from the ILSVRC2013 classification image distribution. These images have more variable complexity with a skew towards images of a single centered object. Unlike val and test, the train images (due to their large number) are not exhaustively annotated. In any given train image, instances from the 200 classes may or may not be labeled. In addition to these image sets, each class has an extra set of negative images. Negative images are manually checked to validate that they do not contain any instances of their associated class. The negative image sets were not used in this work. More information on how ILSVRC was collected and annotated can be found in [11, 36].
+
+The nature of these splits presents a number of choices for training R-CNN. The train images cannot be used for hard negative mining, because annotations are not exhaustive. Where should negative examples come from? Also, the train images have different statistics than val and test. Should the train images be used at all, and if so, to what extent? While we have not thoroughly evaluated a large number of choices, we present what seemed like the most obvious path based on previous experience.
+
+Our general strategy is to rely heavily on the val set and use some of the train images as an auxiliary source of positive examples. To use val for both training and validation, we split it into roughly equally sized “val 1 ” and “val 2 ” sets. Since some classes have very few examples in val (the smallest has only 31 and half have fewer than 110), it is important to produce an approximately class-balanced partition. To do this, a large number of candidate splits were generated and the one with the smallest maximum relative class imbalance was selected. (Relative imbalance is measured as |a − b|/(a + b) where a and b are class counts in each half of the split.) Each candidate split was generated by clustering val images using their class counts as features, followed by a randomized local search that may improve the split balance. The particular split used here has a maximum relative imbalance of about 11% and a median relative imbalance of 4%. The val 1 /val 2 split and code used to produce them will be publicly available to allow other researchers to compare their methods on the val splits used in this report.
