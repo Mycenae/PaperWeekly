@@ -2,7 +2,7 @@
 
 In Caffe, as in most of machine learning, learning is driven by a loss function (also known as an error, cost, or objective function). A loss function specifies the goal of learning by mapping parameter settings (i.e., the current network weights) to a scalar value specifying the “badness” of these parameter settings. Hence, the goal of learning is to find a setting of the weights that minimizes the loss function.
 
-在Caffe中，和在大多数机器学习中一样，学习是由损失函数驱动的（也称为错误函数、代价函数或目标函数）。损失函数将参数设置（即网络目前的参数）映射到一个标量值，这个值是这些参数设置“坏”的程度的度量，这样从而指定了学习的目的。所以，学习的目标是找到一种权值设置来最小化损失函数。
+在Caffe中，和在大多数机器学习中一样，学习是由损失函数驱动的（也称为误差函数、代价函数或目标函数）。损失函数将参数设置（即网络目前的参数）映射到一个标量值，这个值是这些参数设置“坏”的程度的度量，这样从而指定了学习的目的。所以，学习的目标是找到一种权值设置来最小化损失函数。
 
 The loss in Caffe is computed by the Forward pass of the network. Each layer takes a set of input (bottom) blobs and produces a set of output (top) blobs. Some of these layers’ outputs may be used in the loss function. A typical choice of loss function for one-versus-all classification tasks is the SoftmaxWithLoss function, used in a network definition as follows, for example:
 
