@@ -1,0 +1,76 @@
+# SSD: Single Shot MultiBox Detector
+
+Wei Liu et al. / UNC Chapel Hill
+
+## Abstract 摘要
+
+We present a method for detecting objects in images using a single deep neural network. Our approach, named SSD, discretizes the output space of bounding boxes into a set of default boxes over different aspect ratios and scales per feature map location. At prediction time, the network generates scores for the presence of each object category in each default box and produces adjustments to the box to better match the object shape. Additionally, the network combines predictions from multiple feature maps with different resolutions to naturally handle objects of various sizes. SSD is simple relative to methods that require object proposals because it completely eliminates proposal generation and subsequent pixel or feature resampling stages and encapsulates all computation in a single network. This makes SSD easy to train and straightforward to integrate into systems that require a detection component. Experimental results on the PASCAL VOC, COCO, and ILSVRC datasets confirm that SSD has competitive accuracy to methods that utilize an additional object proposal step and is much faster, while providing a unified framework for both training and inference. For 300×300 input, SSD achieves 74.3% mAP on VOC2007 test at 59 FPS on a Nvidia Titan X and for 512 × 512 input, SSD achieves 76.9% mAP, outperforming a comparable state-of-the-art Faster R-CNN model (We achieved even better results using an improved data augmentation scheme in follow-on experiments: 77.2% mAP for 300×300 input and 79.8% mAP for 512×512 input on VOC2007. Please see Sec. 3.6 for details). Compared to other single stage methods, SSD has much better accuracy even with a smaller input image size. Code is available at: https://github.com/weiliu89/caffe/tree/ssd.
+
+我们提出一种图像目标检测的方法，使用单个深度神经网络。我们的方法名称为SSD，将边界框的输出空间离散化为不同纵横比的默认框集合，然后衡量每个特征图的位置。在预测时，网络在每个默认框中生成每类目标的存在分数，并对框产生调整以更好的匹配目标形状。另外，网络将从多个不同分辨率的特征图得到的预测结合起来，从而很自然的处理各种大小的目标。SSD与需要进行目标候选的方法比是相对简单的，因为它完全不需要生成候选，以及随后的像素或特征重新排布阶段，将所有运算封装在一个网络中。这使SSD容易训练，可以直接继承进需要检测模块的系统中。在PASCAL VOC，COCO和ILSVRC数据集上的试验结果确认了SSD与其他采用候选目标的方法的相比，可以得到有竞争力的准确率结果，而且速度快很多，还给出了训练和推理的统一框架。对于300×300的输入，SSD在VOC2007上得到74.3%的mAP，检测速度59FPS，使用NVidia Titan X GPU；对于512×512输入，SSD得到了76.9% mAP，超过了目前最好的Faster R-CNN模型（我们在后续试验中，使用了一种数据扩充方案后，得到了更好的结果：对于VOC2007数据集，300×300输入得到了77.2% mAP，512×512输入得到了79.8% mAP，详见3.6节）。与其他单阶段方法相比，即使输入图像尺寸较小，SSD准确率也远高于它们。
+
+**Keywords**: Real-time Object Detection; Convolutional Neural Network
+
+## 1 Introduction 引言
+
+Current state-of-the-art object detection systems are variants of the following approach: hypothesize bounding boxes, resample pixels or features for each box, and apply a high-quality classifier. This pipeline has prevailed on detection benchmarks since the Selective Search work [1] through the current leading results on PASCAL VOC, COCO, and ILSVRC detection all based on Faster R-CNN[2] albeit with deeper features such as [3]. While accurate, these approaches have been too computationally intensive for embedded systems and, even with high-end hardware, too slow for real-time applications. Often detection speed for these approaches is measured in seconds per frame (SPF), and even the fastest high-accuracy detector, Faster R-CNN, operates at only 7 frames per second (FPS). There have been many attempts to build faster detectors by attacking each stage of the detection pipeline (see related work in Sec. 4), but so far, significantly increased speed comes only at the cost of significantly decreased detection accuracy.
+
+目前最好的目标检测系统是下面这些方法的变体：假设边界框，对每个框进行像素重取样，或特征重取样，然后送入高质量的分类器。这个流程自从selective search[1]提出以来，一直占据检测标准，在PASCAL VOC、COCO、ILSVRC检测都取得了领先的结果，它们都是基于Faster R-CNN[2]的，有的采用了[3]这样的深度特征。虽然非常精确，但这些方法计算量非常大，不适用于嵌入式系统，即使用高端硬件，对于实时应用来说也太慢。通常这些方法的检测速度都是用SPF(seconds per frame)来衡量，即使是最快的高精度检测器，Faster R-CNN，也只有7FPS(frames per second)。有很多尝试要构建更快的检测器，试图改进检测流程的每个阶段（见第4节中的相关工作），但是迄今为止，速度的明显提升代价是检测准确率的明显下降。
+
+This paper presents the first deep network based object detector that does not re-sample pixels or features for bounding box hypotheses and and is as accurate as approaches that do. This results in a significant improvement in speed for high-accuracy detection (59 FPS with mAP 74.3% on VOC2007 test, vs. Faster R-CNN 7 FPS with mAP 73.2% or YOLO 45 FPS with mAP 63.4%). The fundamental improvement in speed comes from eliminating bounding box proposals and the subsequent pixel or feature resampling stage. We are not the first to do this (cf [4,5]), but by adding a series of improvements, we manage to increase the accuracy significantly over previous attempts. Our improvements include using a small convolutional filter to predict object categories and offsets in bounding box locations, using separate predictors (filters) for different aspect ratio detections, and applying these filters to multiple feature maps from the later stages of a network in order to perform detection at multiple scales. With these modifications—especially using multiple layers for prediction at different scales—we can achieve high-accuracy using relatively low resolution input, further increasing detection speed. While these contributions may seem small independently, we note that the resulting system improves accuracy on real-time detection for PASCAL VOC from 63.4% mAP for YOLO to 74.3% mAP for our SSD. This is a larger relative improvement in detection accuracy than that from the recent, very high-profile work on residual networks [3]. Furthermore, significantly improving the speed of high-quality detection can broaden the range of settings where computer vision is useful.
+
+本文提出了第一个基于深度网络的目标检测器，并不对假设的边界框进行重采样像素或特征，且与这样的方法一样精确。这个结果明显改进了高精确度检测方法的速度（在VOC2007测试集上，以59FPS的速度得到了74.3%的结果，对比Faster R-CNN速度7 FPS 73.2% mAP，或YOLO 45 FPS 63.4% mAP）。速度的根本性提升来自于取消边界框候选和后续的像素或特征重采样阶段。我们不是第一个这样做的（参考[4,5]），但通过增加了一系列改进，我们最终明显改进了以前这些尝试的准确率。我们的改进包括，使用小卷积核来预测目标类别和边界框位置的偏移，对于不同的纵横比的检测使用不同的预测器（滤波器），将这些滤波器应用于网络后期阶段得到的不同特征图来在不同尺度上进行检测。通过这些修正，尤其是使用了在不同尺度上使用多层预测，我们可以得到高检测准确率使用相对较低分辨率的输入，进一步增加了检测速度。虽然这些贡献各自看起来都很小，我们注意到得到的系统在PASCAL VOC上将实时检测的mAP从YOLO的63.4%提升到我们SSD的74.3%。这比最近很高调的残差网络[3]在检测准确率上有了更大的改进。而且，高质量检测的明显速度提升可以扩大到计算机视觉有用的范围设定中。
+
+We summarize our contributions as follows: 我们总结贡献如下：
+
+- We introduce SSD, a single-shot detector for multiple categories that is faster than the previous state-of-the-art for single shot detectors (YOLO), and significantly more accurate, in fact as accurate as slower techniques that perform explicit region proposals and pooling (including Faster R-CNN).
+- 我们提出了SSD，一个多类别单发检测器，比之前最好的单发检测器(YOLO)还要快，而且显著提升准确率，实际上与那些更慢的技术一样准确，如Faster R-CNN这样的先进行显式的区域候选然后pooling。
+- The core of SSD is predicting category scores and box offsets for a fixed set of default bounding boxes using small convolutional filters applied to feature maps.
+- SSD的核心是对固定的默认边界框预测类别分数和框偏移，方法是将小卷积核滤波器应用于特征图。
+- To achieve high detection accuracy we produce predictions of different scales from feature maps of different scales, and explicitly separate predictions by aspect ratio.
+- 为得到高检测准确率，我们在特征图的不同尺度上产生预测，显式的根据纵横比分离预测。
+- These design features lead to simple end-to-end training and high accuracy, even on low resolution input images, further improving the speed vs accuracy trade-off.
+- 这些设计特征带来的是简单的端到端的训练和高准确率，即使在低分辨率输入上也是，进一步改进了速度与准确率的折中。
+- Experiments include timing and accuracy analysis on models with varying input size evaluated on PASCAL VOC, COCO, and ILSVRC and are compared to a range of recent state-of-the-art approaches.
+- 在PASCAL VOC、COCO和ILSVRC上进行了不同输入大小的试验，试验包括计时与准确率分析，并与一系列目前最好的方法进行了比较。
+
+## 2 The Single Shot Detector (SSD)
+
+This section describes our proposed SSD framework for detection (Sec. 2.1) and the associated training methodology (Sec. 2.2). Afterwards, Sec. 3 presents dataset-specific model details and experimental results.
+
+本节叙述的是我们提出的SSD检测框架（2.1节），和相关的训练方法（2.2节）。然后第3部分给出了与特定数据集相关的模型细节和试验结果。
+
+### 2.1 Model 模型
+
+The SSD approach is based on a feed-forward convolutional network that produces a fixed-size collection of bounding boxes and scores for the presence of object class instances in those boxes, followed by a non-maximum suppression step to produce the final detections. The early network layers are based on a standard architecture used for high quality image classification (truncated before any classification layers), which we will call the base network (We use the VGG-16 network as a base, but other networks should also produce good results). We then add auxiliary structure to the network to produce detections with the following key features:
+
+SSD方法是基于前馈卷积网络的，它计算得到含有固定数量的边界框的集合，然后在这些框中为目标类别实例的存在打分，然后进行非最大抑制，得到最终检测结果。网络前面的层是基于高质量图像分类的标准框架（任何分类层之前的截取），我们称之为基础网络（我们使用VGG16作为基础，但是其他网络也可以得到很好的结果）。我们然后加入辅助结构来产生检测，检测具有以下关键特征：
+
+**Multi-scale feature maps for detection**. We add convolutional feature layers to the end of the truncated base network. These layers decrease in size progressively and allow predictions of detections at multiple scales. The convolutional model for predicting detections is different for each feature layer (cf Overfeat[4] and YOLO[5] that operate on a single scale feature map).
+
+**用于检测的多尺度特征图**。我们在截取的基础网络上增加卷积特征层。这些层尺寸逐渐减小，允许在多个尺度上进行检测预测。用于预测检测的卷积模型对于每个特征层都不一样（参考OverFeat[4]和YOLO[5]，它们都在单尺度特征图上进行操作）。
+
+**Convolutional predictors for detection**. Each added feature layer (or optionally an existing feature layer from the base network) can produce a fixed set of detection predictions using a set of convolutional filters. These are indicated on top of the SSD network architecture in Fig. 2. For a feature layer of size m × n with p channels, the basic element for predicting parameters of a potential detection is a 3 × 3 × p small kernel that produces either a score for a category, or a shape offset relative to the default box coordinates. At each of the m × n locations where the kernel is applied, it produces an output value. The bounding box offset output values are measured relative to a default box position relative to each feature map location (cf the architecture of YOLO[5] that uses an intermediate fully connected layer instead of a convolutional filter for this step).
+
+**用于检测的卷积预测器**。每个增加的特征层（或基础网络中已经存在的特征层）都能用卷积滤波器集生成固定数量的检测预测集。图2中SSD网络架构的顶部就是这些层。对于一个p通道大小m×n的特征层，潜在检测的预测参数的基础元素是一个3×3×p的小卷积核，产生的或是一个类别的评分，或相对于默认框坐标的形状偏移。卷积核作用于所有的m×n位置，得到一个输出值。边界框偏移输出值是相对于一个默认的边界框位置的，而这个默认框是相对于每个特征图位置的（参考YOLO[5]的框架中这一步使用了中间全连接层，而不是使用的卷积滤波器）。
+
+**Default boxes and aspect ratios**. We associate a set of default bounding boxes with each feature map cell, for multiple feature maps at the top of the network. The default boxes tile the feature map in a convolutional manner, so that the position of each box relative to its corresponding cell is fixed. At each feature map cell, we predict the offsets relative to the default box shapes in the cell, as well as the per-class scores that indicate the presence of a class instance in each of those boxes. Specifically, for each box out of k at a given location, we compute c class scores and the 4 offsets relative to the original default box shape. This results in a total of (c + 4)k filters that are applied around each location in the feature map, yielding (c + 4)kmn outputs for a m × n feature map. For an illustration of default boxes, please refer to Fig. 1. Our default boxes are similar to the anchor boxes used in Faster R-CNN [2], however we apply them to several feature maps of different resolutions. Allowing different default box shapes in several feature maps let us efficiently discretize the space of possible output box shapes.
+
+**默认边界框和纵横比**。我们将默认边界框集合与每个特征图单元关联起来，在网络上层有多个特征图。默认框在特征图上以卷积的方式摆放，每个框的位置相对于对应的单元是固定的。在每个特征图单元中，我们预测单元中相对于默认框的偏移，以及每类的评分，这个评分表明再每个框中一个类别实例的存在。特别的，对于给定位置上k个框中的每个来说，我们计算c类评分和相对于原始默认框形状的4个偏移量。这需要总共(c+4)k个滤波器，每个滤波器都作用于特征图的每个点，对于m×n大小的特征产生(c + 4)kmn个输出。参考图1的默认框描述。我们的默认框与Faster R-CNN[2]中使用的锚框类似，但是我们将其应用于多个分辨率的多个特征图上。多个特征图中的多个默认框，使我们可以高效的将可能输出框的形状空间离散化。
+
+Fig.1: SSD framework. (a) SSD only needs an input image and ground truth boxes for each object during training. In a convolutional fashion, we evaluate a small set (e.g. 4) of default boxes of different aspect ratios at each location in several feature maps with different scales (e.g. 8 × 8 and 4 × 4 in (b) and (c)). For each default box, we predict both the shape offsets and the confidences for all object categories (($c_1 ,c_2 ,··· ,c_p$)). At training time, we first match these default boxes to the ground truth boxes. For example, we have matched two default boxes with the cat and one with the dog, which are treated as positives and the rest as negatives. The model loss is a weighted sum between localization loss (e.g. Smooth L1 [6]) and confidence loss (e.g. Softmax).
+
+图1：SSD框架。(a)在训练过程中，对于每个目标，SSD只需要一个输入图像和ground-truth框。我们以卷积的样式来评估默认框的小集合（如4个），默认框是不同尺度下几个特征图中每个位置上的，拥有不同的纵横比（如b中的8×8，和c中的4×4）。对每个默认框来说，我们预测形状偏移和所有目标类别的信心($c_1 ,c_2 ,··· ,c_p$)。在训练时，我们首先将这些默认框与ground-truth边界框匹配。比如我们对猫匹配了两个默认框，对狗匹配了一个，这些认为是正样本，剩下的为负样本。模型损失函数为定位损失函数（如平滑L1[6]）和信心损失函数（如softmax）的加权和。
+
+Fig.2: A comparison between two single shot detection models: SSD and YOLO [5]. Our SSD model adds several feature layers to the end of a base network, which predict the offsets to default boxes of different scales and aspect ratios and their associated confidences. SSD with a 300 × 300 input size significantly outperforms its 448 × 448 YOLO counterpart in accuracy on VOC2007 test while also improving the speed.
+
+图2 两种单发检测模型的对比：SSD与YOLO[5]。我们的SSD模型在基础网络的后面增加了几个特征层，以预测默认框的偏移，默认框是多尺度的、多纵横比的，还预测与默认框关联的信心。SSD输入为300×300像素，其准确度明显超过了对应的YOLO算法，其输入为448×448，两个算法都在VOC2007测试集上评估，SSD还在运算速度上有改进。
+
+### 2.2 Training 训练
+
+The key difference between training SSD and training a typical detector that uses region proposals, is that ground truth information needs to be assigned to specific outputs in the fixed set of detector outputs. Some version of this is also required for training in YOLO[5] and for the region proposal stage of Faster R-CNN[2] and MultiBox[7]. Once this assignment is determined, the loss function and back propagation are applied end-to-end. Training also involves choosing the set of default boxes and scales for detection as well as the hard negative mining and data augmentation strategies.
+
+训练SSD与训练其他使用候选区域的典型预测器的关键差别在于，ground-truth信息需要指定给特定输出，这个输出是固定检测器输出集中的。YOLO[5]中的训练也有一部分类似的要求，还有Faster R-CNN[2]中的候选区域阶段和MultiBox[7]也有类似的要求。一旦确定了这种指定，损失函数和反向传播都是端到端的。训练还要选择默认框集合和检测尺度，还有难分负样本挖掘，和数据扩充策略。
+
+**Matching strategy**. During training we need to determine which default boxes correspond to a ground truth detection and train the network accordingly. For each ground truth box we are selecting from default boxes that vary over location, aspect ratio, and scale. We begin by matching each ground truth box to the default box with the best jaccard overlap (as in MultiBox [7]). Unlike MultiBox, we then match default boxes to any ground truth with jaccard overlap higher than a threshold (0.5). This simplifies the learning problem, allowing the network to predict high scores for multiple overlapping default boxes rather than requiring it to pick only the one with maximum overlap.
+
+**匹配策略**。在训练时，我们需要确定ground-truth检测对应哪些默认框，对应的训练网络。对于每个ground-truth框，我们选择
