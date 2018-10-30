@@ -195,24 +195,199 @@ For each test RoI r, the forward pass outputs a class posterior probability dist
 
 对于每个测试RoI r，前向过程输出一个类别的后验概率分布p，和有关r的预测边界框偏移集（K类的每个都得到自己的提炼过的边界框预测）。我们给r指定一个每个目标类别k的检测信心，使用的是预测概率$Pr(class = k | r) = p_k$。我们然后对每个类别独立进行非最大抑制，使用的算法和设置都与R-CNN[9]相同。
 
-### 3.1. Truncated SVD for faster detection
+### 3.1. Truncated SVD for faster detection 截断SVD加速检测
 
 For whole-image classification, the time spent computing the fully connected layers is small compared to the conv layers. On the contrary, for detection the number of RoIs to process is large and nearly half of the forward pass time is spent computing the fully connected layers (see Fig. 2). Large fully connected layers are easily accelerated by compressing them with truncated SVD [5, 23].
 
-In this technique, a layer parameterized by the u × v weight matrix W is approximately factorized as
+对于整图分类，在全连接层的计算时间是小于在卷积层的时间的。对于检测来说则相反，要处理的RoI数量很多，几乎一半的前向过程的时间是在计算全连接层（见图2）。大型全连接层很容易用截断SVD[5,23]压缩来加速。
+
+Figure 2. Timing for VGG16 before and after truncated SVD. Before SVD, fully connected layers fc6 and fc7 take 45% of the time.
+
+In this technique, a layer parameterized by the u × v weight matrix W is approximately factorized as 在这种技术中，一层的权值矩阵W，大小u×v，用SVD近似分解为：
 
 $$W ≈ UΣ_t V^T$$(5)
 
 using SVD. In this factorization, U is a u × t matrix comprising the first t left-singular vectors of W, $Σ_t$ is a t × t diagonal matrix containing the top t singular values of W, and V is v × t matrix comprising the first t right-singular vectors of W. Truncated SVD reduces the parameter count from uv to t(u + v), which can be significant if t is much smaller than min(u,v). To compress a network, the single fully connected layer corresponding to W is replaced by two fully connected layers, without a non-linearity between them. The first of these layers uses the weight matrix $Σ_t V^T$ (and no biases) and the second uses U (with the original biases associated with W). This simple compression method gives good speedups when the number of RoIs is large.
 
-## 4. Main results
+在这个分解中，U是一个u×t的矩阵由W的前t个左奇异矢量构成，$Σ_t$是t×t对角矩阵，包括W的最大t个奇异值，V是v×t矩阵，由W的前t个右奇异矢量构成。截断SVD将参数数量由uv个减少到t(u+v)个，如果t远小于min(u,v)，那么减少量是很大的。为压缩网络，对应W的单个全连接层替换为两个全连接层，中间没有非线性处理。第一层使用权值矩阵$Σ_t V^T$（没有偏置），第二个使用U作为权值矩阵 （使用之前W相关的原偏置）。这种简单压缩方法在RoI数量巨大时，加速效果明显。
 
-Three main results support this paper’s contributions:
+## 4. Main results 主要结果
 
-- State-of-the-art mAP on VOC07, 2010, and 2012
-- Fast training and testing compared to R-CNN, SPPnet
-- Fine-tuning conv layers in VGG16 improves mAP
+Three main results support this paper’s contributions: 三个主要结果支撑本文的贡献：
 
-### 4.1. Experimental setup
+- State-of-the-art mAP on VOC07, 2010, and 2012 在VOC07,2010和2012上的最好mAP
+- Fast training and testing compared to R-CNN, SPPnet 与R-CNN、SPPnet相比的快速训练和测试
+- Fine-tuning conv layers in VGG16 improves mAP 精调VGG16的卷积层改进mAP
 
-Our experiments use three pre-trained ImageNet models that are available online. The first is the CaffeNet (essentially AlexNet [14]) from R-CNN[9]. We alternatively refer 
+### 4.1. Experimental setup 试验设置
+
+Our experiments use three pre-trained ImageNet models that are available online. The first is the CaffeNet (essentially AlexNet [14]) from R-CNN[9]. We alternatively refer to this CaffeNet as model S, for “small.” The second network is VGG_CNN_M_1024 from [3], which has the same depth as S, but is wider. We call this network model M, for “medium.” The final network is the very deep VGG16 model from [20]. Since this model is the largest, we call it model L. In this section, all experiments use single-scale training and testing (s = 600; see Section 5.2 for details).
+
+我们的试验使用三种在线可用的预训练ImageNet模型。第一个是R-CNN[9]中的CaffeNet（本质上就是AlexNet[14]）。我们称CaffeNet为模型S，为small的缩写。第二种网络是[3]中的VGG_CNN_M_1024，其深度与S相同，但更宽一些。我们称这个网络为M，为medium的缩写。最后一个网络是非常深的[20]中的VGG16模型。由于这个模型是最大的，我们称之为模型L。在本节中，所有试验使用单尺度训练和测试（s=600，详见5.2节）。
+
+### 4.2. VOC 2010 and 2012 results
+
+On these datasets, we compare Fast R-CNN (FRCN, for short) against the top methods on the comp4 (outside data) track from the public leaderboard (Table 2, Table 3). For the NUS_NIN_c2000 and BabyLearning methods, there are
+no associated publications at this time and we could not find exact information on the ConvNet architectures used; they are variants of the Network-in-Network design [17]. All other methods are initialized from the same pre-trained VGG16 network.
+
+在这个数据集上，我们将Fast R-CNN与公开排行榜上的最好方法相比。对于NUS_NIN_c2000和BabyLearning方法，目前还没有相关的论文，也不知道其使用的卷积网络架构的确切信息；它们是Network-in-Network[17]的变体。所有其他方法都从相同的预训练VGG16网络初始化。
+
+Fast R-CNN achieves the top result on VOC12 with a mAP of 65.7% (and 68.4% with extra data). It is also two orders of magnitude faster than the other methods, which are all based on the “slow” R-CNN pipeline. On VOC10, SegDeepM [25] achieves a higher mAP than Fast R-CNN (67.2% vs. 66.1%). SegDeepM is trained on VOC12 trainval plus segmentation annotations; it is designed to boost R-CNN accuracy by using a Markov random field to reason over R-CNN detections and segmentations from the O2P[1] semantic-segmentation method. Fast R-CNN can be swapped into SegDeepM in place of R-CNN, which may lead to better results. When using the enlarged 07++12 training set (see Table 2 caption), Fast R-CNN’s mAP increases to 68.8%, surpassing SegDeepM.
+
+Fast R-CNN在VOC12上以65.7%的mAP得到了最高结果（有额外数据时达到了68.4%），也比其他方法快了两个数量级，其他方法都是基于慢速的R-CNN流程。在VOC10上，SegDeepM[25]比Fast R-CNN得到了更高的mAP值(67.2% vs. 66.1%)。SegDeepM在VOC12 trainval上训练，外加分割标注；这是设计用于加速R-CNN准确度的。Fast R-CNN可以替换SegDeepM中的R-CNN，可能得到更好结果。当使用扩大的07++12训练集时（见表2说明），Fast R-CNN的mAP增加到了68.8%，超过了SegDeepM。
+
+Table 2. VOC 2010 test detection average precision (%). BabyLearning uses a network based on [17]. All other methods use VGG16. Training set key: 12: VOC12 trainval, Prop.: proprietary dataset, 12+seg: 12 with segmentation annotations, 07++12: union of VOC07 trainval, VOC07 test, and VOC12 trainval.
+
+Table 3. VOC 2012 test detection average precision (%). BabyLearning and NUS NIN c2000 use networks based on [17]. All other methods use VGG16. Training set key: see Table 2, Unk.: unknown.
+
+### 4.3. VOC 2007 results
+
+On VOC07, we compare Fast R-CNN to R-CNN and SPPnet. All methods start from the same pre-trained VGG16 network and use bounding-box regression. The VGG16 SPPnet results were computed by the authors of [11]. SPPnet uses five scales during both training and testing. The improvement of Fast R-CNN over SPPnet illustrates that even though Fast R-CNN uses single-scale training and testing, fine-tuning the conv layers provides a large improvement in mAP (from 63.1% to 66.9%). R-CNN achieves a mAP of 66.0%. As a minor point, SPPnet was trained without examples marked as “difficult” in PASCAL. Removing these examples improves Fast R-CNN mAP to 68.1%. All other experiments use “difficult” examples.
+
+在VOC07上，我们将Fast R-CNN与R-CNN和SPPnet作对比。所有方法都从相同的预训练VGG16网络开始，使用边界框回归。VGG16 SPPnet的结果由[11]的作者计算得到。SPPnet在训练和测试时使用5种尺度。Fast R-CNN相对于SPPnet的改进结果说明，即使Fast R-CNN使用了单尺度的训练和测试，精调卷积层提供了很大的mAP改进（从63.1%到66.9%）。R-CNN的mAP为66.0%。SPPnet没有使用PASCAL中标记为难的样本进行训练。去除这些样本Fast R-CNN将mAP提升到68.1%。所有其他试验都使用了难样本。
+
+### 4.4. Training and testing time 训练及测试时间
+
+Fast training and testing times are our second main result. Table 4 compares training time (hours), testing rate (seconds per image), and mAP on VOC07 between Fast R-CNN, R-CNN, and SPPnet. For VGG16, Fast R-CNN processes images 146× faster than R-CNN without truncated SVD and 213× faster with it. Training time is reduced by 9×, from 84 hours to 9.5. Compared to SPPnet, Fast R-CNN trains VGG16 2.7× faster (in 9.5 vs. 25.5 hours) and tests 7× faster without truncated SVD or 10× faster with it. Fast R-CNN also eliminates hundreds of gigabytes of disk
+storage, because it does not cache features.
+
+快速训练和测试时我们的第二个主要结果。表4对比了Fast R-CNN，R-CNN和SPPnet在VOC07上的训练时间（小时）、测试速度（每幅图像的秒数）和mAP。对于VGG16，Fast R-CNN处理图像的速度在没有使用截断SVD时比R-CNN快了146倍，使用后快了213倍。训练时间减少了9倍，从84小时减少到9.5小时。与SPPnet相比，Fast R-CNN训练VGG16网络快了2.7倍（9.5小时对比25.5小时），测试在没用截断SVD时快了7倍，使用后快了10倍。Fast R-CNN还节省了几百G的磁盘存储空间，因为不需要缓存特征。
+
+Table 4. Runtime comparison between the same models in Fast R-CNN, R-CNN, and SPPnet. Fast R-CNN uses single-scale mode. SPPnet uses the five scales specified in [11]. † Timing provided by the authors of [11]. Times were measured on an Nvidia K40 GPU.
+
+**Truncated SVD**. Truncated SVD can reduce detection time by more than 30% with only a small (0.3 percentage point) drop in mAP and without needing to perform additional fine-tuning after model compression. Fig. 2 illustrates how using the top 1024 singular values from the 25088×4096 matrix in VGG16’s fc6 layer and the top 256 singular values from the 4096×4096 fc7 layer reduces runtime with little loss in mAP. Further speed-ups are possible with smaller drops in mAP if one fine-tunes again after compression.
+
+**截断SVD**。截断SVD可以减少多达30%的检测时间，mAP只减少很少(0.3%)，而且在模型压缩后不需要进行额外的精调。图2所示的是使用VGG16的fc6层的25088×4096矩阵的最大的1024个奇异值，以及fc7层的4096×4096矩阵的最大的256个奇异值，减少了运算时间，而且mAP降低很小。如果压缩后再精调，还可以进一步加速网络。
+
+## 4.5. Which layers to fine-tune? 应当精调哪些层？
+
+For the less deep networks considered in the SPPnet paper [11], fine-tuning only the fully connected layers appeared to be sufficient for good accuracy. We hypothesized that this result would not hold for very deep networks. To validate that fine-tuning the conv layers is important for VGG16, we use Fast R-CNN to fine-tune, but freeze the thirteen conv layers so that only the fully connected layers learn. This ablation emulates single-scale SPPnet training and decreases mAP from 66.9% to 61.4% (Table 5). This experiment verifies our hypothesis: training through the RoI pooling layer is important for very deep nets.
+
+对于SPPnet[11]中使用的没那么深的的网络，只对全连接层进行精调似乎足够了。我们假设这个结果对于非常深的网络是不成立的。为验证精调卷积层对于VGG16是重要的，我们使用Fast R-CNN来精调，但冻结前13个卷积层，所以只有全连接层得到学习。这种简化试验模仿单尺度SPPnet训练，降低mAP从66.9%到61.4%（表5）。这个试验验证了我们的假设：对于非常深网络来说，经过RoI pooling层来训练是非常重要的。
+
+Table 5. Effect of restricting which layers are fine-tuned for VGG16. Fine-tuning ≥ fc6 emulates the SPPnet training algorithm [11], but using a single scale. SPPnet L results were obtained using five scales, at a significant (7×) speed cost.
+
+Does this mean that all conv layers should be fine-tuned? In short, no. In the smaller networks (S and M) we find that conv1 is generic and task independent (a well-known fact [14]). Allowing conv1 to learn, or not, has no meaningful effect on mAP. For VGG16, we found it only necessary to update layers from conv3_1 and up (9 of the 13 conv layers). This observation is pragmatic: (1) updating from conv2_1 slows training by 1.3× (12.5 vs. 9.5 hours) compared to learning from conv3_1; and (2) updating from conv1_1 over-runs GPU memory. The difference in mAP when learning from conv2_1 up was only +0.3 points (Table 5, last column). All Fast R-CNN results in this paper using VGG16 fine-tune layers conv3_1 and up; all experiments with models S and M fine-tune layers conv2 and up.
+
+这是否意味着所有卷积层都需要精调呢？简单来说，不是。在较小的网络(S和M)中，我们发现conv1层是通用的，也是与任务无关的（一个广为人知的事实[14]）。是否精调conv1对mAP没有实质性影响。对于VGG16来说，我们发现只需要更新conv3_1以上的卷积层（13个卷积层中的9个）。这种观察是实用的：(1)从conv2_1更新与从conv3_1相比，使训练减慢了1.3倍（12.5小时 vs. 9.5小时）；(2)从conv1_1开始更新GPU内存不够用。从conv2_1更新，只提升了0.3%的mAP（表5，最后一列）。本文所有Fast R-CNN结果都使用VGG16精调conv3_1以上的层；所有模型S和M的试验都精调conv2以上的层。
+
+## 5. Design evaluation 设计评估
+
+We conducted experiments to understand how Fast R-CNN compares to R-CNN and SPPnet, as well as to evaluate design decisions. Following best practices, we performed these experiments on the PASCAL VOC07 dataset.
+
+我们进行了多个试验来理解Fast R-CNN和R-CNN、SPPnet的对比，以及评估设计决定。我们在PASCAL VOC数据集上进行这些试验。
+
+### 5.1. Does multi-task training help? 多任务训练有用吗？
+
+Multi-task training is convenient because it avoids managing a pipeline of sequentially-trained tasks. But it also has the potential to improve results because the tasks influence each other through a shared representation (the ConvNet)[2]. Does multi-task training improve object detection accuracy in Fast R-CNN?
+
+多任务训练是很方便的，因为避免了连续训练的任务。但也有改进结果的潜能，因为任务通过共享的表示(ConvNet[2])互相影响。多任务训练在Fast R-CNN中改进了目标检测的训练吗？
+
+To test this question, we train baseline networks that use only the classification loss, $L_{cls}$, in Eq. 1 (i.e., setting λ = 0). These baselines are printed for models S, M, and L in the first column of each group in Table 6. Note that these models do not have bounding-box regressors. Next (second column per group), we take networks that were trained with the multi-task loss (Eq. 1, λ = 1), but we disable bounding-box regression at test time. This isolates the networks’ classification accuracy and allows an apples-to-apples comparison with the baseline networks.
+
+为检验这个问题，我们只用式(1)分类损失$L_{cls}$训练一个基准网络。这个基准在表6中模型S、M和L的每组第一列给出。注意这些模型没有边界框回归器。每组的第二列，我们使用多任务损失训练的网络，但测试时没有用边界框回归。这分离出了网络的分类准确率，可以与基准网络逐项进行比较。
+
+Across all three networks we observe that multi-task training improves pure classification accuracy relative to training for classification alone. The improvement ranges from +0.8 to +1.1 mAP points, showing a consistent positive effect from multi-task learning.
+
+三个网络之间我们观察到多任务训练改进了分类准确率，这是相对于只进行分类的网络。改进幅度为0.8%到1.1% mAP，显示了多任务学习确实有正面作用。
+
+Finally, we take the baseline models (trained with only the classification loss), tack on the bounding-box regression layer, and train them with $L_{loc}$ while keeping all other network parameters frozen. The third column in each group shows the results of this stage-wise training scheme: mAP improves over column one, but stage-wise training underperforms multi-task training (forth column per group).
+
+最后，我们采用基准模型，外加边界框回归层，然后用$L_{loc}$进行训练，同时保持网络其他参数冻结。每组第三列显示了这种分阶段训练方案的结果：mAP相比于第一列有改进，但分阶段训练性能没有超过多任务训练（每组第4列）。
+
+### 5.2. Scale invariance: to brute force or finesse? 尺度不变性：暴力解决还是巧妙解决？
+
+We compare two strategies for achieving scale-invariant object detection: brute-force learning (single scale) and image pyramids (multi-scale). In either case, we define the scale s of an image to be the length of its shortest side.
+
+我们对比了得到目标识别尺度不变性的两种策略：暴力学习（单尺度）和图像金字塔（多尺度）。在任一情况中，我们都定义图像的尺度s为其短边的长度。
+
+All single-scale experiments use s = 600 pixels; s may be less than 600 for some images as we cap the longest image side at 1000 pixels and maintain the image’s aspect ratio. These values were selected so that VGG16 fits in GPU memory during fine-tuning. The smaller models are not memory bound and can benefit from larger values of s; however, optimizing s for each model is not our main concern. We note that PASCAL images are 384 × 473 pixels on average and thus the single-scale setting typically upsamples images by a factor of 1.6. The average effective stride at the RoI pooling layer is thus ≈ 10 pixels.
+
+所有单尺度试验使用s=600像素；对一些图像s可能小于600，因为我们使图像长边最长为1000像素，而且维持图像纵横比不变。选择了这些值，VGG16才能在GPU内存精调（太大了内存不够用）。更小的模型不受内存限制，s值大一些会更好；但是，对每个模型优化s不是我们的主要考虑。我们注意PASCAL图像平均大小为384×473像素，所以单尺度设置一般会将图像进行1.6倍的上采样。RoI pooling层的平均有效步长因此是大约10像素。
+
+In the multi-scale setting, we use the same five scales specified in [11] (s ∈ {480,576,688,864,1200}) to facilitate comparison with SPPnet. However, we cap the longest side at 2000 pixels to avoid exceeding GPU memory.
+
+在多尺度设置中，我们使用与[11]中相同的5种尺度，即s ∈ {480,576,688,864,1200}，以与SPPnet进行比较。但是，我们设定长边最长为2000像素，以免超出GPU内存。
+
+Table 7 shows models S and M when trained and tested with either one or five scales. Perhaps the most surprising result in [11] was that single-scale detection performs almost as well as multi-scale detection. Our findings confirm their result: deep ConvNets are adept at directly learning scale invariance. The multi-scale approach offers only a small increase in mAP at a large cost in compute time (Table 7). In the case of VGG16 (model L), we are limited to using a single scale by implementation details. Yet it achieves a mAP of 66.9%, which is slightly higher than the 66.0% reported for R-CNN [10], even though R-CNN uses “infinite” scales in the sense that each proposal is warped to a canonical size.
+
+表7所示的是模型S和M，在使用单尺度或5尺度时进行训练和测试时的结果。可能[11]中最令人惊奇的结果是单尺度检测与多尺度检测的结果机会一样好。我们的发现确认了他们的结果：深度卷积网络可以很熟练的直接学习尺度不变性。多尺度方法对提升mAP的作用很小，但计算时间的代价比较大（表7）。在VGG16的L模型的情况下，我们受限于实现细节，只使用了单尺度。但是得到了66.9% mAP的结果，这比R-CNN[10]中的结果66.0%略高一点，即使R-CNN使用的无限尺度，因为每个候选区域变形为统一大小。
+
+Table 7. Multi-scale vs. single scale. SPPnet ZF (similar to model S) results are from [11]. Larger networks with a single-scale offer the best speed / accuracy tradeoff. (L cannot use multi-scale in our implementation due to GPU memory constraints.)
+
+Since single-scale processing offers the best tradeoff between speed and accuracy, especially for very deep models, all experiments outside of this sub-section use single-scale training and testing with s = 600 pixels.
+
+由于单尺度处理在速度和准确度间的折中最好，尤其是非常深的模型，本小结以外的所有试验都使用单尺度训练和测试，参数s=600像素。
+
+### 5.3. Do we need more training data? 我们需要更多训练数据吗？
+
+A good object detector should improve when supplied with more training data. Zhu et al. [24] found that DPM [8] mAP saturates after only a few hundred to thousand training examples. Here we augment the VOC07 trainval set with the VOC12 trainval set, roughly tripling the number of images to 16.5k, to evaluate Fast R-CNN. Enlarging the training set improves mAP on VOC07 test from 66.9% to 70.0% (Table 1). When training on this dataset we use 60k mini-batch iterations instead of 40k.
+
+好的目标检测器应当在提供更多数据时，性能有所改进。Zhu et al. [24]发现DPM[8]在几百至几千幅训练图像后mAP就饱和了。这里我们使用VOC12 trainval集扩充VOC07 trainval集，使图像数量增加到大约3倍，16.5k幅，来评估Fast R-CNN。增大训练集使得在VOC07上的测试结果从66.9%提升至70.0%（表1）。当在这个数据集上训练时，我们使用60k次mini-batch迭代，而不是40k次。
+
+We perform similar experiments for VOC10 and 2012, for which we construct a dataset of 21.5k images from the union of VOC07 trainval, test, and VOC12 trainval. When training on this dataset, we use 100k SGD iterations and lower the learning rate by 0.1× each 40k iterations (instead of each 30k). For VOC10 and 2012, mAP improves from 66.1% to 68.8% and from 65.7% to 68.4%, respectively.
+
+我们对VOC10和2012进行类似的试验，从VOC07 trainval,test和VOC12 trainval集的合并构建了一个数据集包含了21.5k幅图像。当使用这个数据集训练时，我们使用100k次SGD迭代，每40k次迭代将学习速率降低10倍。对于VOC10和VOC2012，mAP分别从66.1%改进至68.8%，从65.7%改进至68.4%。
+
+### 5.4. Do SVMs outperform softmax? SVM比softmax要好吗？
+
+Fast R-CNN uses the softmax classifier learnt during fine-tuning instead of training one-vs-rest linear SVMs post-hoc, as was done in R-CNN and SPPnet. To understand the impact of this choice, we implemented post-hoc SVM training with hard negative mining in Fast R-CNN. We use the same training algorithm and hyper-parameters as in R-CNN.
+
+Fast R-CNN在精调时使用softmax分类器，而没有训练线性SVM分类器，在R-CNN和SPPnet中都是这样做的。为理解这个选择的影响，我们在Fast R-CNN中实现了用难分负样本挖掘训练的SVM。我们使用了与R-CNN一样的训练算法和超参数。
+
+Table 8 shows softmax slightly outperforming SVM for all three networks, by +0.1 to +0.8 mAP points. This effect is small, but it demonstrates that “one-shot” fine-tuning is sufficient compared to previous multi-stage training approaches. We note that softmax, unlike one-vs-rest SVMs, introduces competition between classes when scoring a RoI.
+
+表8所示的是在三种网络上softmax比SVM略好一些的结果，大约0.1%到0.8% mAP。这个影响是很小的，但说明了one-shot精调与之前的多阶段训练方法比较，是充分好用的。我们注意到softmax不像SVM一样，在给RoI评分时，不同类之间会有竞争。
+
+Table 8. Fast R-CNN with softmax vs. SVM (VOC07 mAP).
+
+method | classifier | S | M | L
+--- | --- | --- | --- | ---
+R-CNN [9, 10] | SVM | 58.5 | 60.2 | 66.0
+FRCN [ours] | SVM | 56.3 | 58.7 | 66.8
+FRCN [ours] | softmax | 57.1 | 59.2 | 66.9
+
+### 5.5. Are more proposals always better? 我们的候选一直都更好吗？
+
+There are (broadly) two types of object detectors: those that use a sparse set of object proposals (e.g., selective search [21]) and those that use a dense set (e.g., DPM [8]). Classifying sparse proposals is a type of cascade [22] in which the proposal mechanism first rejects a vast number of candidates leaving the classifier with a small set to evaluate. This cascade improves detection accuracy when applied to DPM detections [21]. We find evidence that the proposal-classifier cascade also improves Fast R-CNN accuracy.
+
+大致上有两类目标检测器：使用稀疏候选目标集（如selective search[21]），和使用稠密集的（如DPM[8]）。稀疏候选分类是级联类型的[22]，其中推荐机制首先拒绝了大量候选，给分类器剩下很小一个候选集来评估。当应用到DPM检测[21]的时候，这种级联改进检测准确率。我们发现这种推荐-分类器的级联也改进Fast R-CNN的准确率。
+
+Using selective search’s quality mode, we sweep from 1k to 10k proposals per image, each time re-training and re-testing model M. If proposals serve a purely computational role, increasing the number of proposals per image should not harm mAP.
+
+使用selective search的质量模式，我们从每幅图像中得到1k到10k幅图像，每次重新训练并重新测试图像M。如果推荐只是作为计算的角色，增加每幅图像候选的数量不会降低mAP。
+
+We find that mAP rises and then falls slightly as the proposal count increases (Fig. 3, solid blue line). This experiment shows that swamping the deep classifier with more proposals does not help, and even slightly hurts, 
+accuracy.
+
+我们发现当候选数量增加时，mAP首先上升，然后略微下降（图3中的蓝色实线）。这个实验说明，给深度分类器提供更多的候选没有多少帮助，还使准确率略微下降。
+
+Figure 3. VOC07 test mAP and AR for various proposal schemes.
+
+This result is difficult to predict without actually running the experiment. The state-of-the-art for measuring object proposal quality is Average Recall (AR) [12]. AR correlates well with mAP for several proposal methods using R-CNN, when using a fixed number of proposals per image. Fig. 3 shows that AR (solid red line) does not correlate well with mAP as the number of proposals per image is varied. AR must be used with care; higher AR due to more proposals does not imply that mAP will increase. Fortunately, training and testing with model M takes less than 2.5 hours. Fast R-CNN thus enables efficient, direct evaluation of object proposal mAP, which is preferable to proxy metrics.
+
+如果没有实际运行实验，这个结果是很难预测到的。衡量候选目标质量的最新指标是平均召回率(Average Recall, AR)[12]。当每幅图像的候选目标数量固定时，AR与mAP很有关联，这在使用R-CNN的几种候选方法中都有体现。AR必须小心使用；由于候选更多带来的AR越高并不一定保证mAP会改进。幸运的是，模型M的训练和测试耗时少于2.5小时。Fast R-CNN使得对候选目标mAP的评估更加直接高效，相对代理指标来说，这是很好的。
+
+We also investigate Fast R-CNN when using densely generated boxes (over scale, position, and aspect ratio), at a rate of about 45k boxes / image. This dense set is rich enough that when each selective search box is replaced by its closest (in IoU) dense box, mAP drops only 1 point (to 57.7%, Fig. 3, blue triangle).
+
+我们还研究了使用密集生成边界框情况下的Fast R-CNN（不同尺度，位置和纵横比），大概每幅图像45k个边界框。这种稠密集内容丰富，当每个selective search边界框替换成最接近(IoU)的密集框时，mAP下降了大约1个百分点（到57.7%，图3中的蓝色三角形）。
+
+The statistics of the dense boxes differ from those of selective search boxes. Starting with 2k selective search boxes, we test mAP when adding a random sample of 1000 × {2,4,6,8,10,32,45} dense boxes. For each experiment we re-train and re-test model M. When these dense boxes are added, mAP falls more strongly than when adding more selective search boxes, eventually reaching 53.0%.
+
+稠密边界框的统计与那些selective search边界框的不同。从2k个selective search边界框开始，我们加入1000 × {2,4,6,8,10,32,45}个密集边界框的随机样本，然后我们测试mAP。对于每个试验，我们重新训练、重新测试模型M。当这些密集框加入时，mAP下降的很多，最终到达53.0%。
+
+We also train and test Fast R-CNN using only dense boxes (45k / image). This setting yields a mAP of 52.9% (blue diamond). Finally, we check if SVMs with hard negative mining are needed to cope with the dense box distribution. SVMs do even worse: 49.3% (blue circle).
+
+我们还只使用密集边界框训练和测试了Fast R-CNN（每幅图像45k个）。这种设置得到了52.9%的mAP（蓝色星型）。最终，我们检查是否带有难分负样本挖掘的SVM可以和密集边界框分布合拍，SVM的结果甚至更差：49.3%（蓝色圆形）。
+
+### 5.6. Preliminary MS COCO results 在MS COCO上的初步结果
+
+We applied Fast R-CNN (with VGG16) to the MS COCO dataset [18] to establish a preliminary baseline. We trained on the 80k image training set for 240k iterations and evaluated on the “test-dev” set using the evaluation server. The PASCAL-style mAP is 35.9%; the new COCO-style AP, which also averages over IoU thresholds, is 19.7%.
+
+我们将Fast R-CNN(VGG16)应用在MS COCO数据集[18]上，来确定初步基准。我们训练了80k幅图像进行了240k次迭代，使用评估服务器在test-dev集上进行评估。PASCAL-style mAP为35.9%；而新的COCO-style mAP为19.7%，在IoU阈值上进行了平均。
+
+## 6. Conclusion 结论
+
+This paper proposes Fast R-CNN, a clean and fast update to R-CNN and SPPnet. In addition to reporting state-of-the-art detection results, we present detailed experiments that we hope provide new insights. Of particular note, sparse object proposals appear to improve detector quality. This issue was too costly (in time) to probe in the past, but becomes practical with Fast R-CNN. Of course, there may exist yet undiscovered techniques that allow dense boxes to perform as well as sparse proposals. Such methods, if developed, may help further accelerate object detection.
+
+本文提出了Fast R-CNN，是R-CNN和SPPnet的一种干净快速的更新。除了报告了最新监测结果，我们还给出了详细的试验过程，希望能提供新的思想。特意强调的是，稀疏候选目标似乎可以改进检测器质量。这个问题在以前很难调查得到，因为试验时间太长，但在Fast R-CNN下可以进行试验了。当然，可能还存在尚未发现的技术，可以使密集边界框与稀疏候选得到一样的效果。这种方法如果发现，可能进一步加速目标检测。
