@@ -23,7 +23,9 @@ MobileNet | 2017 | [1704.04861](https://arxiv.org/abs/1704.04861)
 Model name | Published time | arXiv link
 --- | --- | ---
 SelectiveSearch | 2012 | [personal link](www.huppelen.nl/publications/selectiveSearchDraft.pdf)
-RCNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
+R-CNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
+Fast R-CNN | 2015 | [1504.08083v2](https://arxiv.org/abs/1504.08083v2)
+SSD | 2016 | [1512.02325v5](https://arxiv.org/abs/1512.02325v5)
 
 ## Books:
 
