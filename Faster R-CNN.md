@@ -150,6 +150,82 @@ Some RPN proposals highly overlap with each other. To reduce redundancy, we adop
 
 We comprehensively evaluate our method on the PASCAL VOC 2007 detection benchmark [4]. This dataset consists of about 5k trainval images and 5k test images over 20 object categories. We also provide results in the PASCAL VOC 2012 benchmark for a few models. For the ImageNet pre-trained network, we use the “fast” version of ZF net [23] that has 5 conv layers and 3 fc layers, and the public VGG-16 model [19] that has 13 conv layers and 3 fc layers. We primarily evaluate detection mean Average Precision (mAP), because this is the actual metric for object detection (rather than focusing on object proposal proxy metrics).
 
-我们在PASCAL VOC 2007检测基准测试[4]中综合评估了我们的方法。这个数据集包括大约5k trainval图像，5k测试图像，共20个类别。我们还给出了在PASCAL VOC 2012基准测试中一些模型的结果。对于ImageNet预训练网络，我们使用了快速版的ZF网络[23]，包括5个卷积层和3个全连接层，公开的VGG-16模型[19]有13个卷积层和3个全连接层。我们主要评估了检测mAP，因为这种目标检测的实际度量标准（而不是聚焦在候选目标的衡量上）。
+我们在PASCAL VOC 2007检测基准测试[4]中综合评估了我们的方法。这个数据集包括大约5k trainval图像，5k测试图像，共20个类别。我们还给出了在PASCAL VOC 2012基准测试中一些模型的结果。对于ImageNet预训练网络，我们使用了快速版的ZF网络[23]，包括5个卷积层和3个全连接层，公开的VGG-16模型[19]有13个卷积层和3个全连接层。我们主要评估了检测mAP，因为这是目标检测的实际度量标准（而不是聚焦在候选目标的衡量上）。
 
 Table 1 (top) shows Fast R-CNN results when trained and tested using various region proposal methods. These results use the ZF net. For Selective Search (SS) [22], we generate about 2k SS proposals by the “fast” mode. For EdgeBoxes (EB) [24], we generate the proposals by the default EB setting tuned for 0.7 IoU. SS has an mAP of 58.7% and EB has an mAP of 58.6%. RPN with Fast R-CNN achieves competitive results, with an mAP of 59.9% while using up to 300 proposals (For RPN, the number of proposals (e.g., 300) is the maximum number for an image. RPN may produce fewer proposals after NMS, and thus the average number of proposals is smaller). Using RPN yields a much faster detection system than using either SS or EB because of shared conv computations; the fewer proposals also reduce the region-wise fc cost. Next, we consider several ablations of RPN and then show that proposal quality improves when using the very deep network.
+
+表1（上）给出了Fast R-CNN使用不同的区域候选方法进行训练和测试的结果，这些结果使用的是ZF网络。对Selective Search(SS)[22]，我们用快速模式生成2k个SS候选；对于EdgeBoxes(EB)[24]，我们用默认的EB设置即0.7 IoU生成候选。SS得到了58.7% mAP，EB得到了58.6% mAP。RPN和Fast R-CNN取得了很好的结果，使用最多300个候选得到了59.9% mAP。（对RPN，候选数量是一幅图像中的最大数量，如300；RPN在NMS后可能生成没那么多候选，所以候选平均数量会略少一点）。使用RPN比使用SS或EB进行检测速度快很多，原因是共享卷积计算；候选数量更少，也减少了与区域相关的全连接层计算代价。下一步，我们进行一些RPN的分离对比实验，说明使用非常深网络的时候候选质量确实会改善。
+
+Table 1: Detection results on PASCAL VOC 2007 test set (trained on VOC 2007 trainval). The detectors are Fast R-CNN with ZF, but using various proposal methods for training and testing.
+
+**Ablation Experiments**. To investigate the behavior of RPNs as a proposal method, we conducted several ablation studies. First, we show the effect of sharing conv layers between the RPN and Fast R-CNN detection network. To do this, we stop after the second step in the 4-step training process. Using separate networks reduces the result slightly to 58.7% (RPN+ZF, unshared, Table 1). We observe that this is because in the third step when the detector-tuned features are used to fine-tune the RPN, the proposal quality is improved.
+
+**分离对比实验**。为研究RPN作为候选方法的表现，我们进行了几个分离对比实验。首先，我们展示了RPN和Fast R-CNN检测网络共享卷积层的效果。我们在4步训练法中第2步进行完后就停止，以进行对比。使用分离网络使结果略微降低到58.7%（表1中的PRN+ZF，非共享）。我们观察到，这是因为在第3步中，检测器调整的特征用于精调RPN，这改进了候选质量。
+
+Next, we disentangle the RPN’s influence on training the Fast R-CNN detection network. For this purpose, we train a Fast R-CNN model by using the 2k SS proposals and ZF net. We fix this detector and evaluate the detection mAP by changing the proposal regions used at test-time. In these ablation experiments, the RPN does not share features with the detector.
+
+然后，我们理顺RPN在训练Fast R-CNN检测网络中的作用。为达到目的，我们用2k个SS候选和ZF网络训练了一个Fast R-CNN模型。我们固定这个检测器，在测试时改变候选区域来评估检测mAP。在这些分离对比实验中，RPN不和检测器共享特征。
+
+Replacing SS with 300 RPN proposals at test-time leads to an mAP of 56.8%. The loss in mAP is because of the inconsistency between the training/testing proposals. This result serves as the baseline for the following comparisons.
+
+测试时将SS替换为300个RPN候选，得到了56.8%的mAP。这个mAP的下降是因为训练/测试候选区域的不一致性。这个结果作为后续对比的基准。
+
+Somewhat surprisingly, the RPN still leads to a competitive result (55.1%) when using the top-ranked 100 proposals at test-time, indicating that the top-ranked RPN proposals are accurate. On the other extreme, using the top-ranked 6k RPN proposals (without NMS) has a comparable mAP (55.2%), suggesting NMS does not harm the detection mAP and may reduce false alarms.
+
+当在测试时使用排名最高的100个候选，RPN仍然得到了有竞争力的结果(55.1%)，这有些令人惊讶，说明排名最前的RPN候选都是准确的。在另外一个极端情况时，使用排名最前的6k个候选（没有经过NMS）得到了不错的mAP(55.2%)，说明NMS并没有损害mAP，可以减少虚警。
+
+Next, we separately investigate the roles of RPN’s cls and reg outputs by turning off either of them at test-time. When the cls layer is removed at test-time (thus no NMS/ranking is used), we randomly sample N proposals from the unscored regions. The mAP is nearly unchanged with N = 1k (55.8%), but degrades considerably to 44.6% when N = 100. This shows that the cls scores account for the accuracy of the highest ranked proposals.
+
+然后，我们分别研究了RPN的cls和reg输出的作用，方法是在测试时关闭任意一个。当测试时去除cls层时（所以没有使用NMS/排名），我们从未评分的区域中随机取样了N个候选。在N=1k时，mAP基本不变(55.8%)，当N=100时，有很大的下降，到了44.6%。这说明cls对排名最高的那些候选的准确率有很大影响。
+
+On the other hand, when the reg layer is removed at test-time (so the proposals become anchor boxes), the mAP drops to 52.1%. This suggests that the high-quality proposals are mainly due to regressed positions. The anchor boxes alone are not sufficient for accurate detection.
+
+另一方面，当测试时去除reg层时（这样候选成为了锚窗），mAP下降到了52.1%。这说明高质量的候选主要是由于对位置的回归。仅仅是锚窗不足以得到准确的检测。
+
+We also evaluate the effects of more powerful networks on the proposal quality of RPN alone. We use VGG-16 to train the RPN, and still use the above detector of SS+ZF. The mAP improves from 56.8% (using RPN+ZF) to 59.2% (using RPN+VGG). This is a promising result, because it suggests that the proposal quality of RPN+VGG is better than that of RPN+ZF. Because proposals of RPN+ZF are competitive with SS (both are 58.7% when consistently used for training and testing), we may expect RPN+VGG to be better than SS. The following experiments justify this hypothesis.
+
+我们还只用RPN候选评估了更强大的网络的效果。我们使用VGG-16训练RPN，仍然使用SS+ZF的检测器。mAP从56.8%(RPN+ZF)提升到了59.2%(RPN+VGG)。这是个很有希望的结果，因为这说明RPN+VGG的候选质量要高于RPN+ZF。因为RPN+ZF的候选与SS的候选类似（当一致用于训练和测试时，两者都是58.7%），我们期待RPN+VGG要比SS好。后续的实验证实了这个假设。
+
+**Detection Accuracy and Running Time of VGG-16**. Table 2 shows the results of VGG-16 for both proposal and detection. Using RPN+VGG, the Fast R-CNN result is 68.5% for unshared features, slightly higher than the SS baseline. As shown above, this is because the proposals generated by RPN+VGG are more accurate than SS. Unlike SS that is pre-defined, the RPN is actively trained and benefits from better networks. For the feature-shared variant, the result is 69.9%—better than the strong SS baseline, yet with nearly cost-free proposals. We further train the RPN and detection network on the union set of PASCAL VOC 2007 trainval and 2012 trainval, following [5]. The mAP is 73.2%. On the PASCAL VOC 2012 test set (Table 3), our method has an mAP of 70.4% trained on the union set of VOC 2007 trainval+test and VOC 2012 trainval, following [5].
+
+**VGG-16的检测准确率和运行时间**。表2给出了VGG-16进行候选和检测的结果。使用RPN+VGG，Fast R-CNN在未共享特征时得到了68.5%的结果，略高于SS基准。这是因为RPN+VGG生成的候选比SS要更精确。SS是预定义好的，而RPN则是在动态训练的，还从更好的网络中得益。对于共享特征的版本，结果是69.9%，比SS基准要好，但候选计算几乎没有代价。我们进一步在07+12 trainval上训练RPN和检测网络，得到了73.2%的mAP。在PASCAL VOC 2012测试集上（表3），我们的方法得到了70.4% mAP，训练则是在07+12 trainval上，与[5]一样。
+
+Table 2: Detection results on PASCAL VOC 2007 test set. The detector is Fast R-CNN and VGG-16. Training data: “07”: VOC 2007 trainval, “07+12”: union set of VOC 2007 trainval and VOC 2012 trainval. For RPN, the train-time proposals for Fast R-CNN are 2k. † : this was reported in [5]; using the repository provided by this paper, this number is higher (68.0±0.3 in six runs).
+
+Table 3: Detection results on PASCAL VOC 2012 test set. The detector is Fast R-CNN and VGG-16. Training data: “07”: VOC 2007 trainval, “07++12”: union set of VOC 2007 trainval+test and VOC 2012 trainval. For RPN, the train-time proposals for Fast R-CNN are 2k.
+
+In Table 4 we summarize the running time of the entire object detection system. SS takes 1-2 seconds depending on content (on average 1.51s), and Fast R-CNN with VGG-16 takes 320ms on 2k SS proposals (or 223ms if using SVD on fc layers [5]). Our system with VGG-16 takes in total 198ms for both proposal and detection. With the conv features shared, the RPN alone only takes 10ms computing the additional layers. Our region-wise computation is also low, thanks to fewer proposals (300). Our system has a frame-rate of 17 fps with the ZF net.
+
+在表4中，我们总结了整个目标检测系统的运行时间。SS对不同的内容花费1-2秒钟（平均1.51秒），采用VGG16的Fast R-CNN对2k个SS候选处理时间为320ms（如果对fc层使用SVD[5]则为223ms）。我们采用VGG-16的系统候选和检测共计为198ms。在共享卷积层特征的情况下，RPN只耗费10ms计算额外的层。分区域的计算耗费也很低，因为候选区域很少(300)。我们系统使用ZF网络是帧率为17fps。
+
+Table 4: Timing (ms) on a K40 GPU, except SS proposal is evaluated in a CPU. “Region-wise” includes NMS, pooling, fc, and softmax. See our released code for the profiling of running time.
+
+**Analysis of Recall-to-IoU**. Next we compute the recall of proposals at different IoU ratios with ground-truth boxes. It is noteworthy that the Recall-to-IoU metric is just loosely [9, 8, 1] related to the ultimate detection accuracy. It is more appropriate to use this metric to diagnose the proposal method than to evaluate it.
+
+**Recall-to-IoU分析**。下一步，我们计算在不同IoU下候选区域的召回率。值得注意，终极检测结果相关的Recall-to-IoU度量仅是[9, 8, 1]。这种度量更适合于分析候选方法，而不是评估它。
+
+In Fig. 2, we show the results of using 300, 1k, and 2k proposals. We compare with SS and EB, and the N proposals are the top-N ranked ones based on the confidence generated by these methods. The plots show that the RPN method behaves gracefully when the number of proposals drops from 2k to 300. This explains why the RPN has a good ultimate detection mAP when using as few as 300 proposals. As we analyzed before, this property is mainly attributed to the cls term of the RPN. The recall of SS and EB drops more quickly than RPN when the proposals are fewer.
+
+在图2中，我们给出了使用300、1k和2k个候选的结果。我们与SS和EB方法进行了比较，N个候选是根据置信度排前N名的那些。图2说明，RPN方法在候选从2k减少到300时，表现一直很不错。这解释了为什么RPN在只使用了300个候选时还能得到很好的终极检测mAP。我们前面分析过，这种性质主要来自RPN的cls项。当候选减少时，SS和EB的召回率下降很快。
+
+Figure 2: Recall vs. IoU overlap ratio on the PASCAL VOC 2007 test set
+
+**One-Stage Detection vs. Two-Stage Proposal + Detection**. The OverFeat paper [18] proposes a detection method that uses regressors and classifiers on sliding windows over conv feature maps. OverFeat is a one-stage, class-specific detection pipeline, and ours is a two-stage cascade consisting of class-agnostic proposals and class-specific detections. In OverFeat, the region-wise features come from a sliding window of one aspect ratio over a scale pyramid. These features are used to simultaneously determine the location and category of objects. In RPN, the features are from square (3×3) sliding windows and predict proposals relative to anchors with different scales and aspect ratios. Though both methods use sliding windows, the region proposal task is only the first stage of RPN + Fast R-CNN—the detector attends to the proposals to refine them. In the second stage of our cascade, the region-wise features are adaptively pooled [7, 5] from proposal boxes that more faithfully cover the features of the regions. We believe these features lead to more accurate detections.
+
+**单阶段检测与两阶段候选+检测的对比**。OverFeat[18]提出了一种在卷积特征图上的滑窗使用回归器和分类器的检测方法。OverFeat是单阶段指定类别的检测流程，我们的是两阶段级联过程，包括与类别无关的候选，和类别相关的检测。在OverFeat中，区域,分区域的特征来自于一种纵横比几种尺度的滑窗。这些特征用于同时确定目标的位置和类别。在RPN中，特征来自于方形滑窗(3×3)和预测与不同尺度不同纵横比的锚窗关联的候选。虽然两种方法都使用滑窗，区域候选任务只是RPN+Fast R-CNN的第一阶段，检测器会处理候选并进行提炼。在我们级联的第二阶段，分区域特征从候选框中自适应的pool出来[7,5]，更能忠实的反映区域的特征。
+
+To compare the one-stage and two-stage systems, we emulate the OverFeat system (and thus also circumvent other differences of implementation details) by one-stage Fast R-CNN. In this system, the “proposals” are dense sliding windows of 3 scales (128, 256, 512) and 3 aspect ratios (1:1, 1:2, 2:1). Fast R-CNN is trained to predict class-specific scores and regress box locations from these sliding windows. Because the OverFeat system uses an image pyramid, we also evaluate using conv features extracted from 5 scales. We use those 5 scales as in [7, 5].
+
+为比较单阶段和两阶段系统，我们用单阶段Fast R-CNN模拟OverFeat系统（也防止实现细节的其他不同）。在这个系统中，候选是三种尺度(128,256,512)和三种纵横比(1:1,1:2,2:1)的稠密滑窗。Fast R-CNN训练进行预测类别相关的评分，并回归得到框的位置。由于OverFeat系统使用了图像金字塔，我们也使用5个尺度的卷积特征进行评估。我们使用[7,5]中的5个尺度。
+
+Table 5 compares the two-stage system and two variants of the one-stage system. Using the ZF model, the one-stage system has an mAP of 53.9%. This is lower than the two-stage system (58.7%) by 4.8%. This experiment justifies the effectiveness of cascaded region proposals and object detection. Similar observations are reported in [5, 13], where replacing SS region proposals with sliding windows leads to ∼6% degradation in both papers. We also note that the one-stage system is slower as it has considerably more proposals to process.
+
+表5对比了两阶段系统和单阶段系统的两种变体。使用ZF模型，单阶段系统得到了53.9% mAP。这低于两阶段系统58.7%。这个实验验证了区域候选和目标检测级联系统的有效性。[5,13]也给出了类似的观察结果，两篇文章中将SS区域候选法替换为滑窗法得到了大约6%的下降。我们还注意到，单阶段系统更慢，因为要处理的候选多出不少。
+
+Table 5: One-Stage Detection vs. Two-Stage Proposal + Detection. Detection results are on the PASCAL VOC 2007 test set using the ZF model and Fast R-CNN. RPN uses unshared features.
+
+## 5 Conclusion 结论
+
+We have presented Region Proposal Networks (RPNs) for efficient and accurate region proposal generation. By sharing convolutional features with the down-stream detection network, the region proposal step is nearly cost-free. Our method enables a unified, deep-learning-based object detection system to run at 5-17 fps. The learned RPN also improves region proposal quality and thus the overall object detection accuracy.
+
+我们给出了区域候选网络(RPN)来进行高效准确的候选区域生成。通过与检测网络共享卷积特征，区域候选步骤几乎是不耗费计算时间的。我们的方法使得统一的基于深度学习的目标检测系统在5-17fps的速度运行。学习到的RPN也改进了区域候选质量，所以也改进了总体的目标检测准确率。
