@@ -27,6 +27,14 @@ R-CNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
 Fast R-CNN | 2015 | [1504.08083v2](https://arxiv.org/abs/1504.08083v2)
 Faster R-CNN | 2016 | [1506.01497](https://arxiv.org/abs/1506.01497)
 SSD | 2016 | [1512.02325v5](https://arxiv.org/abs/1512.02325v5)
+YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
+
+## Datasets
+
+Datasets name | Published time | arXiv link
+--- | --- | ---
+MS COCO | 2014 | [1405.0312](https://arxiv.org/abs/1405.0312)
+CrowdHuman | 2018 | [1805.00123](https://arxiv.org/abs/1805.00123)
 
 ## Books:
 
