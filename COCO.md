@@ -1,6 +1,6 @@
 # Microsoft COCO: Common Objects in Context
 
-Tsung-Yi Lin etc
+Tsung-Yi Lin et al.
 
 ## Abstract 摘要
 
