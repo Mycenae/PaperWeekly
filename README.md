@@ -28,6 +28,8 @@ Fast R-CNN | 2015 | [1504.08083v2](https://arxiv.org/abs/1504.08083v2)
 Faster R-CNN | 2016 | [1506.01497](https://arxiv.org/abs/1506.01497)
 SSD | 2016 | [1512.02325v5](https://arxiv.org/abs/1512.02325v5)
 YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
+YOLO9000 | 2016 | [1612.08242](https://arxiv.org/abs/1612.08242)
+YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
 
 ## Datasets
 
