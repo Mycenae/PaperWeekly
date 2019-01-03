@@ -17,6 +17,7 @@ VGG | 2014 | [1409.1556](https://arxiv.org/abs/1409.1556)
 ResNet V1 | 2015 | [1512.03385](https://arxiv.org/abs/1512.03385)
 FaceNet | 2015 | [1503.03832](https://arxiv.org/abs/1503.03832)
 MobileNet | 2017 | [1704.04861](https://arxiv.org/abs/1704.04861)
+MobileNetV2 | 2018 | [1801.04381v3](https://arxiv.org/abs/1801.04381v3)
 
 ## Object Detetion models and algorithms
 
@@ -27,6 +28,7 @@ R-CNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
 Fast R-CNN | 2015 | [1504.08083v2](https://arxiv.org/abs/1504.08083v2)
 Faster R-CNN | 2016 | [1506.01497](https://arxiv.org/abs/1506.01497)
 SSD | 2016 | [1512.02325v5](https://arxiv.org/abs/1512.02325v5)
+Speed/accuracy trade-offs | [1611.10012v3](https://arxiv.org/abs/1611.10012v3)
 YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
 YOLO9000 | 2016 | [1612.08242](https://arxiv.org/abs/1612.08242)
 YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
