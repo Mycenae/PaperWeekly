@@ -27,6 +27,7 @@ SelectiveSearch | 2012 | [personal link](www.huppelen.nl/publications/selectiveS
 R-CNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
 Fast R-CNN | 2015 | [1504.08083v2](https://arxiv.org/abs/1504.08083v2)
 Faster R-CNN | 2016 | [1506.01497](https://arxiv.org/abs/1506.01497)
+Mask R-CNN | 2018 | [1703.06870v3](https://arxiv.org/abs/1703.06870v3)
 SSD | 2016 | [1512.02325v5](https://arxiv.org/abs/1512.02325v5)
 Speed/accuracy trade-offs | [1611.10012v3](https://arxiv.org/abs/1611.10012v3)
 YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
