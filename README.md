@@ -29,10 +29,19 @@ Fast R-CNN | 2015 | [1504.08083v2](https://arxiv.org/abs/1504.08083v2)
 Faster R-CNN | 2016 | [1506.01497](https://arxiv.org/abs/1506.01497)
 Mask R-CNN | 2018 | [1703.06870v3](https://arxiv.org/abs/1703.06870v3)
 SSD | 2016 | [1512.02325v5](https://arxiv.org/abs/1512.02325v5)
-Speed/accuracy trade-offs | [1611.10012v3](https://arxiv.org/abs/1611.10012v3)
+Speed/accuracy trade-offs | 2016 | [1611.10012v3](https://arxiv.org/abs/1611.10012v3)
 YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
 YOLO9000 | 2016 | [1612.08242](https://arxiv.org/abs/1612.08242)
 YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
+
+## Pose Estimation
+
+Paper | Published time | arXiv link
+--- | --- | ---
+Convolutional Pose Machines | 2016 | [1602.00134](https://arxiv.org/abs/1602.00134)
+Part Affinity Fields | 2016 | [1611.08050](https://arxiv.org/abs/1611.08050)
+Hand keypoint detection | 2017 | [1704.07809](https://arxiv.org/abs/1704.07809)
+OpenPose | 2018 | [1812.08008](https://arxiv.org/abs/1812.08008)
 
 ## Datasets
 
