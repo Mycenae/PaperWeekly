@@ -48,6 +48,7 @@ OpenPose | 2018 | [1812.08008](https://arxiv.org/abs/1812.08008)
 Datasets name | Published time | arXiv link
 --- | --- | ---
 MS COCO | 2014 | [1405.0312](https://arxiv.org/abs/1405.0312)
+MPII | 2014 | [CVPR'14](http://human-pose.mpi-inf.mpg.de/contents/andriluka14cvpr.pdf)
 CrowdHuman | 2018 | [1805.00123](https://arxiv.org/abs/1805.00123)
 
 ## Books:
