@@ -43,6 +43,12 @@ Part Affinity Fields | 2016 | [1611.08050](https://arxiv.org/abs/1611.08050)
 Hand keypoint detection | 2017 | [1704.07809](https://arxiv.org/abs/1704.07809)
 OpenPose | 2018 | [1812.08008](https://arxiv.org/abs/1812.08008)
 
+## Image Super-Resolution
+
+Paper | Published time | arXiv link
+--- | --- | ---
+EDSR | 2017 | [1707.02921v1](https://arxiv.org/1707.02921v1)
+
 ## Datasets
 
 Datasets name | Published time | arXiv link
