@@ -202,8 +202,7 @@ We provide the quantitative evaluation results of our final models (EDSR+, MDSR+
 
 ## 5. NTIRE2017 SR Challenge
 
-This work is initially proposed for the purpose of participating in the NTIRE2017 Super-Resolution Challenge [26]. The challenge aims to develop a single image super-
-resolution system with the highest PSNR.
+This work is initially proposed for the purpose of participating in the NTIRE2017 Super-Resolution Challenge [26]. The challenge aims to develop a single image super-resolution system with the highest PSNR.
 
 本文的工作最初是提交参加NTIRE2017超分挑战的[26]。挑战赛目标是得到PSNR最高的单幅图像超分系统。
 
