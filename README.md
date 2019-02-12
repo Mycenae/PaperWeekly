@@ -48,6 +48,7 @@ OpenPose | 2018 | [1812.08008](https://arxiv.org/abs/1812.08008)
 Paper | Published time | arXiv link
 --- | --- | ---
 EDSR | 2017 | [1707.02921v1](https://arxiv.org/1707.02921v1)
+Deep image prior | 2018 | [github.io](https://dmitryulyanov.github.io/deep_image_prior)
 
 ## Datasets
 
