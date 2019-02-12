@@ -43,6 +43,12 @@ Part Affinity Fields | 2016 | [1611.08050](https://arxiv.org/abs/1611.08050)
 Hand keypoint detection | 2017 | [1704.07809](https://arxiv.org/abs/1704.07809)
 OpenPose | 2018 | [1812.08008](https://arxiv.org/abs/1812.08008)
 
+## Face Detection
+
+Paper | Published time | arXiv link
+--- | --- | ---
+MTCNN | 2016 | [1604.02878v1](https://arxiv.org/abs/1604.02878v1)
+
 ## Image Super-Resolution
 
 Paper | Published time | arXiv link
