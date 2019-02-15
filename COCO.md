@@ -252,7 +252,7 @@ There are several promising directions for future annotations on our dataset. We
 
 To download and learn more about MS COCO please see the project website. MS COCO will evolve and grow over time; up to date information is available online.
 
-访问我们的项目网站来下载和学习MS COCO。数据集会随着时间烟花并增长；线上信息是最新的信息。
+访问我们的项目网站来下载和学习MS COCO。数据集会随着时间演化并增长；线上信息是最新的信息。
 
 **Acknowledgments**. Funding for all crowd worker tasks was provided by Microsoft. P.P. and D.R. were supported by ONR MURI Grant N00014-10-1-0933. We would like to thank all members of the community who provided valuable feedback throughout the process of defining and collecting the dataset.
 
