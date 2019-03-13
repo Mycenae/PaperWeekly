@@ -56,6 +56,12 @@ Paper | Published time | arXiv link
 EDSR | 2017 | [1707.02921v1](https://arxiv.org/1707.02921v1)
 Deep image prior | 2018 | [github.io](https://dmitryulyanov.github.io/deep_image_prior)
 
+## Crowd counting
+
+Paper | Published time | Link
+--- | --- | ---
+MSCNN | 2017 | [1702.02359](https://arxiv.org/abs/1702.02359)
+
 ## Datasets
 
 Datasets name | Published time | arXiv link
@@ -63,6 +69,8 @@ Datasets name | Published time | arXiv link
 MS COCO | 2014 | [1405.0312](https://arxiv.org/abs/1405.0312)
 MPII | 2014 | [CVPR'14](http://human-pose.mpi-inf.mpg.de/contents/andriluka14cvpr.pdf)
 CrowdHuman | 2018 | [1805.00123](https://arxiv.org/abs/1805.00123)
+fddb | 2010 | [fddb](http://vis-www.cs.umass.edu/fddb/fddb.pdf)
+WIDER-FACE | 2015 | [1511.06523](https://arxiv.org/abs/1511.06523)
 
 ## Books:
 
