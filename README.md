@@ -60,6 +60,7 @@ Deep image prior | 2018 | [github.io](https://dmitryulyanov.github.io/deep_image
 
 Paper | Published time | Link
 --- | --- | ---
+MCNN | 2016 | [CVPR2016](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf)
 MSCNN | 2017 | [1702.02359](https://arxiv.org/abs/1702.02359)
 
 ## Datasets
