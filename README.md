@@ -1,10 +1,8 @@
 # PaperWeekly
 
-The meaning of translation is to read, slowly, with concentration, to understand.
-
 ## Deep learning models and algorithms
 
-Model name | Published time | arxiv link
+Model name | Published time | Link
 --- | --- | ---
 AlexNet | 2012 | [nips link](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)
 Visualization | 2013 | [1311.2901](https://arxiv.org/abs/1311.2901)
@@ -21,7 +19,7 @@ MobileNetV2 | 2018 | [1801.04381v3](https://arxiv.org/abs/1801.04381v3)
 
 ## Object Detetion models and algorithms
 
-Model name | Published time | arXiv link
+Model name | Published time | Link
 --- | --- | ---
 SelectiveSearch | 2012 | [personal link](www.huppelen.nl/publications/selectiveSearchDraft.pdf)
 R-CNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
@@ -36,7 +34,7 @@ YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
 
 ## Pose Estimation
 
-Paper | Published time | arXiv link
+Paper | Published time | Link
 --- | --- | ---
 Convolutional Pose Machines | 2016 | [1602.00134](https://arxiv.org/abs/1602.00134)
 Part Affinity Fields | 2016 | [1611.08050](https://arxiv.org/abs/1611.08050)
@@ -45,13 +43,13 @@ OpenPose | 2018 | [1812.08008](https://arxiv.org/abs/1812.08008)
 
 ## Face Detection
 
-Paper | Published time | arXiv link
+Paper | Published time | Link
 --- | --- | ---
 MTCNN | 2016 | [1604.02878v1](https://arxiv.org/abs/1604.02878v1)
 
 ## Image Super-Resolution
 
-Paper | Published time | arXiv link
+Paper | Published time | Link
 --- | --- | ---
 EDSR | 2017 | [1707.02921v1](https://arxiv.org/1707.02921v1)
 Deep image prior | 2018 | [github.io](https://dmitryulyanov.github.io/deep_image_prior)
@@ -63,9 +61,15 @@ Paper | Published time | Link
 MCNN | 2016 | [CVPR2016](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf)
 MSCNN | 2017 | [1702.02359](https://arxiv.org/abs/1702.02359)
 
+## OCR
+
+Paper | Published time | Link
+--- | --- | ---
+review | 2018 | [1811.04256](https://arxiv.org/abs/1811.04256)
+
 ## Datasets
 
-Datasets name | Published time | arXiv link
+Datasets name | Published time | Link
 --- | --- | ---
 MS COCO | 2014 | [1405.0312](https://arxiv.org/abs/1405.0312)
 MPII | 2014 | [CVPR'14](http://human-pose.mpi-inf.mpg.de/contents/andriluka14cvpr.pdf)
