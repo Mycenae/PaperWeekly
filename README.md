@@ -77,6 +77,12 @@ CrowdHuman | 2018 | [1805.00123](https://arxiv.org/abs/1805.00123)
 fddb | 2010 | [fddb](http://vis-www.cs.umass.edu/fddb/fddb.pdf)
 WIDER-FACE | 2015 | [1511.06523](https://arxiv.org/abs/1511.06523)
 
+## Other usage
+
+usage | paper | time | link
+--- | --- | --- | ---
+fire detection | FireNet | 2018 | [personal link](https://breckon.org/toby/publications/papers/dunnings18fire.pdf)
+
 ## Books:
 
 1. [深度学习入门：基于Python的理论与实现](http://www.ituring.com.cn/book/1921)
