@@ -37,6 +37,7 @@ YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
 Model | Published time | Link
 --- | --- | ---
 FCN-rLSTM | 2017 | [1707.09476](https://arxiv.org/abs/1707.09476)
+Bi-ConvLSTM | 2017 | [1707.07890](https://arxiv.org/abs/1707.07890)
 
 ## Pose Estimation
 
