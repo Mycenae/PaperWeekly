@@ -32,6 +32,12 @@ YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
 YOLO9000 | 2016 | [1612.08242](https://arxiv.org/abs/1612.08242)
 YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
 
+## Semantic Segmentation
+
+Model name | Published time | Link
+--- | --- | ---
+FCN | 2015 | [1411.4038](https://arxiv.org/abs/1411.4038)
+
 ## Spatial-temporal CNN
 
 Model | Published time | Link
