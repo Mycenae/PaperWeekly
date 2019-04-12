@@ -13,7 +13,6 @@ Inception V4 | 2016 | [1602.07261v2](https://arxiv.org/abs/1602.07261v2)
 Xception     | 2016 | [1610.02357v3](https://arxiv.org/abs/1610.02357v3)
 VGG | 2014 | [1409.1556](https://arxiv.org/abs/1409.1556)
 ResNet V1 | 2015 | [1512.03385](https://arxiv.org/abs/1512.03385)
-FaceNet | 2015 | [1503.03832](https://arxiv.org/abs/1503.03832)
 MobileNet | 2017 | [1704.04861](https://arxiv.org/abs/1704.04861)
 MobileNetV2 | 2018 | [1801.04381v3](https://arxiv.org/abs/1801.04381v3)
 
@@ -54,11 +53,13 @@ Part Affinity Fields | 2016 | [1611.08050](https://arxiv.org/abs/1611.08050)
 Hand keypoint detection | 2017 | [1704.07809](https://arxiv.org/abs/1704.07809)
 OpenPose | 2018 | [1812.08008](https://arxiv.org/abs/1812.08008)
 
-## Face Detection
+## Face Detection & Alignment & Recognition
 
 Paper | Published time | Link
 --- | --- | ---
+FaceNet | 2015 | [1503.03832](https://arxiv.org/abs/1503.03832)
 MTCNN | 2016 | [1604.02878v1](https://arxiv.org/abs/1604.02878v1)
+ArcFace | 2018 | [1801.07698](https://arxiv.org/abs/1801.07698)
 
 ## Image Super-Resolution
 
