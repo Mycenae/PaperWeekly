@@ -16,6 +16,12 @@ ResNet V1 | 2015 | [1512.03385](https://arxiv.org/abs/1512.03385)
 MobileNet | 2017 | [1704.04861](https://arxiv.org/abs/1704.04861)
 MobileNetV2 | 2018 | [1801.04381v3](https://arxiv.org/abs/1801.04381v3)
 
+## AutoML
+
+Method | Published time | Link
+--- | --- | ---
+Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
+
 ## Object Detetion models and algorithms
 
 Model name | Published time | Link
