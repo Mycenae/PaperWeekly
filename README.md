@@ -15,6 +15,7 @@ VGG | 2014 | [1409.1556](https://arxiv.org/abs/1409.1556)
 ResNet V1 | 2015 | [1512.03385](https://arxiv.org/abs/1512.03385)
 MobileNet | 2017 | [1704.04861](https://arxiv.org/abs/1704.04861)
 MobileNetV2 | 2018 | [1801.04381v3](https://arxiv.org/abs/1801.04381v3)
+SENet | 2017 | [1709.01507](https://arxiv.org/abs/1709.01507)
 
 ## AutoML
 
