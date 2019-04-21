@@ -37,6 +37,7 @@ Speed/accuracy trade-offs | 2016 | [1611.10012v3](https://arxiv.org/abs/1611.100
 YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
 YOLO9000 | 2016 | [1612.08242](https://arxiv.org/abs/1612.08242)
 YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
+Focal Loss | 2017 | [1708.02002](https://arxiv.org/abs/1708.02002)
 
 ## Semantic Segmentation
 
