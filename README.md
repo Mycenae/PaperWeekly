@@ -16,6 +16,7 @@ ResNet V1 | 2015 | [1512.03385](https://arxiv.org/abs/1512.03385)
 MobileNet | 2017 | [1704.04861](https://arxiv.org/abs/1704.04861)
 MobileNetV2 | 2018 | [1801.04381v3](https://arxiv.org/abs/1801.04381v3)
 SENet | 2017 | [1709.01507](https://arxiv.org/abs/1709.01507)
+OctConv | 2019 | [1904.0509](https://arxiv.org/abs/1904.05049)
 
 ## AutoML
 
