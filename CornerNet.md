@@ -1,4 +1,4 @@
-maokuang# CornerNet: Detecting Objects as Paired Keypoints
+# CornerNet: Detecting Objects as Paired Keypoints
 
 Hei Law · Jia Deng Princeton Universtiy
 
