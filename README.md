@@ -50,19 +50,6 @@ Model name | Published time | Link
 --- | --- | ---
 FCN | 2015 | [1411.4038](https://arxiv.org/abs/1411.4038)
 
-## Framework
-
-Name | Published time | Link
---- | --- | ---
-TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
-
-## Spatial-temporal CNN
-
-Model | Published time | Link
---- | --- | ---
-FCN-rLSTM | 2017 | [1707.09476](https://arxiv.org/abs/1707.09476)
-Bi-ConvLSTM | 2017 | [1707.07890](https://arxiv.org/abs/1707.07890)
-
 ## Pose Estimation
 
 Paper | Published time | Link
@@ -80,6 +67,20 @@ FaceNet | 2015 | [1503.03832](https://arxiv.org/abs/1503.03832)
 MTCNN | 2016 | [1604.02878v1](https://arxiv.org/abs/1604.02878v1)
 ArcFace | 2018 | [1801.07698](https://arxiv.org/abs/1801.07698)
 MobileFaceNet | 2018 | [1804.07573](https://arxiv.org/abs/1804.07573)
+
+## Framework
+
+Name | Published time | Link
+--- | --- | ---
+TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
+
+## Spatial-temporal CNN
+
+Model | Published time | Link
+--- | --- | ---
+FCN-rLSTM | 2017 | [1707.09476](https://arxiv.org/abs/1707.09476)
+Bi-ConvLSTM | 2017 | [1707.07890](https://arxiv.org/abs/1707.07890)
+
 
 ## Image Super-Resolution
 
