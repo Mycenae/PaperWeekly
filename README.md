@@ -68,11 +68,12 @@ MTCNN | 2016 | [1604.02878v1](https://arxiv.org/abs/1604.02878v1)
 ArcFace | 2018 | [1801.07698](https://arxiv.org/abs/1801.07698)
 MobileFaceNet | 2018 | [1804.07573](https://arxiv.org/abs/1804.07573)
 
-## Framework
+## Inference Framework and Quantization
 
 Name | Published time | Link
 --- | --- | ---
 TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
+Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 
 ## Spatial-temporal CNN
 
