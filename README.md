@@ -77,10 +77,11 @@ Name | Published time | Link
 TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 
-## Spatial-temporal CNN
+## Action Recognition and Spatial-temporal CNN
 
 Model | Published time | Link
 --- | --- | ---
+I3D | 2017 | [1705.07750](https://arxiv.org/abs/1705.07750)
 FCN-rLSTM | 2017 | [1707.09476](https://arxiv.org/abs/1707.09476)
 Bi-ConvLSTM | 2017 | [1707.07890](https://arxiv.org/abs/1707.07890)
 
