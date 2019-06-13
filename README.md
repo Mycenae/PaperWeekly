@@ -52,6 +52,9 @@ CornerNet | 2018 | [1808.01244](https://arxiv.org/abs/1808.01244)
 Model name | Published time | Link
 --- | --- | ---
 FCN | 2015 | [1411.4038](https://arxiv.org/abs/1411.4038)
+DeepLabV1 | 2015 | [1412.7062](https://arxiv.org/abs/1412.7062)
+DeepLabV2 | 2016 | [1606.00915](https://arxiv.org/abs/1606.00915)
+DeepLabV3 | 2017 | [1706.05587](https://arxiv.org/abs/1706.05587)
 
 ## Pose Estimation
 
