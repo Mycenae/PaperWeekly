@@ -55,6 +55,9 @@ FCN | 2015 | [1411.4038](https://arxiv.org/abs/1411.4038)
 DeepLabV1 | 2015 | [1412.7062](https://arxiv.org/abs/1412.7062)
 DeepLabV2 | 2016 | [1606.00915](https://arxiv.org/abs/1606.00915)
 DeepLabV3 | 2017 | [1706.05587](https://arxiv.org/abs/1706.05587)
+DeepLabV3+ | 2018 | [1802.02611](https://arxiv.org/abs/1802.02611)
+Dense-Prediction-Architecture-Search | 2018 | [1809.04184](https://arxiv.org/abs/1809.04184)
+Auto-DeepLab | 2019 | [1901.02985](https://arxiv.org/abs/1901.02985)
 
 ## Pose Estimation
 
