@@ -21,7 +21,7 @@ MobileNetV2 | 2018 | [1801.04381v3](https://arxiv.org/abs/1801.04381v3)
 SENet | 2017 | [1709.01507](https://arxiv.org/abs/1709.01507)
 OctConv | 2019 | [1904.0509](https://arxiv.org/abs/1904.05049)
 MobileNetV3 | 2019 | [1905.02244](https://arxiv.org/abs/1905.02244)
-EfficientNet | 2019 | [190.11946](https://arxiv.org/abs/1905.11946)
+EfficientNet | 2019 | [1905.11946](https://arxiv.org/abs/1905.11946)
 
 ## AutoML
 
@@ -33,7 +33,7 @@ Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
 
 Model name | Published time | Link
 --- | --- | ---
-SelectiveSearch | 2012 | [personal link](www.huppelen.nl/publications/selectiveSearchDraft.pdf)
+SelectiveSearch | 2012 | [personal link](http://www.huppelen.nl/publications/selectiveSearchDraft.pdf)
 R-CNN | 2014 | [1311.2524v5](https://arxiv.org/abs/1311.2524v5)
 Fast R-CNN | 2015 | [1504.08083v2](https://arxiv.org/abs/1504.08083v2)
 Faster R-CNN | 2016 | [1506.01497](https://arxiv.org/abs/1506.01497)
@@ -77,7 +77,7 @@ MTCNN | 2016 | [1604.02878v1](https://arxiv.org/abs/1604.02878v1)
 ArcFace | 2018 | [1801.07698](https://arxiv.org/abs/1801.07698)
 MobileFaceNet | 2018 | [1804.07573](https://arxiv.org/abs/1804.07573)
 
-## Inference Framework and Pruning, Quantization
+## Inference Framework and Pruning, Quantization, Compression
 
 Name | Published time | Link
 --- | --- | ---
