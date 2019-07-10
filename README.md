@@ -43,6 +43,7 @@ Speed/accuracy trade-offs | 2016 | [1611.10012v3](https://arxiv.org/abs/1611.100
 YOLOv1 | 2015 | [1506.02640](https://arxiv.org/abs/1506.02640)
 YOLO9000 | 2016 | [1612.08242](https://arxiv.org/abs/1612.08242)
 YOLOv3 | 2018 | [1804.02767](https://arxiv.org/abs/1804.02767)
+R-FCN | 2016 | [1605.06409](https://arxiv.org/abs/1605.06409)
 Focal Loss | 2017 | [1708.02002](https://arxiv.org/abs/1708.02002)
 Feature Pyramid Network | 2017 | [1612.03144](https://arxiv.org/abs/1612.03144)
 CornerNet | 2018 | [1808.01244](https://arxiv.org/abs/1808.01244)
@@ -125,6 +126,7 @@ MPII | 2014 | [CVPR'14](http://human-pose.mpi-inf.mpg.de/contents/andriluka14cvp
 CrowdHuman | 2018 | [1805.00123](https://arxiv.org/abs/1805.00123)
 fddb | 2010 | [fddb](http://vis-www.cs.umass.edu/fddb/fddb.pdf)
 WIDER-FACE | 2015 | [1511.06523](https://arxiv.org/abs/1511.06523)
+MS-Celeb-1M | 2016 | [1607.08221](https://arxiv.org/abs/1607.08221)
 
 ## Other usage
 
