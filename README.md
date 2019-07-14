@@ -79,6 +79,7 @@ FaceNet | 2015 | [1503.03832](https://arxiv.org/abs/1503.03832)
 MTCNN | 2016 | [1604.02878v1](https://arxiv.org/abs/1604.02878v1)
 ArcFace | 2018 | [1801.07698](https://arxiv.org/abs/1801.07698)
 MobileFaceNet | 2018 | [1804.07573](https://arxiv.org/abs/1804.07573)
+RetinaFace | 2019 | [1905.00641](https://arxiv.org/abs/1905.00641)
 
 ## Inference Framework and Pruning, Quantization, Compression
 
