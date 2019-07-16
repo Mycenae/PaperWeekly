@@ -85,6 +85,7 @@ RetinaFace | 2019 | [1905.00641](https://arxiv.org/abs/1905.00641)
 
 Name | Published time | Link
 --- | --- | ---
+Caffe | 2014 | [1408.5093](https://arxiv.org/abs/1408.5093)
 Learning-weights-and-connections | 2015 | [1506.02626](https://arxiv.org/abs/1506.02626)
 Deep-Compression | 2015 | [1510.00149](https://arxiv.org/abs/1510.00149)
 Pruning-Filters | 2016 | [1608.08710](https://arxiv.org/abs/1608.08710)
