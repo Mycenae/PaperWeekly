@@ -96,4 +96,187 @@ In this section, we will first discuss our proposed novel factorized hierarchica
 
 As shown in recent studies [36, 20], a well-defined search space is extremely important for neural architecture search. However, most previous approaches [35, 19, 26] only search for a few complex cells and then repeatedly stack the same cells. These approaches don’t permit layer diversity, which we show is critical for achieving both high accuracy and lower latency.
 
+最近的研究[36,20]显示，定义良好的搜索空间对于神经网络搜索是非常重要的。但是，多数之前的方法[25,19,26]只搜索了几个复杂的单元，然后就重复堆叠相同的单元。这种方法欠缺层的多样性，我们会证明，这对网络取得高准确率和低延迟是非常关键的。
+
 In contrast to previous approaches, we introduce a novel factorized hierarchical search space that factorizes a CNN model into unique blocks and then searches for the operations and connections per block separately, thus allowing different layer architectures in different blocks. Our intuition is that we need to search for the best operations based on the input and output shapes to obtain better accurate-latency trade-offs. For example, earlier stages of CNNs usually process larger amounts of data and thus have much higher impact on inference latency than later stages. Formally, consider a widely-used depthwise separable convolution [11] kernel denoted as the four-tuple (K, K, M, N) that transforms an input of size (H, W, M) (We omit batch size dimension for simplicity) to an output of size (H, W, N), where (H, W) is the input resolution and M, N are the input/output filter sizes. The total number of multiply-adds can be described as:
+
+与之前的方法形成对比，我们提出了一种新颖的分解层次式搜索空间，将一个CNN模型分解成唯一的模块，然后逐个模块单独搜索其算子和连接，这样不同模块中就可以有不同的层架构。我们的直觉是，我们需要基于输入和输出的形状，搜索最佳的算子，以得到更好的准确率-延迟折中。比如，CNN早期的层通常处理更多的数据，所以与后期的阶段相比，对推理延迟有更大的影响。正式的，我们考虑一种广泛使用的分层可分离卷积[11]核，表示为四元组(K,K,M,N)，将大小为(H,W,M)的输入转换为大小为(H,W,N)的输出（简化起见，我们忽略了批大小的维度），其中(H,W)是输入分辨率，M,N是输入/输出滤波器大小。MultiAdd计算量可以表示为：
+
+$$H ∗ W ∗ M ∗ (K ∗ K + N)$$(4)
+
+Here we need to carefully balance the kernel size K and filter size N if the total computation is constrained. For instance, increasing the receptive field with larger kernel size K of a layer must be balanced with reducing either the filter size N at the same layer, or compute from other layers.
+
+这里，如果总计算量是固定的话，我们需要仔细的平衡核大小K和滤波器的数量N。比如，用更大的核大小K来增加一层的感受野的大小，要得到均衡，必须降低这一层的滤波器数量N，或降低其他层的计算量。
+
+Figure 4 shows the baseline structure of our search space. We partition a CNN model into a sequence of pre-defined blocks, gradually reducing input resolutions and increasing filter sizes as is common in many CNN models. Each block has a list of identical layers, whose operations and connections are determined by a per-block sub search space. Specifically, a sub search space for a block i consists of the following choices:
+
+图4是我们搜索空间的基准结构。我们将一个CNN模型分解成一系列预定义的模块，逐渐降低输入分辨率，增加滤波器数量，CNN模型通常都是这样的。每个模块中都是相同的层，其运算和连接是由每个模块的子搜索空间确定的。具体的，模块i的子搜索空间包括以下选择：
+
+- Convolutional ops ConvOp: regular conv (conv), depthwise conv (dconv), and mobile inverted bottleneck conv [29]. 卷积算子ConvOp：常规卷积(conv)，分层卷积(dconv)，和移动逆瓶颈卷积[29]。
+- Convolutional kernel size KernelSize: 3x3, 5x5. 卷积核大小KernelSize：3×3,5×5。
+- Squeeze-and-excitation [13] ratio SERatio: 0, 0.25. SE率：0,0.25。
+- Skip ops SkipOp: pooling, identity residual, or no skip. 跳跃连接SkipOp：池化，恒等残差，或没有跳跃连接。
+- Output filter size $F_i$. 输出滤波器数量$F_i$。
+- Number of layers per block $N_i$. 每一层的模块数$N_i$。
+
+ConvOp, KernelSize, SERatio, SkipOp, $F_i$ determines the architecture of a layer, while $N_i$ determines how many times the layer will be repeated for the block. For example, each layer of block 4 in Figure 4 has an inverted bottleneck 5x5 convolution and an identity residual skip path, and the same layer is repeated $N_4$ times. We discretize all search options using MobileNetV2 as a reference: For #layers in each block, we search for {0, +1, -1} based on MobileNetV2; for filter size per layer, we search for its relative size in {0.75, 1.0, 1.25} to MobileNetV2 [29].
+
+ConvOp, KernelSize, SERatio, SkipOp, $F_i$确定了一层的架构，而$N_i$确定了每个模块中一层会重复多少次。比如，图4中的模块4中的每层，都有一个逆瓶颈5×5卷积和一个恒等残差跳跃路径，同样的层要重复$N_4$次。我们离散化所有的搜索选项，使用MobileNetV2作为一个参考：对于每个模块中的#layers，我们搜索基于MobileNetV2搜索{0, +1, -1}；对于每一层的滤波器数量，我们搜索MobileNetV2中的相对数量的{0.75, 1.0, 1.25}倍数。
+
+Our factorized hierarchical search space has a distinct advantage of balancing the diversity of layers and the size of total search space. Suppose we partition the network into B blocks, and each block has a sub search space of size S with average N layers per block, then our total search space size would be $S^B$, versing the flat per-layer search space with size $S^{B∗N}$. A typical case is S = 432, B = 5, N = 3, where our search space size is about $10^{13}$, versing the perlayer approach with search space size $10^{39}$.
+
+我们的分解层次化搜索空间，在层的多样性和和整个搜索空间的规模上，可以达到更好的均衡。假设我们将网络分成B个模块，每个模块有一个子搜索空间，大小为S，平均每个模块有N层，那么我们的整个搜索空间大小将是$S^B$，比较起来，普通的逐层搜索空间的大小为$S^{B∗N}$。典型的情况是，S = 432, B = 5, N = 3, 其中我们的搜索空间大小大约为$10^{13}$，逐层的方法其搜索空间大小为$10^{39}$。
+
+Figure 4: Factorized Hierarchical Search Space. Network layers are grouped into a number of predefined skeletons, called blocks, based on their input resolutions and filter sizes. Each block contains a variable number of repeated identical layers where only the first layer has stride 2 if input/output resolutions are different but all other layers have stride 1. For each block, we search for the operations and connections for a single layer and the number of layers N , then the same layer is repeated N times (e.g., Layer 4-1 to 4-$N_4$ are the same). Layers from different blocks (e.g., Layer 2-1 and 4-1) can be different.
+
+### 4.2. Search Algorithm 搜索算法
+
+Inspired by recent work [35, 36, 25, 20], we use a reinforcement learning approach to find Pareto optimal solutions for our multi-objective search problem. We choose reinforcement learning because it is convenient and the reward is easy to customize, but we expect other methods like evolution [26] should also work.
+
+受最近的工作[35,36,25,20]启发，我们使用强化学习的方法，来对我们的多目标搜索问题，寻找Pareto最优解。我们选择强化学习，是因为方便，其奖励函数很容易定制，但我们希望其他方法如演化算法[26]也应当起到作用。
+
+Concretely, we follow the same idea as [36] and map each CNN model in the search space to a list of tokens. These tokens are determined by a sequence of actions $a_{1:T}$ from the reinforcement learning agent based on its parameters θ. Our goal is to maximize the expected reward:
+
+具体的，我们采用的是与[36]中一样的算法，将每个CNN模型映射到符号列表的搜索空间。这些符号由强化学习代理的动作序列$a_{1:T}$确定，这些动作序列是基于其参数θ的。我们的目标是最大化期望奖励：
+
+$$J = E_{P(a_{1:T};θ)} [R(m)]$$(5)
+
+where m is a sampled model determined by action $a_{1:T}$, and R(m) is the objective value defined by equation 2. 其中m是由动作序列$a_{1:T}$确定的一个采样模型，R(m)是式(2)定义的目标值。
+
+As shown in Figure 1, the search framework consists of three components: a recurrent neural network (RNN) based controller, a trainer to obtain the model accuracy, and a mobile phone based inference engine for measuring the latency. We follow the well known sample-eval-update loop to train the controller. At each step, the controller first samples a batch of models using its current parameters θ, by predicting a sequence of tokens based on the softmax logits from its RNN. For each sampled model m, we train it on the target task to get its accuracy ACC(m), and run it on real phones to get its inference latency LAT (m). We then calculate the reward value R(m) using equation 2. At the end of each step, the parameters θ of the controller are updated by maximizing the expected reward defined by equation 5 using Proximal Policy Optimization [30]. The sample-eval-update loop is repeated until it reaches the maximum number of steps or the parameters θ converge.
+
+如图1所示，搜索框架包含三个部分：一个基于RNN的控制器，一个训练器来得到模型准确率，一个基于移动手机的推理引擎来衡量延迟。我们按照著名的“采样-评估-更新”的循环，来训练控制器。在每一步中，控制器首先使用现有参数θ来采样一批模型，主要是通过预测一个符号序列，基于RNN的softmax logits。对每个采样的模型m，我们在目标任务中对其训练，以得到其准确率ACC(m)，并在真实手机上运行，以得到其推理延迟LAT(m)。我们然后使用公式2计算其奖励值R(m)。在每一步骤的最后，通过使用Proximal Policy Optimization，最大化式5定义的期望奖励，来更新控制器的参数θ。这个“采样—评估—更新”的训练重复进行，直到达到最大步骤数量，或参数θ收敛。
+
+## 5. Experimental Setup 试验设置
+
+Directly searching for CNN models on large tasks like ImageNet or COCO is expensive, as each model takes days to converge. While previous approaches mainly perform architecture search on smaller tasks such as CIFAR-10 [36, 26], we find those small proxy tasks don’t work when model latency is taken into account, because one typically needs to scale up the model when applying to larger problems. In this paper, we directly perform our architecture search on the ImageNet training set but with fewer training steps (5 epochs). As a common practice, we reserve randomly selected 50K images from the training set as the fixed validation set. To ensure the accuracy improvements are from our search space, we use the same RNN controller as NASNet [36] even though it is not efficient: each architecture search takes 4.5 days on 64 TPUv2 devices. During training, we measure the real-world latency of each sampled model by running it on the single-thread big CPU core of Pixel 1 phones. In total, our controller samples about 8K models during architecture search, but only 15 top-performing models are transferred to the full ImageNet and only 1 model is transferred to COCO.
+
+在大型任务中直接搜索CNN模型是非常耗时的，如ImageNet或COCO，因为每个模型都需要几天才能收敛。之前的方法主要在更小的任务中，如CIFAR-10中搜索架构，而我们则发现，在考虑到模型延迟的情况下，这些小型代理任务不好用，因为在更大的问题中应用时，一般需要放大这个模型。在本文中，我们在ImageNet训练集上直接进行架构搜索，但使用更少的训练步骤（5轮迭代）。与通常做法一样，我们从训练集中随机选择50K图像，作为固定的验证集。为确保准确率的改进是因为我们的搜索空间的原因，我们使用与NASNet[36]相同的控制器RNN，虽然其效率不太高：每次架构搜索在TPUv2上耗时4.5天。在训练时，我们测量每个采样模型的真实世界延迟，在Pixel 1手机上单线程用大CPU核运行模型。总计，我们的控制器在架构搜索中，采样了大约8K个模型，但只有15个表现最好的模型迁移到了完整的ImageNet上，只有一个模型迁移到了COCO上。
+
+For full ImageNet training, we use RMSProp optimizer with decay 0.9 and momentum 0.9. Batch norm is added after every convolution layer with momentum 0.99, and weight decay is 1e-5. Dropout rate 0.2 is applied to the last layer. Following [7], learning rate is increased from 0 to 0.256 in the first 5 epochs, and then decayed by 0.97 every 2.4 epochs. We use batch size 4K and Inception preprocessing with image size 224×224. For COCO training, we plug our learned model into SSD detector [22] and use the same settings as [29], including input size 320 × 320.
+
+对于完整的ImageNet训练，我们使用RMSProp优化器，衰减为0.9，动量为0.9。在买个卷积层后，都加入了批归一化，动量0.99，权重衰减1e-5。对于最后一层，Dropout率为0.2。按照[7]的方法，学习率在前5轮中从0增加到0.256，然后每2.4轮衰减0.97。我们使用批规模为4K，图像大小224×224，Inception预处理。对于COCO训练，我们将学习到的模型插入到SSD检测器中，使用[29]相同的设置，包括输入大小为320×320。
+
+## 6. Results
+
+In this section, we study the performance of our models on ImageNet classification and COCO object detection, and compare them with other state-of-the-art mobile models. 本节中，我们在ImageNet分类和COCO目标检测中研究我们模型的性能，与其他目标最好的移动模型进行比较。
+
+### 6.1. ImageNet Classification Performance
+
+Table 1 shows the performance of our models on ImageNet [28]. We set our target latency as T = 75ms, similar to MobileNetV2 [29], and use Equation 2 with α=β=-0.07 as our reward function during architecture search. Afterwards, we pick three top-performing MnasNet models, with different latency-accuracy trade-offs from the same search experiment and compare them with existing mobile models.
+
+表1给出了我们的模型在ImageNet上的结果。我们设目标延迟为T = 75ms，与MobileNetV2类似，式2中α=β=-0.07，是我们架构搜索过程中的奖励函数。然后，我们选择了表现最好的三个MnasNet模型，在相同的搜索试验中有着不同的延迟-准确率折中，将其与现有的移动模型进行比较。
+
+As shown in the table, our MnasNet A1 model achieves 75.2% top-1 / 92.5% top-5 accuracy with 78ms latency and 3.9M parameters / 312M multiply-adds, achieving a new state-of-the-art accuracy for this typical mobile latency constraint. In particular, MnasNet runs 1.8× faster than MobileNetV2 (1.4) [29] on the same Pixel phone with 0.5% higher accuracy. Compared with automatically searched CNN models, our MnasNet runs 2.3× faster than the mobile-size NASNet-A [36] with 1.2% higher top-1 accuracy. Notably, our slightly larger MnasNet-A3 model achieves better accuracy than ResNet-50 [9], but with 4.8× fewer parameters and 10× fewer multiply-add cost.
+
+如表中所示，我们的MnasNet A1模型得到了75.2% top-1 / 92.5% top-5准确率，延迟为78ms，参数量为3.9M，MultiAdds为312M，对于这种典型的移动延迟的约束来说，取得了目前最好的准确率。特别的，MnasNet比MobileNetV2(1.4)在同样的Pixel手机上快了1.8x，准确率高了0.5%。与自动搜索到的CNN模型相比，我们的MnasNet比移动大小的NASNet-A快了2.3x，top-1准确率高了1.2%。需要说明的是，我们略大的MnasNet-A3模型比ResNet-50模型准确率更高，但参数量少了4.8x，MultiAdds少了10x。
+
+Given that squeeze-and-excitation (SE [13]) is relatively new and many existing mobile models don’t have this extra optimization, we also show the search results without SE in the search space in Table 2; our automated approach still significantly outperforms both MobileNetV2 and NASNet.
+
+因为SE模块相对较新，很多现有的移动模型没有这个额外的优化，我们也给出了搜索空间中没有SE模块的结果，见表2；我们的自动方法仍然比MobileNetV2和NASNet要好很多。
+
+Table 1: Performance Results on ImageNet Classification [28]. We compare our MnasNet models with both manually-designed mobile models and other automated approaches – MnasNet-A1 is our baseline model;MnasNet-A2 and MnasNet-A3 are two models (for comparison) with different latency from the same architecture search experiment; #Params: number of trainable parameters; #Mult-Adds: number of multiply-add operations per image; Top-1/5 Acc.: the top-1 or top-5 accuracy on ImageNet validation set; Inference Latency is measured on the big CPU core of a Pixel 1 Phone with batch size 1.
+
+Table 2: Performance Study for Squeeze-and-Excitation SE [13] – MnasNet-A denote the default MnasNet with SE in search space; MnasNet-B denote MnasNet with no SE in search space.
+
+### 6.2. Model Scaling Performance 模型缩放的性能
+
+Given the myriad application requirements and device heterogeneity present in the real world, developers often scale a model up or down to trade accuracy for latency or model size. One common scaling technique is to modify the filter size using a depth multiplier [11]. For example, a depth multiplier of 0.5 halves the number of channels in each layer, thus reducing the latency and model size. Another common scaling technique is to reduce the input image size without changing the network.
+
+在真实世界中存在多样化的应用需求和设备异质性，开发者通常会把模型放大或缩小，用模型准确率换取延迟或模型大小。一个通常的缩放技术是用深度乘子来改变滤波器数量。比如，深度乘子为0.5时，将每层中的通道数量减半，因此降低了延迟和模型大小。另一种常用的缩放技术是降低输入图像分辨率，而不改变网络。
+
+Figure 5 compares the model scaling performance of MnasNet and MobileNetV2 by varying the depth multipliers and input image sizes. As we change the depth multiplier from 0.35 to 1.4, the inference latency also varies from 20ms to 160ms. As shown in Figure 5a, our MnasNet model consistently achieves better accuracy than MobileNetV2 for each depth multiplier. Similarly, our model is also robust to input size changes and consistently outperforms MobileNetV2 (increaseing accuracy by up to 4.1%) across all input image sizes from 96 to 224, as shown in Figure 5b.
+
+图5比较了MnasNet和MobileNetV2模型缩放的性能，使用了不同的深度乘子和输入图像大小。我们将深度乘子从0.35变化到1.4，推理延迟也从20ms变化到160ms。如图5a所示，我们的MnasNet模型在每个深度乘子下，一直都比MobileNetV2效果要好。类似的，我们的模型对于输入图像大小也非常稳健，在所有的输入图像大小下（从96到224）一直都比MobileNetV2要好（准确率最多超了4.1%），如图5b所示。
+
+Figure 5: Performance Comparison with Different Model Scaling Techniques. MnasNet is our baseline model shown in Table 1. We scale it with the same depth multipliers and input sizes as MobileNetV2. (a) Depth multiplier = 0.35, 0.5, 0.75, 1.0, 1.4, corresponding to points from left to right. (b) Input size = 96, 128, 160, 192, 224, corresponding to points from left to right.
+
+In addition to model scaling, our approach also allows searching for a new architecture for any latency target. For example, some video applications may require latency as low as 25ms. We can either scale down a baseline model, or search for new models specifically targeted to this latency constraint. Table 4 compares these two approaches. For fair comparison, we use the same 224x224 image sizes for all models. Although our MnasNet already outperforms MobileNetV2 with the same scaling parameters, we can further improve the accuracy with a new architecture search targeting a 22ms latency constraint.
+
+除了模型缩放，我们的方法还可以对任意的目标延迟，搜索一个新的架构。比如，一些视频应用可能需要的延迟在25ms以下。我们可以将基准模型缩小，或具体针对这个延迟约束搜索新的模型。表4比较了这两种方法。为公平比较，我们对所有模型使用相同的输入图像分辨率224×224。虽然我们的MnasNet在相同的缩放参数下已经超过了MobileNetV2，我们可以针对22ms的延迟约束，搜索一个新的架构，进一步改进准确率。
+
+Table 4: Model Scaling vs. Model Search – MobileNetV2 (0.35x) and MnasNet-A1 (0.35x) denote scaling the baseline models with depth multiplier 0.35; MnasNet-search1/2 denotes models from a new architecture search that targets 22ms latency constraint.
+
+| | Params | MAdds | Latency | Top-1 Acc.
+--- | --- | --- | --- | ---
+MobileNetV2 (0.35x) | 1.66M | 59M | 21.4ms | 60.3%
+MnasNet-A1 (0.35x) | 1.7M | 63M | 22.8ms | 64.1%
+MnasNet-search1 | 1.9M | 65M | 22.0ms | 64.9%
+MnasNet-search2 | 2.0M | 68M | 23.2ms | 66.0%
+
+### 6.3. COCO Object Detection Performance
+
+For COCO object detection [18], we pick the MnasNet models in Table 2 and use them as the feature extractor for SSDLite, a modified resource-efficient version of SSD [29]. Similar to [29], we compare our models with other mobilesize SSD or YOLO models.
+
+对于COCO目标检测[18]，我们选择了表2中的MnasNet模型，使用其作为SSDLite的特征提取器，SSDLite是SSD的修正的节省资源的版本。与[29]类似，我们将模型与其他移动规模的SSD或YOLO模型进行比较。
+
+Table 3 shows the performance of our MnasNet models on COCO. Results for YOLO and SSD are from [27], while results for MobileNets are from [29]. We train our models on COCO trainval35k and evaluate them on testdev2017 by submitting the results to COCO server. As shown in the table, our approach significantly improve the accuracy over MobileNet V1 and V2. Compare to the standard SSD300 detector [22], our MnasNet model achieves comparable mAP quality (23.0 vs 23.2) as SSD300 with 7.4× fewer parameters and 42× fewer multiply-adds.
+
+表3给出了我们的MnasNet模型在COCO上的表现。YOLO和SSD的结果是[27]中的，MobileNets的结果是[29]中的。我们在COCO trainval35k中训练我们的模型，并在testdev2017上评估，将结果提交给COCO服务器。如表中所示，我们的方法比MobileNetV1和V2的效果要好很多。与标准的SSD300检测器相比，我们的MnasNet模型与SSD300的mAP类似(23.0 vs 23.2)，但参数少了7.4x，MultiAdds少了42x。
+
+Table 3: Performance Results on COCO Object Detection – #Params: number of trainable parameters; #Mult-Adds: number of multiply-additions per image; mAP : standard mean average precision on test-dev2017; mAP_S, mAP_M, mAP_L: mean average precision on small, medium, large objects; Inference Latency: the inference latency on Pixel 1 Phone.
+
+Network | Params | Mult-Adds | mAP | mAP_S | mAP_M | mAP_L | Inference Latency
+--- | --- | --- | --- | --- | --- | --- | ---
+YOLOv2 [27] | 50.7M | 17.5B | 21.6 | 5.0 | 22.4 | 35.5 | -
+SSD300 [22] | 36.1M | 35.2B | 23.2 | 5.3 | 23.2 | 39.6 | -
+SSD512 [22] | 36.1M | 99.5B | 26.8 | 9.0 | 28.9 | 41.9 | -
+MobileNetV1 + SSDLite [11] | 5.1M | 1.3B | 22.2 | - | - | - | 270ms
+MobileNetV2 + SSDLite [29] | 4.3M | 0.8B | 22.1 | - | - | - | 200ms
+MnasNet-A1 + SSDLite | 4.9M | 0.8B | 23.0 | 3.8 | 21.7 | 42.0 | 203ms
+
+## 7. Ablation Study and Discussion
+
+In this section, we study the impact of latency constraint and search space, and discuss MnasNet architecture details and the importance of layer diversity. 本节中，我们研究了延迟约束和搜索空间的影响，讨论了MnasNet的架构细节，和层多样性的重要性。
+
+### 7.1. Soft vs. Hard Latency Constraint
+
+Our multi-objective search method allows us to deal with both hard and soft latency constraints by setting α and β to different values in the reward equation 2. Figure 6 shows the multi-objective search results for typical α and β. When α = 0, β = −1, the latency is treated as a hard constraint, so the controller tends to focus more on faster models to avoid the latency penalty. On the other hand, by setting α = β = −0.07, the controller treats the target latency as a soft constraint and tries to search for models across a wider latency range. It samples more models around the target latency value at 75ms, but also explores models with latency smaller than 40ms or greater than 110ms. This allows us to pick multiple models from the Pareto curve in a single architecture search as shown in Table 1.
+
+我们的多目标搜索方法，通过设置奖励函数式2中α和β为不同的值，可以处理延迟硬约束和软约束的情况。图6给出了典型α和β值的多目标搜索结果。当α=0，β=-1时，延迟是作为硬约束的，所以控制器倾向于关注更快的模型，以避免延迟惩罚。另一方面，设α=β=-0.07，控制器将目标延迟作为软约束，在更多的延迟范围内搜索模型。在目标延迟值75ms附近采样更多的模型，但也会探索延迟小于40ms或大于110ms的模型。这允许我们在一次架构搜索中从Pareto曲线中选择模型，如表1所示。
+
+Figure 6: Multi-Objective Search Results based on equation 2 with (a) α=0, β=-1; and (b) α=β=−0.07. Target latency is T =75ms. Top figure shows the Pareto curve (blue line) for the 3000 sampled models (green dots); bottom figure shows the histogram of model latency.
+
+### 7.2. Disentangling Search Space and Reward
+
+To disentangle the impact of our two key contributions: multi-objective reward and new search space, Figure 5 compares their performance. Starting from NASNet [36], we first employ the same cell-base search space [36] and simply add the latency constraint using our proposed multiple-object reward. Results show it generates a much faster model by trading the accuracy to latency. Then, we apply both our multi-objective reward and our new factorized search space, and achieve both higher accuracy and lower latency, suggesting the effectiveness of our search space.
+
+为将两个关键贡献的影响分开，即多目标奖励函数和新的搜索空间。图5比较了其性能。从NASNet开始，我们首先采用相同的基于单元的搜索空间，并简单的加入了延迟约束，使用提出的多目标奖励。结果表明，可以产生一个快的多的模型，用准确率换取了延迟。然后，我们使用了多目标奖励和我们新的架构搜索空间，得到了更高的准确率和更低的延迟，说明我们搜索空间的有效性。
+
+Table 5: Comparison of Decoupled Search Space and Reward Design – Multi-obj denotes our multi-objective reward; Single-obj denotes only optimizing accuracy.
+
+Reward | Search Space | Latency | Top-1 Acc.
+--- | --- | --- | ---
+Single-obj [36] | Cell-based[36] | 183ms | 74.0%
+Multi-obj | Cell-based[36] | 100ms | 72.0%
+Multi-obj | MnasNet | 78ms | 75.2%
+
+### 7.3. MnasNet Architecture and Layer Diversity
+
+Figure 7(a) illustrates our MnasNet-A1 model found by our automated approach. As expected, it consists of a variety of layer architectures throughout the network. One interesting observation is that our MnasNet uses both 3x3 and 5x5 convolutions, which is different from previous mobile models that all only use 3x3 convolutions.
+
+图7(a)给出了自动方法搜索到的MnasNet-A1模型，在网络中包含了多种层的架构。一个有趣的观察是，我们的MnasNet使用了3×3和5×5两种卷积，与之前的移动模型不太一样，只使用3×3卷积。
+
+Figure 7: MnasNet-A1 Architecture – (a) is a representative model selected from Table 1; (b) - (d) are a few corresponding layer structures. MBConv denotes mobile inverted bottleneck conv, DWConv denotes depthwise conv, k3x3/k5x5 denotes kernel size, BN is batch norm, HxWxF denotes tensor shape (height, width, depth), and ×1/2/3/4 denotes the number of repeated layers within the block.
+
+images(224×224×3)) -> conv3×3 -> SepConv(k3×3) /×1 -> MBConv6(k3×3) /×2 -> MBConv3(k5×5), SE /×3 -> MBConv6(k3×3) /×4 -> MBConv6(k3×3), SE /×2 -> MBConv6(k5×5), SE /×3 -> MBConv6(k3×3) /×1 -> Pooling, FC -> logits
+
+In order to study the impact of layer diversity, Table 6 compares MnasNet with its variants that only repeat a single type of layer (fixed kernel size and expansion ratio). Our MnasNet model has much better accuracy-latency trade-offs than those variants, highlighting the importance of layer diversity in resource-constrained CNN models.
+
+为研究层多样性的影响，表6比较了MnasNet的一个变体，只重复同一类型的层（固定的核大小和扩展率）。我们的MnasNet模型比这些变体有着好的多的准确率-延迟折中，强调了层多样性在资源限制的CNN模型中的重要性。
+
+Table 6: Performance Comparison of MnasNet and Its Variants – MnasNet-A1 denotes the model shown in Figure 7(a); others are variants that repeat a single type of layer throughout the network. All models have the same number of layers and same filter size at each layer.
+
+| | Top-1 Acc. | Inference Latency
+--- | --- | ---
+MnasNet-A1 | 75.2% | 78ms
+MBConv3 (k3x3) only | 71.8% | 63ms
+MBConv3 (k5x5) only | 72.5% | 78ms
+MBConv6 (k3x3) only | 74.9% | 116ms
+MBConv6 (k5x5) only | 75.6% | 146ms
+
+## 8. Conclusion
+
+This paper presents an automated neural architecture search approach for designing resource-efficient mobile CNN models using reinforcement learning. Our main ideas are incorporating platform-aware real-world latency information into the search process and utilizing a novel factorized hierarchical search space to search for mobile models with the best trade-offs between accuracy and latency. We demonstrate that our approach can automatically find significantly better mobile models than existing approaches, and achieve new state-of-the-art results on both ImageNet classification and COCO object detection under typical mobile inference latency constraints. The resulting MnasNet architecture also provides interesting findings on the importance of layer diversity, which will guide us in designing and improving future mobile CNN models.
+
+本文提出了一种自动神经架构搜索方法，采用强化学习设计资源利用高效的移动CNN模型。我们的主要思想是将与平台相关的真实世界的延迟信息纳入到搜索过程中来，利用了一种新型分解的层次式搜索空间，来搜索拥有最好准确率-延迟折中的移动模型。我们证明了，我们的方法可以比现有的方法自动找到明显更好的移动模型，在典型的移动推理延迟限制下，在ImageNet分类和COCO目标检测中得到了新的目前更好的结果。在得到的MnasNet架构中，还可以观察到层多样性也是非常重要的，这在设计和改进将来的移动CNN模型中，有指导作用。
