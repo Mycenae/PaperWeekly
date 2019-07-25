@@ -92,6 +92,7 @@ Learning-weights-and-connections | 2015 | [1506.02626](https://arxiv.org/abs/150
 Deep-Compression | 2015 | [1510.00149](https://arxiv.org/abs/1510.00149)
 Pruning-Filters | 2016 | [1608.08710](https://arxiv.org/abs/1608.08710)
 TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
+Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05877)
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 
 ## Action Recognition and Spatial-temporal CNN
