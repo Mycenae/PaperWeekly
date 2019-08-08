@@ -50,6 +50,7 @@ R-FCN | 2016 | [1605.06409](https://arxiv.org/abs/1605.06409)
 Focal Loss | 2017 | [1708.02002](https://arxiv.org/abs/1708.02002)
 Feature Pyramid Network | 2017 | [1612.03144](https://arxiv.org/abs/1612.03144)
 CornerNet | 2018 | [1808.01244](https://arxiv.org/abs/1808.01244)
+CenterNet | 2019 | [1904.07850](https://arxiv.org/abs/1904.07850)
 
 ## Semantic Segmentation
 
