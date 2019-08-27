@@ -51,6 +51,7 @@ Focal Loss | 2017 | [1708.02002](https://arxiv.org/abs/1708.02002)
 Feature Pyramid Network | 2017 | [1612.03144](https://arxiv.org/abs/1612.03144)
 CornerNet | 2018 | [1808.01244](https://arxiv.org/abs/1808.01244)
 CenterNet | 2019 | [1904.07850](https://arxiv.org/abs/1904.07850)
+NAS-FPN | 2019 | [1904.07392](https://arxiv.org/abs/1904.07392)
 
 ## Semantic Segmentation
 
@@ -95,6 +96,12 @@ Pruning-Filters | 2016 | [1608.08710](https://arxiv.org/abs/1608.08710)
 TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
 Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05877)
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
+
+## Medical Image Processing
+
+Name | Published time | Link
+--- | --- | ---
+U-Net-Medical | 2015 | [1505.04597](https://arxiv.org/abs/1505.04597)
 
 ## Action Recognition and Spatial-temporal CNN
 
