@@ -65,6 +65,12 @@ DeepLabV3+ | 2018 | [1802.02611](https://arxiv.org/abs/1802.02611)
 Dense-Prediction-Architecture-Search | 2018 | [1809.04184](https://arxiv.org/abs/1809.04184)
 Auto-DeepLab | 2019 | [1901.02985](https://arxiv.org/abs/1901.02985)
 
+## GAN
+
+Model name | Published time | Link
+--- | --- | ---
+GAN | 2014 | [1406.2661](https://arxiv.org/abs/1406.2661v1)
+
 ## Pose Estimation
 
 Paper | Published time | Link
