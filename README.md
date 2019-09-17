@@ -70,8 +70,9 @@ Auto-DeepLab | 2019 | [1901.02985](https://arxiv.org/abs/1901.02985)
 Model name | Published time | Link
 --- | --- | ---
 GAN | 2014 | [1406.2661](https://arxiv.org/abs/1406.2661v1)
-Conditional GAN | 2014 | [1411.1784](https://arxiv.org/abs/1411.1784)
+cGAN | 2014 | [1411.1784](https://arxiv.org/abs/1411.1784)
 DCGAN | 2015 | [1511.06434](https://arxiv.org/abs/1511.06434)
+image-to-image cGAN | 2016 | [1611.07004](https://arxiv.org/abs/1611.07004)
 
 ## Pose Estimation
 
