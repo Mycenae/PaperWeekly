@@ -112,6 +112,7 @@ Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 
 Name | Published time | Link
 --- | --- | ---
+MRI-sCT-Generation-Review | 2017 | [Radioation Oncology](https://ro-journal.biomedcentral.com/track/pdf/10.1186/s13014-016-0747-y)
 U-Net-Medical | 2015 | [1505.04597](https://arxiv.org/abs/1505.04597)
 Survey-DL-Medical | 2017 | [1702.05747](https://arxiv.org/abs/1702.05747)
 
