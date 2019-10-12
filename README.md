@@ -115,6 +115,7 @@ Name | Published time | Link
 MRI-sCT-Generation-Review | 2017 | [Radioation Oncology](https://ro-journal.biomedcentral.com/track/pdf/10.1186/s13014-016-0747-y)
 U-Net-Medical | 2015 | [1505.04597](https://arxiv.org/abs/1505.04597)
 Survey-DL-Medical | 2017 | [1702.05747](https://arxiv.org/abs/1702.05747)
+CycleGAN-UNIT-comparison | 2018 | [1806.07777v1](https://arxiv.org/abs/1806.07777v1)
 
 ## Action Recognition and Spatial-temporal CNN
 
