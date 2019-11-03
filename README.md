@@ -72,7 +72,8 @@ Model name | Published time | Link
 GAN | 2014 | [1406.2661](https://arxiv.org/abs/1406.2661v1)
 cGAN | 2014 | [1411.1784](https://arxiv.org/abs/1411.1784)
 DCGAN | 2015 | [1511.06434](https://arxiv.org/abs/1511.06434)
-image-to-image cGAN | 2016 | [1611.07004](https://arxiv.org/abs/1611.07004)
+Improved-Techniques-for-Training-GANs | 2016 | [1606.03498](https://arxiv.org/abs/1606.03498)
+pix2pix | 2016 | [1611.07004](https://arxiv.org/abs/1611.07004)
 CycleGAN | 2017 | [1703.10593](https://arxiv.org/abs/1703.10593)
 
 ## Pose Estimation
@@ -116,6 +117,7 @@ MRI-sCT-Generation-Review | 2017 | [Radioation Oncology](https://ro-journal.biom
 U-Net-Medical | 2015 | [1505.04597](https://arxiv.org/abs/1505.04597)
 Survey-DL-Medical | 2017 | [1702.05747](https://arxiv.org/abs/1702.05747)
 CycleGAN-UNIT-comparison | 2018 | [1806.07777v1](https://arxiv.org/abs/1806.07777v1)
+DL-Registration-Survey | 2019 | [1903.02026](https://arxiv.org/abs/1903.02026)
 
 ## Action Recognition and Spatial-temporal CNN
 
