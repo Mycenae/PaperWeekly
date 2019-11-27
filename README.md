@@ -158,6 +158,7 @@ CrowdHuman | 2018 | [1805.00123](https://arxiv.org/abs/1805.00123)
 fddb | 2010 | [fddb](http://vis-www.cs.umass.edu/fddb/fddb.pdf)
 WIDER-FACE | 2015 | [1511.06523](https://arxiv.org/abs/1511.06523)
 MS-Celeb-1M | 2016 | [1607.08221](https://arxiv.org/abs/1607.08221)
+CV-HAZOP | 2017 | [IJCV2018](https://link.springer.com/article/10.1007/s11263-017-1020-z)
 
 ## Other usage
 
