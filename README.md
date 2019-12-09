@@ -1,5 +1,11 @@
 # PaperWeekly
 
+## Deep learning and chip design
+
+Paper Name | Published time | Link
+--- | --- | ---
+Deep-Learning-Computer-Architecture-Chip-Design | 2019 | [1911.05289](https://arxiv.org/abs/1911.05289v1)
+
 ## Deep learning models and algorithms
 
 Model name | Published time | Link
