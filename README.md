@@ -5,6 +5,7 @@
 Paper Name | Published time | Link
 --- | --- | ---
 Deep-Learning-Computer-Architecture-Chip-Design | 2019 | [1911.05289](https://arxiv.org/abs/1911.05289v1)
+DL-vs-Traditional-CV | 2019 | [1910.13796](https://arxiv.org/abs/1910.13796)
 
 ## Deep learning models and algorithms
 
