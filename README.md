@@ -8,6 +8,7 @@ Deep-Learning-Computer-Architecture-Chip-Design | 2019 | [1911.05289](https://ar
 DL-Critical-Appraisal | 2018 | [1801.00631](https://arxiv.org/abs/1801.00631)
 DL-vs-Traditional-CV | 2019 | [1910.13796](https://arxiv.org/abs/1910.13796)
 Federated-Machine-Learning | 2019 | [1902.04885](https://arxiv.org/1902.04885)
+Federated-Learning-At-Scale | 2019 | [1902.01046](https://arxiv.org/1902.01046)
 
 ## Deep learning models and algorithms
 
