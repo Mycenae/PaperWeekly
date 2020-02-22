@@ -119,6 +119,12 @@ TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
 Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05877)
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 
+## Image Registration
+
+Name | Published time | Link
+--- | --- | ---
+Geometric-Mapping-CNN | 2017 | [1703.05593](https://arxiv.org/abs/1703.05593)
+
 ## Medical Image Processing
 
 Name | Published time | Link
