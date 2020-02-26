@@ -213,3 +213,4 @@ fire detection | FireNet | 2018 | [personal link](https://breckon.org/toby/publi
 15. [caffe tutorial solver](http://caffe.berkeleyvision.org/tutorial/loss.html)
 16. [caffe tutorial layers](http://caffe.berkeleyvision.org/tutorial/layers.html)
 17. [DMD orign](http://e2e.ti.com/blogs_/b/enlightened/archive/2016/10/06/the-pioneering-work-that-led-to-the-dmd)
+18. [TI-DLP](http://www.ti.com/dlp-chip/overview.html)
