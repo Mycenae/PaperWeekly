@@ -139,6 +139,7 @@ DL-Registration-Survey | 2019 | [1903.02026](https://arxiv.org/abs/1903.02026)
 Name | Published time | Link
 --- | --- | ---
 U-Net-Medical | 2015 | [1505.04597](https://arxiv.org/abs/1505.04597)
+V-Net | 2016 | [1606.04797](https://arxiv.org/abs/1606.04797)
 Clinically-Applicable-DL-OAR-Delineation | 2019 | [Nature](https://www.nature.com/articles/s42256-019-0099-z)
 nnU-Net | 2019 | [1904.08128](https://arxiv.org/abs/1904.08128)
 
