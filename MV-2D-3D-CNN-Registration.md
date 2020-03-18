@@ -1,0 +1,97 @@
+# 2D/3D Megavoltage Image Registration Using Convolutional Neural Networks
+
+Hector N. B. Pinheiro et al. Varian Medical Systems et al.
+
+## 0. Abstract
+
+We presented a 2D/3D MV image registration method based on a Convolutional Neural Network. Most of the traditional image registration method intensity-based, which use optimization algorithms to maximize the similarity between to images. Although these methods can achieve good results for kilovoltage images, the same does not occur for megavoltage images due to the lower image quality. Also, these methods most of the times do not present a good capture range. To deal with this problem, we propose the use of Convolutional Neural Network. The experiments were performed using a dataset of 50 brain images. The results showed to be promising compared to traditional image registration methods.
+
+我们提出了一种基于CNN的2D/3D MV图像配准方法。大多数基于灰度的传统图像配准的方法，使用的是优化算法，来最大化图像之间的相似性。虽然这些方法对于KV图像能够得到很好的效果，但由于MV图像质量较低，所以不能得到类似的效果。同时，这些方法并没有很好的捕获范围。为处理这些问题，我们提出使用CNN。这些试验是在50幅脑图像的数据集上进行的。结果表明，与传统图像配准方法相比，是非常有希望的。
+
+**Keywords:** 2D/3D Image Registration, Megavoltage Image, Convolutional Neural Networks
+
+## 1. Introduction
+
+The correct patient positioning is an essential procedure for the success of radiotherapy treatment. During the preoperative phase, a three-dimensional CT (Computed Tomography) of the planning is used both to set the location of the tumor and to define the treatment parameters (number of sessions, dose, etc.). In subsequent treatment sessions, the patient should be well positioned so that the doses can be distributed at the planned sites. Several techniques are used for guiding the patient position, such as body markings and laser systems, but still positioning errors are a reality. In fact, such errors can reach 10-20 mm in some types of cancer [1, 2]. One of the most effective alternatives to reduce these errors consists of Image-Guided Radiation Therapy (IGRT), in which images are acquired and compared with the 3D image of the planning CT to verify the patient’s positioning before the application of the treatment dose. The comparison between the images has the objective of estimating the displacements necessary for the correction of the patient’s positioning. This task is called Image Registration (IR), which can be performed by visually inspecting the overlapping images (manual registration) or through the use of algorithms that search for the best match between the images (automatic registration). Depending on the machine used, registration can be performed using two-dimensional MegaVoltage (MV) or KiloVoltage (KV) images, or using three-dimensional (Cone-beam CTs) images. Typically, the same machine on which the treatment is performed is capable of producing megavoltage images without any additional apparatus, which makes such an approach still the most widely used. In this approach, a pair of two-dimensional MV images is compared to two-dimensional Digitally Reconstructed Radiographs (DRRs) extracted from the planning CT.
+
+正确的病人摆位是放射治疗成功的必要过程。在术前阶段，计划三维CT用于肿瘤定位，也用于定义治疗参数（分次数，剂量等）。在后续的治疗阶段中，病人应当进行准确的摆位，这样剂量才能投射到计划好的位置。引导病人摆位应用了几种技术，如体部标记和激光系统，但仍然有摆位误差。实际上，这种误差在一些癌症类型中甚至可以达到10-20mm。降低这些误差的一种最有效的替代技术是图像引导放射治疗(IGRT)，即获取图像后，与计划CT的3D图像进行比较，在治疗剂量开始之前验证病人的摆位。图像之间的比较，其目标是估计摆位需要的偏移，以对病人进行正确摆位。这个任务称为图像配准，这个过程可以手动进行，观察重叠的图像，或通过算法搜索到图像间的最佳匹配（自动配准）。根据使用的机器的不同，配准的进行可以使用2D MV或KV图像，或使用3D CBCT图像。一般的，在进行治疗的机器上，可以不需要其他设备就可以产生MV图像，这仍然是使用最广泛的方法。在这种方法中，一对2D MV图像与从计划CT中生成的2D DRR图像进行比较。
+
+The most used methods for 2D/3D registration are intensity-based, which use optimization algorithms to maximize the similarity between the 2D images and the DRRs. Although these methods can achieve good results for kilovoltage images, the same does not occur for megavoltage images due to the lower image quality. Furthermore, such methods do not have a good capture range, which implies the need for numerous maximization iterations. Since at each iteration a 2D DRR is extracted from the CT, such methods are hardly capable of being executed in real time.
+
+2D/3D配准用的最多的方法还是基于灰度的，这是对2D图像与DRR之间相似度进行最大化的优化算法。虽然这些方法对于KV图像可以得到很好的效果，但由于MV图像，由于图像质量较低，不能得到这样的结果。而且，这样的方法并没有很好的捕获范围，这说明需要大量的最大化迭代。由于在每次迭代中，都从CT中生成2D DRR，这种方法很难实时运行。
+
+To deal with this problem, recently Miao et. al proposed the use of a hierarchical regression method for real-time X-ray 2D/3D image registration [3]. The regression is performed applying a Convolutional Neural Network, whose training is performed using two-dimensional artificial X-ray images. The trained model is then able to infer the displacements necessary for the correction of positioning errors without the explicit definition of any measure of similarity. As the problem of inferring the displacements has extremely high complexity, the authors proposed the use of different regressors, which are specialized in different ranges of displacement values. This hierarchical approach, together with iterative execution, proved to be quite effective, presenting results superior to those achieved by methods based on image similarity. Moreover, such results were achieved with few regression iterations (less than ten), which makes it possible to use the real-time approach. In this work, we follow the same approach proposed by Miao et. al. However, we focused on image registration using MV images. In addition, the regression models have significant differences in their architectures which are described in the next sections.
+
+为解决这个问题，最近Miao等提出了一种使用层次化回归的方法进行实时X射线2D/3D配准的方法[3]。回归是用CNN进行的，其训练是用2D合成X射线图像进行的。训练的模型然后可以用于推理出必要的偏移，可以修正摆位误差，同时不需要任何显式的相似性度量。由于推理出偏移的复杂度非常高，作者提出，对于不同的偏移值范围，使用不同的回归器。这种层次化的方法，与迭代式执行相结合，证明了非常有效，与那些基于图像相似性的方法相比，可以得到更好的效果。而且，这些结果只需要经过很少的回归迭代就可以得到（少于10次），所以可能使用实时方法。在本文中，我们按照Miao等提出的方法进行。但是，我们关注的是使用MV图像的图像配准。而且，回归模型在其架构中有明显的不同，我们在下一节中进行描述。
+
+## 2. Proposed 2D/3D Registration Method
+
+The proposed method is based on the concept of regression. Unlike the similarity-based methods, where an optimization algorithm is employed to find displacements that maximize a given measure of similarity, the proposed method uses a regression model whose parameters are learned through machine learning techniques. Figure 1 shows the diagram of this approach. Starting from an initial offset value, the method uses the planning CT to generate an artificial MV image employing the current displacement values. This MV image is then processed by the regression method in conjunction with the test MV image, defining the displacement required for the shifted image to conform to the test image. At each iteration, the result of the regression is used to define the system response. Given the current displacement values, ∆i, and the predicted value by the regression model, ∆k, the new displacement - the response of the registration method to the iteration - is defined by the accumulation of these values: ∆i+1 = ∆i +∆k. Similar to the traditional optimization methods, this process can be performed iteratively until a certain convergence condition is reached (∆k ≈ 0).
+
+我们提出的方法是基于回归的概念的。基于相似度的方法采用了优化算法，找到可以最大化给定相似性度量的偏移值，我们提出的方法使用了一种回归模型，其参数通过机器学习方法学习得到。图1展示了这种方法的图示。从初始偏移值开始，我们的方法用计划CT，采用目前的偏移值，来生成一幅人造MV图像。这张MV图像与测试MV图像一起，通过回归方法进行处理，得到的偏移值，应用到偏移图像与测试图像是相一致的。在每次迭代中，回归的结果用于定义系统响应。给定目前的偏移值∆i，和回归模型的预测值∆k，新的偏移值，即配准方法对迭代的响应，可以从这些值的累加来定义：∆i+1 = ∆i + ∆k。与传统优化方法类似，这个过程可以迭代进行，直到达到一定的收敛条件（∆k ≈ 0）。
+
+Figure 1: On the right, the scheme of the proposed method, based on regression. Iteratively, the displacement values define the inputs of the regression model, which infers the new displacement values. On the left, the architecture of the CNN network used for the regression.
+
+The regression model consists of a Convolutional Neural Network, whose parameters are learned with the purpose of estimating the displacement values necessary for two-dimensional images to be coupled (match). Through this approach, it is not necessary to fix a measure of similarity to be maximized. From training data, which define known displacement values for image examples, learning algorithms adjust the weights of the network in order to define a model that can be used for arbitrary images. Figure 1 shows the proposed network settings. Given the test image and the artificial MV image produced with the current displacement values, we first compute the difference between the images, extracting from them the Region Of Interest (ROI) defined for the processing. The resulting image is then divided into a 4×4 grid, producing a total of 16 sub-images (or patches). The network input is defined by a three-dimensional image with 16 channels, one for each patch.
+
+回归模型由CNN组成，其参数学习的目标是，估计两维图像配准所必须的偏移值。通过这种方法，不需要固定一个要去最大化的相似度。训练数据定义了图像样本的已知偏移值，学习算法利用这些数据调整了网络权重，以定义一个模型，可以用于任意图像。图1展示了提出的网络设置。给定测试图像和用当前偏移值生成的MV图像，我们首先计算了图像之间的差异，这是从要处理的ROI中提取出来的。得到的图像然后分割成4×4的网格，生成总计16个子图像（或图像块）。网络输入为一个三维图像，有16个通道，每个图像块一个。
+
+The input is then processed by two convolutional processes, which are defined by a convolutional layer with 20 nodes with 5×5 bi-dimensional filters, followed by a normalization layer of batch and one of pooling Pool 2×2 with strides = 2. Next, the network is composed of a dense layer (100% nested), maintaining the volume of the data, which is then flattened and processed by a dense layer with 250 nodes that connect to the output layer which define the two predicted displacement values. Here, we use the ReLU (Rectified Linear Unit) activation function for the convoluted and dense layers.
+
+输入然后由两个卷积过程进行处理，一个是卷积层，有20个节点，是5×5双维度滤波器，然后是一个批归一化层，和一个2×2的池化层，步长为2。下面，网络是一个密集层（100%嵌套），包含了整个体数据，然后展平并由有250个节点的密集层处理，最后连接到输出层，即两个预测的偏移值。这里，我们对卷积层和密集层使用ReLU激活函数。
+
+Using an image database with controlled shifts, the desired outputs for the data presented to the network are used to adjust the layer parameters. This adjustment was performed using the Stochastic Gradient Descending (SGD) algorithm with cost function defined by the Mean Square Error (MSE). The algorithm was executed with a learning rate of 0.0001 (with a decay of the same value), and the value for momentum set to 0.9. Initially, the parameters are initialized using the Glorot [4] method.
+
+我们使用的数据集，有可控的偏移，也就是数据的期望输出，送入网络后用于调整参数。这种调整是用SGD算法进行的，损失函数为MSE。算法的学习速率为0.0001（衰减为相同的），动量为0.9。参数的初始化使用Glorot方法。
+
+## 3. Experiments
+
+### 3.1. Dataset
+
+In order to evaluate the proposed method in a scenario close to reality, artificial MV images generated from real CTs were used. Such images were generated following the method proposed by Kieselmann et. al [5], where the Hounsfield Units (HUs) present in the CT are mapped taking into account the differences present in the attenuation values for energies of 80keV (reference from CT) to 0.3 MeV (reference from the MV images). Also, the model also describes beam scattering and noise addition, present in MV images. Figure 2 shows examples of DRRs extracted from CTs and artificial MV images generated by the model for brain and pelvic CTs.
+
+为在接近现实的场景中评估这个方法，使用了从真实CTs中生成的仿造MV图像。这种图像的生成，采用的是Kieselmann等[5]提出的方法，CT中的HUs，考虑到了不同能量射线的衰减值，即从80KeV（CT）到0.3MeV（MV图像）。同时，模型还考虑了MV图像中的射束散射和增加的噪声。图2展示了脑部和盆部的DRRs例子，包括从CT中生成的，和模型仿真的MV图像。
+
+Figure 2: Examples of artificial MV images (right) generated from CT images from the brain and pelvis. The images on the left show the respective DRRs extracted in the same direction that generates the MV images.
+
+In total, 50 images of brain CTs were used for the experiments, the training set of the regression model was composed of 25 images, and the other 25 were used for evaluation. The test set was produced by fixing the displacement values in the lateral and longitudinal directions, with the displacement values of ±5mm, ±10mm and ±20mm. A total of 6 possible displacements in each direction, generating 36 samples for each test CT. This configuration produced a total of 900 test registration cases. The training set was produced by randomly generating displacements in both directions, following a uniform distribution [-20, 20] mm. For each CT, 100 displacements were created by fixing a direction with zero displacement, and 300 displacements were generated with non-zero values. For each CT, 500 training images were generated, giving a total of 12500 samples. Examples of these images are shown in Figure 3.
+
+总计，在试验中使用了50幅脑CTs图像，回归模型的训练集为25幅图像，另外25幅用于评估。测试集是用水平和垂直方向的固定偏移值产生的，为±5mm, ±10mm和±20mm。在每个方向都有6个可能的偏移值，对每个测试CT生成36个样本。这种配置生成了共计900个测试配准案例。训练集的生成是在两个方向上随机生成偏移，其值是[-20, 20]mm范围内的均匀分布。对于每个CT，固定一个方向零偏移，生成另外一个方向的100个偏移值，并产生两个方向都非零的300个偏移值。对于每个CT，生成500幅训练图像，总共有12500个训练样本。这些图像如图3所示。
+
+Figure 3: Examples of artificial MV images generated with different longitudinal displacements. While the top image shows no displacement, the middle and the bottom images have displacements of + 2cm and -2cm, respectively.
+
+### 3.2. Comparison with State-of-Art Methods
+
+The proposed method was compared with methods based on similarity which are more widely used. Each of these methods can be described by the applied optimization algorithm and the similarity measure to be maximized. The optimization occurs taking into account an initial solution. At each iteration, new solutions are generated until the value to be optimized converges, that is, until the difference in the value of the similarity of the solution found does not exceed a certain tolerance threshold φ. In this work, we consider two optimization algorithms: the Powell [6] method and the Downhill Simplex method of Nelder-Mead [7], and three measures of similarity: Mutual Information (MI) [8], Cross-Correlation (CC) [9] and Pattern Intensity (PI) [10]. For both, the six combinations of intensity-based methods and the proposed method, the initial solution was fixed at the origin, and the Region Of Interest (ROI) was defined as the 10 cm side center square. Also, for methods based on similarity, a tolerance value of φ = 0.0001 was used.
+
+我们提出的方法，与应用更广泛的基于相似度的方法进行了比较。这些方法可以用使用的优化算法和要最大化的相似性度量来描述。优化还考虑到了初始解。在每次迭代中，直到收敛才生成新的解，即，直到相似性度量的差值小于一定的容忍阈值φ。在本文中，我们考虑两种优化算法：Powell法和Nelder-Mead[7]的Downhill Simplex方法，和三个相似性度量，互信息(MI)，交叉相关(CC)和模式灰度(PI)。对于组合起来的六种基于灰度的方法，和提出的方法，初始解都是固定在原点的，ROI定义为10cm的中心矩形。同时，对于基于相似度的方法，使用了φ = 0.0001的容忍度值。
+
+### 3.3. Evaluation Metrics
+
+The gold standards are defined by the fixed displacements generated for the test set. We compute the distances between the values of displacements generated by the methods and the expected values. Also, based on the evaluation of the margins of error applied in treatments [11, 12], we set a cut-off threshold of 2 mm for the distance between the displacement and the gold standard. Then, we define that when such distance is above the threshold, a false positive case occurs. The then false positive rate is defined by the ratio of the number of false positives by the number of test records. Here, both the false positive rate and the distribution of distances values were used to compare the methods.
+
+金标准定义为生成测试集的固定偏移。我们计算了生成方法的偏移值和期望的偏移值之间的距离。同时，基于在治疗中使用的误差评估，我们设置了偏移和金标准之间的距离的截止阈值2mm。然后，我们定义了当距离在阈值之上时，就是一个假阳性案例。假阳率定义为，假阳性的数量与测试样本的数量比值。这里，假阳性率和距离值的分布，都用于方法的比较。
+
+### 3.4. Results
+
+Table 1 shows the obtained results. Both, the mean distance between the displacements obtained by the methods and the False Positive Rate (FPR) are the shown in this Table. In addition, the distributions of the distances between the displacements and the gold standard are described by the percentiles 10, 25, 50, 75 and 90. The results by the methods based on similarity were obtained by the optimization methods applied until the tolerance threshold phi = 0.0001 is reached. For the proposed method, the results until the third iteration are presented. The best results for both approaches are described in bold.
+
+表1给出了得到的结果，即这些方法得到的偏移值和假阳率(FPR)。另外，偏移和金标准之间的距离的分布以百分位10, 25, 50, 75和90来描述。基于相似度的方法的结果是通过优化方法得到的，直到达到容忍度阈值phi = 0.0001。对于提出的方法，给出了三次迭代以内的结果。两类方法的最好结果，都用粗体给出。
+
+Among the optimization methods, it was observed that the best results were obtained with the Downhill Simplex method. The Powell method proved unstable, where high deviations were observed for some examples. The worst results were observed with the use of PI similarity, where more than half of the registration presented deviations close to 2 cm. No measure of similarity presented results superior to no results achieved by the Simplex method.
+
+在优化方法中，最好的结果由Downhill Simplex方法得到。Powell方法不太稳定，在一些样本中有很高的偏差。最差的结果是采用PI相似性度量的，超过一半的配准结果偏差接近2cm。采用Simplex方法的得到了最好的相似性度量。
+
+Among similarity measures, the best results were observed with CC similarity. In both optimization methods, a better accuracy was observed using this similarity. By combining the Simplex method with CC similarity, we obtained the best results, arriving at a perfect false positive rate. That is, in none of the tests did the deviation observed by the obtained displacement exceed 2 mm - the mean deviation does not reach 1mm. The second best result achieved by the similarity methods was the Simplex-PI, with a false positive rate of 16.22%. The best performance achieved by the Powell optimization method showed a false positive rate of 31.56% (Powell-CC).
+
+在相似性度量中，最好的结果是用CC相似性度量得到的。在几种优化方法中，使用这种相似性度量都能得到更好的结果。将Simplex方法与CC相似性度量结合到一起，我们得到了最好的结果，得到了最好的假阳率。即，测试中所有的偏差都小于2mm，均值偏差没有达到1mm。相似性度量方法得到的第二好的结果，是Simplex-PI，假阳率为16.22%。Powell优化方法得到的最佳性能，假阳率为31.56%（Powell-CC）。
+
+The proposed method presented a clear performance gain at each new iteration performed. With a single iteration, the FPR rate of 37.22% was obtained. In addition, at least half of the test cases showed deviations of at most 1.14mm, showing a good performance achieved by the training of the regression model. In the next iteration, a performance gain of 27.91% was observed, presenting an FPR rate of 26.81%, which indicates that its competitive with the Simplex-MI method. Already in the third iteration, a performance gain of 52.29% was observed, with an FPR rate of 12.79%. In this case, more than 75% of the test cases showed a deviation of less than 2 mm. With an average deviation of 4.15 mm, this result was better than the Simplex-PI method. In this way, it is possible to observe that the proposed method can achieve competitive results with similarity-based methods with very few iterations. Comparing with these methods, depending on the adopted tolerance value, it can reach dozens of iterations, having a method capable of obtaining similar results with fewer iterations is quite attractive, especially from the point of view of speed.
+
+提出的方法每多迭代一次，都会有明显的性能提升。迭代1次，FPR率为37.22%。另外，至少一半的测试案例中，其偏移最多1.14mm，说明训练的回归模型可以得到很好的性能。在下一次迭代中，可以得到27.91%的性能提升，FPR率为26.81%，说明与Simplex-MI方法是可以竞争的。在第三次迭代后，性能提升率52.29%，FPR率为12.79%。在这种情况下，超过75%的测试样本偏差小于2%。平均偏差为4.15mm，这个结果比Simplex-PI方法要好。在这种方法，只需要几次迭代，就可以得到与基于相似度的方法差不多的结果。与这些方法相比，根据应用的容忍度值，可以达到几十次迭代，在很少几次迭代就可以得到不错的结果，是非常好的，尤其是从速度的角度来说。
+
+## 4. Conclusions
+
+In the paper, we presented a 2D/3D MV image registration method based on a Convolutional Neural Network. The experiments were performed using a dataset of 50 images from the brain and the results were compared to traditional image registration methods. For the experiments using the CNN, due to computational limitations just 3 interactions of the proposed model were performed. However, the results show to be promising since for each interaction the FPR show a decrease of approximately 30%. Further investigation is needed to evaluate the full potential of the method.
+
+本文中，我们提出了一种基于CNN的2D/3D图像配准方法。试验所用的数据集是脑部的50幅CT图像，结果与传统图像配准方法进行了对比。对于使用CNN的试验，由于计算上的局限，只对提出的方法进行了三次迭代。而且，结果表明是非常有希望的，因为对于每次迭代，FPR都下降了接近30%。需要进一步研究，来评估本方法的完全潜力。
