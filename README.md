@@ -125,6 +125,7 @@ Name | Published time | Link
 --- | --- | ---
 Geometric-Mapping-CNN | 2017 | [1703.05593](https://arxiv.org/abs/1703.05593)
 CNN-3D-2D-Registration | 2016 | [1507.07505](https://arxiv.org/abs/1507.07505)
+MV-3D-2D-CNN-Registration | 2018 | [1811.11816](https://arxiv.org/abs/1811.11816)
 
 ## Medical Image Processing
 
