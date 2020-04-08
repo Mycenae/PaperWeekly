@@ -133,6 +133,7 @@ VoxelMorph | 2018 | [1809.05231](https://arxiv.org/abs/1809.05231)
 Name | Published time | Link
 --- | --- | ---
 DRR-Siddon-1985 | 1985 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/pdf/10.1118/1.595715)
+DRR_Jacob-1998 | 1998 | [semanticscholar](https://pdfs.semanticscholar.org/7916/c777de1b9c3e605c0686dc242bd00b430185.pdf?_ga=2.194502378.619609805.1586311961-1648229840.1586311961)
 MRI-sCT-Generation-Review | 2017 | [Radioation Oncology](https://ro-journal.biomedcentral.com/track/pdf/10.1186/s13014-016-0747-y)
 Survey-DL-Medical | 2017 | [1702.05747](https://arxiv.org/abs/1702.05747)
 CycleGAN-UNIT-comparison | 2018 | [1806.07777v1](https://arxiv.org/abs/1806.07777v1)
