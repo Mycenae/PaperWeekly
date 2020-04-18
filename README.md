@@ -62,6 +62,7 @@ Feature Pyramid Network | 2017 | [1612.03144](https://arxiv.org/abs/1612.03144)
 CornerNet | 2018 | [1808.01244](https://arxiv.org/abs/1808.01244)
 CenterNet | 2019 | [1904.07850](https://arxiv.org/abs/1904.07850)
 NAS-FPN | 2019 | [1904.07392](https://arxiv.org/abs/1904.07392)
+EfficientDet | 2019 | [1911.09070](https://arxiv.org/abs/1911.09070)
 
 ## Semantic Segmentation
 
