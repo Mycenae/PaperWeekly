@@ -75,6 +75,7 @@ DeepLabV3 | 2017 | [1706.05587](https://arxiv.org/abs/1706.05587)
 DeepLabV3+ | 2018 | [1802.02611](https://arxiv.org/abs/1802.02611)
 Dense-Prediction-Architecture-Search | 2018 | [1809.04184](https://arxiv.org/abs/1809.04184)
 Auto-DeepLab | 2019 | [1901.02985](https://arxiv.org/abs/1901.02985)
+Boundary-Loss | 2018 | [1812.07032](https://arxiv.org/abs/1812.07032)
 
 ## GAN
 
