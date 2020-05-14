@@ -1,5 +1,10 @@
 # PaperWeekly
 
+## Classical Image Processing Algorithms
+Paper Name | Published time | Link
+--- | --- | ---
+Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
+
 ## Deep learning, Federated Learning, Chip design and its limitation
 
 Paper Name | Published time | Link
@@ -37,12 +42,6 @@ MnasNet | 2018 | [1807.11626](https://arxiv.org/abs/1807.11626)
 OctConv | 2019 | [1904.0509](https://arxiv.org/abs/1904.05049)
 MobileNetV3 | 2019 | [1905.02244](https://arxiv.org/abs/1905.02244)
 EfficientNet | 2019 | [1905.11946](https://arxiv.org/abs/1905.11946)
-
-## AutoML
-
-Method | Published time | Link
---- | --- | ---
-Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
 
 ## Object Detetion models and algorithms
 
@@ -110,7 +109,7 @@ ArcFace | 2018 | [1801.07698](https://arxiv.org/abs/1801.07698)
 MobileFaceNet | 2018 | [1804.07573](https://arxiv.org/abs/1804.07573)
 RetinaFace | 2019 | [1905.00641](https://arxiv.org/abs/1905.00641)
 
-## Inference Framework and Pruning, Quantization, Compression
+## Inference Framework and Pruning, Quantization, Compression, AutoML
 
 Name | Published time | Link
 --- | --- | ---
@@ -122,6 +121,7 @@ Pruning-Filters | 2016 | [1608.08710](https://arxiv.org/abs/1608.08710)
 TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
 Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05877)
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
+Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
 
 ## Image Registration
 
