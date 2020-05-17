@@ -145,6 +145,12 @@ CycleGAN-UNIT-comparison | 2018 | [1806.07777v1](https://arxiv.org/abs/1806.0777
 DL-Registration-Survey | 2019 | [1903.02026](https://arxiv.org/abs/1903.02026)
 Models Genesis | 2019 | [1908.06912](https://arxiv.org/abs/1908.06912)
 
+## CT Reconstruction
+
+Name | Published time | Link
+--- | --- | ---
+CT-Reconstruction-Evolution | 2019 | [springer](https://link.springer.com/article/10.1007/s00330-018-5810-7)
+
 ## Medical Image Segmentation
 
 Name | Published time | Link
