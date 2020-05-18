@@ -150,6 +150,7 @@ Models Genesis | 2019 | [1908.06912](https://arxiv.org/abs/1908.06912)
 Name | Published time | Link
 --- | --- | ---
 CT-Reconstruction-Evolution | 2019 | [springer](https://link.springer.com/article/10.1007/s00330-018-5810-7)
+CT-RED-CNN | 2017 | [IEEE](https://ieeexplore.ieee.org/document/7947200/)
 
 ## Medical Image Segmentation
 
