@@ -16,6 +16,7 @@ Federated-Machine-Learning | 2019 | [1902.04885](https://arxiv.org/abs/1902.0488
 Federated-Learning-At-Scale | 2019 | [1902.01046](https://arxiv.org/abs/1902.01046)
 ML-Stuck-in-a-Rut | 2019 | [HotOS-2019](https://dl.acm.org/doi/pdf/10.1145/3317550.3321441)
 Self-supervised-representation-learning-revisited | 2019 | [1901.09005](https://arixv.org/abs/1901.09005)
+Momentum-Contrast | 2019 | [1911.05722](https://arxiv.org/abs/1911.05722)
 
 ## Classification models and algorithms
 
