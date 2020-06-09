@@ -9,6 +9,7 @@ Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/doc
 
 Paper Name | Published time | Link
 --- | --- | ---
+Contrastive-Loss-Function | 2006 | [LeCun](http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf)
 Deep-Learning-Computer-Architecture-Chip-Design | 2019 | [1911.05289](https://arxiv.org/abs/1911.05289v1)
 DL-Critical-Appraisal | 2018 | [1801.00631](https://arxiv.org/abs/1801.00631)
 DL-vs-Traditional-CV | 2019 | [1910.13796](https://arxiv.org/abs/1910.13796)
