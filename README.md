@@ -47,6 +47,7 @@ OctConv | 2019 | [1904.0509](https://arxiv.org/abs/1904.05049)
 MobileNetV3 | 2019 | [1905.02244](https://arxiv.org/abs/1905.02244)
 EfficientNet | 2019 | [1905.11946](https://arxiv.org/abs/1905.11946)
 ResNeSt | 2020 | [2004.08955](https://arxiv.org/abs/2004.08955)
+Non-local NN | 2017 | [1711.07971](https://arxiv.org/abs/1711.07971)
 
 ## Object Detetion models and algorithms
 
