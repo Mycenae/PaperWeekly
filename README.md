@@ -3,6 +3,7 @@
 ## Classical Image Processing Algorithms
 Paper Name | Published time | Link
 --- | --- | ---
+Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 
 ## Deep learning, Federated Learning, Chip design and its limitation, unsupervised learning
