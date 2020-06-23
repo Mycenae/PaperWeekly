@@ -130,6 +130,13 @@ Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
 
+## PCL related
+
+Name | Published time | Link
+--- | --- | ---
+PCL-Library | 2011 | [PCL](http://www.pointclouds.org/assets/pdf/pcl_icra2011.pdf)
+
+
 ## Image Registration
 
 Name | Published time | Link
