@@ -159,6 +159,7 @@ CycleGAN-UNIT-comparison | 2018 | [1806.07777v1](https://arxiv.org/abs/1806.0777
 DL-Registration-Survey | 2019 | [1903.02026](https://arxiv.org/abs/1903.02026)
 Models Genesis | 2019 | [1908.06912](https://arxiv.org/abs/1908.06912)
 Radiomics-ML-DL | 2020 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/full/10.1002/mp.13678)
+Intrafractional-motion-management | 2020 | [pubmed](https://pubmed.ncbi.nlm.nih.gov/31476194/)
 
 ## CT Reconstruction
 
