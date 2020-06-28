@@ -3,6 +3,7 @@
 ## Classical Image Processing Algorithms
 Paper Name | Published time | Link
 --- | --- | ---
+Bilateral-Filter | 1998 | [link](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 
