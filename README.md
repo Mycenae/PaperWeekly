@@ -87,6 +87,12 @@ Dense-Prediction-Architecture-Search | 2018 | [1809.04184](https://arxiv.org/abs
 Auto-DeepLab | 2019 | [1901.02985](https://arxiv.org/abs/1901.02985)
 Boundary-Loss | 2018 | [1812.07032](https://arxiv.org/abs/1812.07032)
 
+## Edge Detection
+
+Model name | Published time | Link
+--- | --- | ---
+HED | 2015 | [1504.06375](https://arxiv.org/abs/1504.06375)
+
 ## GAN
 
 Model name | Published time | Link
