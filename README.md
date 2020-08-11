@@ -4,6 +4,7 @@
 Paper Name | Published time | Link
 --- | --- | ---
 Live-Wire-1992 | 1992 | [link](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=1712&context=facpub)
+Normalized-Cuts | 1997 | [stanford](http://vision.stanford.edu/teaching/cs231b_spring1213/papers/CVPR97_ShiMalik.pdf)
 Bilateral-Filter | 1998 | [link](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf)
 SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
