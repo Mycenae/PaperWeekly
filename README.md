@@ -158,6 +158,7 @@ MV-3D-2D-CNN-Registration | 2018 | [1811.11816](https://arxiv.org/abs/1811.11816
 VoxelMorph | 2018 | [1809.05231](https://arxiv.org/abs/1809.05231)
 X-ray-CT-Registration | 2019 | [MICCAI2019](https://link.springer.com/chapter/10.1007%2F978-3-030-32226-7_70)
 Weakly-Supervised-CNN-Multimodal-Registration | 2018 | [1807.03361](https://arxiv.org/abs/1807.03361)
+POINT2 | 2019 | [1903.03896](https://arxiv.org/abs/1903.03896)
 
 ## Medical Image Processing
 
