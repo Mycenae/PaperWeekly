@@ -10,7 +10,7 @@ SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 
-## Deep learning, Federated Learning, Chip design and its limitation, self-supervised learning
+## Deep learning and its limitation, Federated Learning, Self-Supervised Learning
 
 Paper Name | Published time | Link
 --- | --- | ---
