@@ -236,6 +236,7 @@ fddb | 2010 | [fddb](http://vis-www.cs.umass.edu/fddb/fddb.pdf)
 WIDER-FACE | 2015 | [1511.06523](https://arxiv.org/abs/1511.06523)
 MS-Celeb-1M | 2016 | [1607.08221](https://arxiv.org/abs/1607.08221)
 CV-HAZOP | 2017 | [IJCV2017](https://link.springer.com/article/10.1007/s11263-017-1020-z)
+DeepLesion | 2018 | [SPIE](https://www.spiedigitallibrary.org/journals/journal-of-medical-imaging/volume-5/issue-03/036501/DeepLesion--automated-mining-of-large-scale-lesion-annotations-and/10.1117/1.JMI.5.3.036501.full?SSO=1)
 
 ## Other usage
 
