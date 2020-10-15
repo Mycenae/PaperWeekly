@@ -242,6 +242,7 @@ DeepLesion | 2018 | [SPIE](https://www.spiedigitallibrary.org/journals/journal-o
 
 Paper | Published time | Link
 --- | --- | ---
+Rethinking-Generalization | 2016 | [1611.03530](https://arxiv.org/abs/1611.03530)
 Data-HFC-CNN | 2019 | [1905.13545](https://arxiv.org/abs/1905.13545)
 
 ## Other usage
