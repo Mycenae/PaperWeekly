@@ -17,6 +17,7 @@ NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2
 Paper Name | Published time | Link
 --- | --- | ---
 Contrastive-Loss-Function | 2006 | [LeCun](http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf)
+Nature-Deep-Learning | 2015 | [Nature](https://www.nature.com/articles/nature14539)
 Federated-Averaging | 2016 | [1602.05629](https://arxiv.org/abs/1602.05629)
 Deep-Learning-Computer-Architecture-Chip-Design | 2019 | [1911.05289](https://arxiv.org/abs/1911.05289v1)
 DL-Critical-Appraisal | 2018 | [1801.00631](https://arxiv.org/abs/1801.00631)
