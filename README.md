@@ -10,6 +10,7 @@ SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
 Mattes-Mutual-Information | 2001 | [harvard](https://ui.adsabs.harvard.edu/abs/2001SPIE.4322.1609M/abstract)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
+gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
 NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
 
 ## Deep learning and its limitation, Federated Learning, Self-Supervised Learning
