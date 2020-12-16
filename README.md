@@ -12,6 +12,7 @@ Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
 CBCT-Scatter-Compensation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/full/10.1118/1.3599033)
+CBCT-Scatter-Estimation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/abs/10.1118/1.3589140)
 NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
 
 ## Deep learning and its limitation, Federated Learning, Self-Supervised Learning
