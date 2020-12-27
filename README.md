@@ -256,6 +256,7 @@ usage | paper | time | link
 --- | --- | --- | ---
 fire detection | FireNet | 2018 | [personal link](https://breckon.org/toby/publications/papers/dunnings18fire.pdf)
 Contour-to-DICOM-RT-Structure-Set | 2009 | [link](https://infoscience.epfl.ch/record/133543)
+stochasticity | 2000 | [link](http://www.dam.brown.edu/people/mumford/beyond/papers/2000b--DawningAgeStoch-NC.pdf)
 
 ## Books:
 
