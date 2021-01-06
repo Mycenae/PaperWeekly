@@ -1,6 +1,7 @@
 # PaperWeekly
 
 ## Classical Image Processing Algorithms
+
 Paper Name | Published time | Link
 --- | --- | ---
 Live-Wire-1992 | 1992 | [link](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=1712&context=facpub)
@@ -11,9 +12,15 @@ Mattes-Mutual-Information | 2001 | [harvard](https://ui.adsabs.harvard.edu/abs/2
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
+NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
+
+## Medical imaging
+
+Paper Name | Published time | Link
+--- | --- | ---
 CBCT-Scatter-Compensation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/full/10.1118/1.3599033)
 CBCT-Scatter-Estimation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/abs/10.1118/1.3589140)
-NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
+CT-Survey | 2013 | [springer](https://link.springer.com/content/pdf/10.1007%2Fs40134-012-0006-4.pdf)
 
 ## Deep learning and its limitation, Federated Learning, Self-Supervised Learning
 
@@ -252,9 +259,9 @@ Data-HFC-CNN | 2019 | [1905.13545](https://arxiv.org/abs/1905.13545)
 
 ## Other
 
-usage | paper | time | link
---- | --- | --- | ---
-fire detection | FireNet | 2018 | [personal link](https://breckon.org/toby/publications/papers/dunnings18fire.pdf)
+Paper | time | link
+--- | --- | ---
+FireNet | 2018 | [personal link](https://breckon.org/toby/publications/papers/dunnings18fire.pdf)
 Contour-to-DICOM-RT-Structure-Set | 2009 | [link](https://infoscience.epfl.ch/record/133543)
 stochasticity | 2000 | [link](http://www.dam.brown.edu/people/mumford/beyond/papers/2000b--DawningAgeStoch-NC.pdf)
 
