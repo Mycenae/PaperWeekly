@@ -9,6 +9,7 @@ Normalized-Cuts | 1997 | [stanford](http://vision.stanford.edu/teaching/cs231b_s
 Bilateral-Filter | 1998 | [link](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf)
 SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
 Mattes-Mutual-Information | 2001 | [harvard](https://ui.adsabs.harvard.edu/abs/2001SPIE.4322.1609M/abstract)
+IFT | 2004 | [PAMI](https://pubmed.ncbi.nlm.nih.gov/15382683/)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
