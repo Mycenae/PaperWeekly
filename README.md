@@ -13,6 +13,7 @@ IFT | 2004 | [PAMI](https://pubmed.ncbi.nlm.nih.gov/15382683/)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
+Objectness | 2012 | [PAMI](https://ieeexplore.ieee.org/document/6133291)
 NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
 
 ## Medical imaging
