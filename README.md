@@ -21,6 +21,7 @@ NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2
 
 Paper Name | Published time | Link
 --- | --- | ---
+DETR | 2020 | [2005.12872](https://arxiv.org/abs/2005.12872.pdf)
 Vision-Transformers-Survey | 2021 | [2101.01169](https://arxiv.org/abs/2101.01169.pdf)
 
 ## Medical imaging
