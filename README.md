@@ -4,15 +4,25 @@
 
 Paper Name | Published time | Link
 --- | --- | ---
+findContours | 1985 | [link](https://www.sciencedirect.com/science/article/pii/0734189X85900167)
 Live-Wire-1992 | 1992 | [link](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=1712&context=facpub)
 Normalized-Cuts | 1997 | [stanford](http://vision.stanford.edu/teaching/cs231b_spring1213/papers/CVPR97_ShiMalik.pdf)
 Bilateral-Filter | 1998 | [link](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf)
 SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
 Mattes-Mutual-Information | 2001 | [harvard](https://ui.adsabs.harvard.edu/abs/2001SPIE.4322.1609M/abstract)
+IFT | 2004 | [PAMI](https://pubmed.ncbi.nlm.nih.gov/15382683/)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
+Objectness | 2012 | [PAMI](https://ieeexplore.ieee.org/document/6133291)
 NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
+
+## Attention and Transformer
+
+Paper Name | Published time | Link
+--- | --- | ---
+DETR | 2020 | [2005.12872](https://arxiv.org/abs/2005.12872.pdf)
+Vision-Transformers-Survey | 2021 | [2101.01169](https://arxiv.org/abs/2101.01169.pdf)
 
 ## Medical imaging
 
@@ -154,11 +164,12 @@ Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
 
-## PCL related
+## 3D Data Processing
 
 Name | Published time | Link
 --- | --- | ---
 PCL-Library | 2011 | [PCL](http://www.pointclouds.org/assets/pdf/pcl_icra2011.pdf)
+Open3D | 2018 | [1801.09847](https//arxiv.org/abs/1801.09847)
 
 
 ## Image Registration & Optical Flow
