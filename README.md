@@ -19,6 +19,12 @@ gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezM
 Objectness | 2012 | [PAMI](https://ieeexplore.ieee.org/document/6133291)
 NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
 
+## Texture analysis
+
+Paper Name | Published time | Link
+--- | --- | ---
+Deep Filter Banks | 2015 | [CVPR](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Cimpoi_Deep_Filter_Banks_2015_CVPR_paper.pdf)
+
 ## Attention and Transformer
 
 Paper Name | Published time | Link
