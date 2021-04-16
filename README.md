@@ -24,6 +24,7 @@ NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2
 Paper Name | Published time | Link
 --- | --- | ---
 Laws-Filters | 1980 | [link](https://www.deepdyve.com/lp/spie/rapid-texture-identification-WCydw7kuTL)
+LBP | 2002 | [link](http://www.cse.msu.edu/~rossarun/BiometricsTextBook/Papers/Face/Ojala_LBP_PAMI02.pdf)
 VGG-Texture-Classification | 2005 | [VGG](https://www.robots.ox.ac.uk/~vgg/publications/2005/Varma05/varma05.pdf)
 Deep Filter Banks | 2015 | [CVPR](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Cimpoi_Deep_Filter_Banks_2015_CVPR_paper.pdf)
 
