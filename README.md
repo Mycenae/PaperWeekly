@@ -28,6 +28,12 @@ LBP | 2002 | [link](http://www.cse.msu.edu/~rossarun/BiometricsTextBook/Papers/F
 VGG-Texture-Classification | 2005 | [VGG](https://www.robots.ox.ac.uk/~vgg/publications/2005/Varma05/varma05.pdf)
 Deep Filter Banks | 2015 | [CVPR](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Cimpoi_Deep_Filter_Banks_2015_CVPR_paper.pdf)
 
+## One Class Classification
+
+Paper Name | Published time | Link
+--- | --- | ---
+Deep OCC | 2018 | [1801.05365v2](https://arxiv.org/abs/1801.05365v2)
+
 ## Attention and Transformer
 
 Paper Name | Published time | Link
