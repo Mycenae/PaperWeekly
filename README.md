@@ -33,6 +33,7 @@ Deep Filter Banks | 2015 | [CVPR](https://www.cv-foundation.org/openaccess/conte
 Paper Name | Published time | Link
 --- | --- | ---
 Deep OCC | 2018 | [1801.05365v2](https://arxiv.org/abs/1801.05365v2)
+OC-CNN | 2019 | [1901.08688v1](https://arxiv.org/abs/1901.08688v1)
 
 ## Attention and Transformer
 
