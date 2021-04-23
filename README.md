@@ -42,6 +42,7 @@ Paper Name | Published time | Link
 --- | --- | ---
 Attention | 2017 | [1706.03762](https://arxiv.org/abs/1706.03762)
 DETR | 2020 | [2005.12872](https://arxiv.org/abs/2005.12872.pdf)
+ViT | 2020 | [2010.11929](https://openreview.net/pdf?id=YicbFdNTTy)
 Vision-Transformers-Survey | 2021 | [2101.01169](https://arxiv.org/abs/2101.01169.pdf)
 
 ## Medical imaging
