@@ -180,6 +180,7 @@ RetinaFace | 2019 | [1905.00641](https://arxiv.org/abs/1905.00641)
 Name | Published time | Link
 --- | --- | ---
 CNN-FFT | 2014 | [1312.5851v5](https://arxiv.org/abs/1312.5851v5)
+FFT-DL-Deploy | 2017 | [1712.04910](https://arxiv.org/abs/1712.04910)
 Caffe | 2014 | [1408.5093](https://arxiv.org/abs/1408.5093)
 Knowledge-Distilling | 2015 | [1503.02531](https://arxiv.org/abs/1503.02531)
 Learning-weights-and-connections | 2015 | [1506.02626](https://arxiv.org/abs/1506.02626)
