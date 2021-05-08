@@ -21,11 +21,6 @@ gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezM
 linemod | 2012 | [link](http://campar.in.tum.de/pub/hinterstoisser2011pami/hinterstoisser2011pami.pdf)
 Objectness | 2012 | [PAMI](https://ieeexplore.ieee.org/document/6133291)
 NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
-
-## Texture analysis
-
-Paper Name | Published time | Link
---- | --- | ---
 Laws-Filters | 1980 | [link](https://www.deepdyve.com/lp/spie/rapid-texture-identification-WCydw7kuTL)
 LBP | 2002 | [link](http://www.cse.msu.edu/~rossarun/BiometricsTextBook/Papers/Face/Ojala_LBP_PAMI02.pdf)
 VGG-Texture-Classification | 2005 | [VGG](https://www.robots.ox.ac.uk/~vgg/publications/2005/Varma05/varma05.pdf)
@@ -47,18 +42,12 @@ DETR | 2020 | [2005.12872](https://arxiv.org/abs/2005.12872.pdf)
 ViT | 2020 | [2010.11929](https://openreview.net/pdf?id=YicbFdNTTy)
 Vision-Transformers-Survey | 2021 | [2101.01169](https://arxiv.org/abs/2101.01169.pdf)
 
-## Medical imaging
+## Deep learning Interpretability, Federated Learning, Self-Supervised Learning
 
 Paper Name | Published time | Link
 --- | --- | ---
-CBCT-Scatter-Compensation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/full/10.1118/1.3599033)
-CBCT-Scatter-Estimation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/abs/10.1118/1.3589140)
-CT-Survey | 2013 | [springer](https://link.springer.com/content/pdf/10.1007%2Fs40134-012-0006-4.pdf)
-
-## Deep learning and its limitation, Federated Learning, Self-Supervised Learning
-
-Paper Name | Published time | Link
---- | --- | ---
+Rethinking-Generalization | 2016 | [1611.03530](https://arxiv.org/abs/1611.03530)
+Data-HFC-CNN | 2019 | [1905.13545](https://arxiv.org/abs/1905.13545)
 Contrastive-Loss-Function | 2006 | [LeCun](http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf)
 Nature-Deep-Learning | 2015 | [Nature](https://www.nature.com/articles/nature14539)
 Federated-Averaging | 2016 | [1602.05629](https://arxiv.org/abs/1602.05629)
@@ -137,12 +126,11 @@ DeepLabV3+ | 2018 | [1802.02611](https://arxiv.org/abs/1802.02611)
 Dense-Prediction-Architecture-Search | 2018 | [1809.04184](https://arxiv.org/abs/1809.04184)
 Auto-DeepLab | 2019 | [1901.02985](https://arxiv.org/abs/1901.02985)
 Boundary-Loss | 2018 | [1812.07032](https://arxiv.org/abs/1812.07032)
-
-## Edge Detection
-
-Model name | Published time | Link
---- | --- | ---
-HED | 2015 | [1504.06375](https://arxiv.org/abs/1504.06375)
+U-Net-Medical | 2015 | [1505.04597](https://arxiv.org/abs/1505.04597)
+V-Net | 2016 | [1606.04797](https://arxiv.org/abs/1606.04797)
+Clinically-Applicable-DL-OAR-Delineation | 2019 | [Nature](https://www.nature.com/articles/s42256-019-0099-z)
+nnU-Net | 2019 | [1904.08128](https://arxiv.org/abs/1904.08128)
+Fast-SCNN | 2019 | [1902.04502](https://arxiv.org/abs/1902.04502)
 
 ## GAN
 
@@ -155,7 +143,7 @@ Improved-Techniques-for-Training-GANs | 2016 | [1606.03498](https://arxiv.org/ab
 pix2pix | 2016 | [1611.07004](https://arxiv.org/abs/1611.07004)
 CycleGAN | 2017 | [1703.10593](https://arxiv.org/abs/1703.10593)
 
-## Pose Estimation
+## Keypoint detection
 
 Paper | Published time | Link
 --- | --- | ---
@@ -191,14 +179,6 @@ Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
 
-## 3D Data Processing
-
-Name | Published time | Link
---- | --- | ---
-PCL-Library | 2011 | [PCL](http://www.pointclouds.org/assets/pdf/pcl_icra2011.pdf)
-Open3D | 2018 | [1801.09847](https//arxiv.org/abs/1801.09847)
-
-
 ## Image Registration & Optical Flow
 
 Name | Published time | Link
@@ -213,7 +193,7 @@ X-ray-CT-Registration | 2019 | [MICCAI2019](https://link.springer.com/chapter/10
 Weakly-Supervised-CNN-Multimodal-Registration | 2018 | [1807.03361](https://arxiv.org/abs/1807.03361)
 POINT2 | 2019 | [1903.03896](https://arxiv.org/abs/1903.03896)
 
-## Medical Image Processing
+## Medical Imaging and Medical Image Processing
 
 Name | Published time | Link
 --- | --- | ---
@@ -229,51 +209,24 @@ Radiomics-ML-DL | 2020 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/full/10
 Intrafractional-motion-management | 2020 | [pubmed](https://pubmed.ncbi.nlm.nih.gov/31476194/)
 UltraSound-Toolbox | 2017 | [IEEE](https://ieeexplore.ieee.org/document/8092389)
 ALTIS | 2019 | [pubmed](https://pubmed.ncbi.nlm.nih.gov/31435950/)
-
-## CT Reconstruction
-
-Name | Published time | Link
---- | --- | ---
+CBCT-Scatter-Compensation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/full/10.1118/1.3599033)
+CBCT-Scatter-Estimation | 2011 | [aapm](https://aapm.onlinelibrary.wiley.com/doi/abs/10.1118/1.3589140)
+CT-Survey | 2013 | [springer](https://link.springer.com/content/pdf/10.1007%2Fs40134-012-0006-4.pdf)
 CT-Reconstruction-Evolution | 2019 | [springer](https://link.springer.com/article/10.1007/s00330-018-5810-7)
 CT-RED-CNN | 2017 | [IEEE](https://ieeexplore.ieee.org/document/7947200/)
 
-## Medical Image Segmentation
-
-Name | Published time | Link
---- | --- | ---
-U-Net-Medical | 2015 | [1505.04597](https://arxiv.org/abs/1505.04597)
-V-Net | 2016 | [1606.04797](https://arxiv.org/abs/1606.04797)
-Clinically-Applicable-DL-OAR-Delineation | 2019 | [Nature](https://www.nature.com/articles/s42256-019-0099-z)
-nnU-Net | 2019 | [1904.08128](https://arxiv.org/abs/1904.08128)
-
-## Action Recognition and Spatial-temporal CNN
+## OCR & Action Recognition & Spatial-temporal CNN & Image Super-Resolution & Crowd counting
 
 Model | Published time | Link
 --- | --- | ---
 I3D | 2017 | [1705.07750](https://arxiv.org/abs/1705.07750)
 FCN-rLSTM | 2017 | [1707.09476](https://arxiv.org/abs/1707.09476)
 Bi-ConvLSTM | 2017 | [1707.07890](https://arxiv.org/abs/1707.07890)
-
-
-## Image Super-Resolution
-
-Paper | Published time | Link
---- | --- | ---
 EDSR | 2017 | [1707.02921v1](https://arxiv.org/1707.02921v1)
 Deep image prior | 2018 | [github.io](https://dmitryulyanov.github.io/deep_image_prior)
-
-## Crowd counting
-
-Paper | Published time | Link
---- | --- | ---
 MCNN | 2016 | [CVPR2016](https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Zhang_Single-Image_Crowd_Counting_CVPR_2016_paper.pdf)
 MSCNN | 2017 | [1702.02359](https://arxiv.org/abs/1702.02359)
-
-## OCR
-
-Paper | Published time | Link
---- | --- | ---
-review | 2018 | [1811.04256](https://arxiv.org/abs/1811.04256)
+OCR review | 2018 | [1811.04256](https://arxiv.org/abs/1811.04256)
 
 ## Datasets
 
@@ -289,45 +242,22 @@ CV-HAZOP | 2017 | [IJCV2017](https://link.springer.com/article/10.1007/s11263-01
 DeepLesion | 2018 | [SPIE](https://www.spiedigitallibrary.org/journals/journal-of-medical-imaging/volume-5/issue-03/036501/DeepLesion--automated-mining-of-large-scale-lesion-annotations-and/10.1117/1.JMI.5.3.036501.full?SSO=1)
 RIL-Contour | 2019 | [Mayo](https://link.springer.com/article/10.1007/s10278-019-00232-0)
 
-## Interpretability
-
-Paper | Published time | Link
---- | --- | ---
-Rethinking-Generalization | 2016 | [1611.03530](https://arxiv.org/abs/1611.03530)
-Data-HFC-CNN | 2019 | [1905.13545](https://arxiv.org/abs/1905.13545)
-
-## Other
+## 3D Point Cloud & Other
 
 Paper | time | link
 --- | --- | ---
+PCL-Library | 2011 | [PCL](http://www.pointclouds.org/assets/pdf/pcl_icra2011.pdf)
+Open3D | 2018 | [1801.09847](https//arxiv.org/abs/1801.09847)
+HED | 2015 | [1504.06375](https://arxiv.org/abs/1504.06375)
 FireNet | 2018 | [personal link](https://breckon.org/toby/publications/papers/dunnings18fire.pdf)
 Contour-to-DICOM-RT-Structure-Set | 2009 | [link](https://infoscience.epfl.ch/record/133543)
 stochasticity | 2000 | [link](http://www.dam.brown.edu/people/mumford/beyond/papers/2000b--DawningAgeStoch-NC.pdf)
 
-## Books:
+## Books & links
 
 1. [深度学习入门：基于Python的理论与实现](http://www.ituring.com.cn/book/1921)
 2. [解析卷积神经网络—深度学习实践手册](http://lamda.nju.edu.cn/weixs/book/CNN_book.html)
-
-## Links:
-
-1. [Keras](https://keras.io/zh/)
-2. [movidius](https://developer.movidius.com/)
-3. [feature map](https://stats.stackexchange.com/questions/291820/what-is-the-definition-of-a-feature-map-aka-activation-map-in-a-convolutio)
-4. [tensorflow dataset](https://www.tensorflow.org/guide/datasets)
-5. [tensorflow estimator](https://www.tensorflow.org/guide/estimators)
-6. [tensorflow low level api - Intro](https://www.tensorflow.org/guide/low_level_intro)
-7. [tensorflow low level api - Tensors](https://www.tensorflow.org/guide/tensors)
-8. [tensorflow low level api - Variables](https://www.tensorflow.org/guide/variables)
-9. [tensorflow low level api - Graphs and Sessions](https://www.tensorflow.org/guide/graphs)
-10. [tensorflow low level api - Save and Restore](https://www.tensorflow.org/guide/saved_model)
-11. [tensorflow low level api - Control Flow](https://www.tensorflow.org/guide/autograph)
-12. [caffe tutorial net-layer-blob](http://caffe.berkeleyvision.org/tutorial/net_layer_blob.html)
-13. [caffe tutorial forward-backward](http://caffe.berkeleyvision.org/tutorial/forward_backward.html)
-14. [caffe tutorial loss](http://caffe.berkeleyvision.org/tutorial/loss.html)
-15. [caffe tutorial solver](http://caffe.berkeleyvision.org/tutorial/loss.html)
-16. [caffe tutorial layers](http://caffe.berkeleyvision.org/tutorial/layers.html)
-17. [DMD orign](http://e2e.ti.com/blogs_/b/enlightened/archive/2016/10/06/the-pioneering-work-that-led-to-the-dmd)
-18. [TI-DLP](http://www.ti.com/dlp-chip/overview.html)
-19. [Camera-Calibration-Matlab](https://ww2.mathworks.cn/help/vision/ug/camera-calibration.html)
-20. [SimpleITK](https://simpleitk.readthedocs.io/en/master/fundamentalConcepts.html)
+3. [DMD orign](http://e2e.ti.com/blogs_/b/enlightened/archive/2016/10/06/the-pioneering-work-that-led-to-the-dmd)
+4. [TI-DLP](http://www.ti.com/dlp-chip/overview.html)
+5. [Camera-Calibration-Matlab](https://ww2.mathworks.cn/help/vision/ug/camera-calibration.html)
+6. [SimpleITK](https://simpleitk.readthedocs.io/en/master/fundamentalConcepts.html)
