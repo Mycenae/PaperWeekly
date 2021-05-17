@@ -91,6 +91,7 @@ ResNeSt | 2020 | [2004.08955](https://arxiv.org/abs/2004.08955)
 Non-local NN | 2017 | [1711.07971](https://arxiv.org/abs/1711.07971)
 ResNet-RS | 2021 | [2103.07579](https://arxiv.org/abs/2103.07579)
 RandAugment | 2019 | [1909.13719](https://arxiv.org/abs/1909.13719)
+Deformable-CNN-v1 | 2017 | [1703.06211](https://arxiv.org/abs/1703.06211)
 
 ## Object Detetion models and algorithms
 
