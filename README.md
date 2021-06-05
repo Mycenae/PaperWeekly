@@ -15,6 +15,7 @@ Mattes-Mutual-Information | 2001 | [harvard](https://ui.adsabs.harvard.edu/abs/2
 Elastic Distortion | 2003 | [cmu](http://www.cs.cmu.edu/~bhiksha/courses/deeplearning/Fall.2016/pdfs/Simard.pdf)
 IFT | 2004 | [PAMI](https://pubmed.ncbi.nlm.nih.gov/15382683/)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
+HOG | 2005 | [paper](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
 t-SNE visualization | 2008 | [link](https://jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
