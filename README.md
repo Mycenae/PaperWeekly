@@ -1,43 +1,37 @@
 # PaperWeekly
 
-## Classical Image Processing & Pattern Recognition Algorithms
+## Classical Image Features, Image Processing and Pattern Recognition
 
 Paper Name | Published time | Link
 --- | --- | ---
 Marr-1980 | 1980 | [link](https://royalsocietypublishing.org/doi/10.1098/rstb.1980.0091)
+Laws-Filters | 1980 | [link](https://www.deepdyve.com/lp/spie/rapid-texture-identification-WCydw7kuTL)
 findContours | 1985 | [link](https://www.sciencedirect.com/science/article/pii/0734189X85900167)
 cornerHarris | 1988 | [link](http://www.bmva.org/bmvc/1988/avc-88-023.pdf)
-Live-Wire-1992 | 1992 | [link](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=1712&context=facpub)
 GoodFeaturesToTrack | 1993 | [IEEE](https://ieeexplore.ieee.org/document/323794)
+SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
+LBP | 2002 | [link](http://www.cse.msu.edu/~rossarun/BiometricsTextBook/Papers/Face/Ojala_LBP_PAMI02.pdf)
+HOG | 2005 | [paper](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
+SURF | 2006 | [paper](http://people.ee.ethz.ch/~surf/eccv06.pdf)
+FAST | 2006 | [paper](https://www.edwardrosten.com/work/rosten_2006_machine.pdf)
+DPM | 2008 | [paper](http://cs.brown.edu/people/pfelzens/papers/latent.pdf)
+VGG-Texture-Classification | 2005 | [VGG](https://www.robots.ox.ac.uk/~vgg/publications/2005/Varma05/varma05.pdf)
+Deep Filter Banks | 2015 | [CVPR](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Cimpoi_Deep_Filter_Banks_2015_CVPR_paper.pdf)
+Live-Wire-1992 | 1992 | [link](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=1712&context=facpub)
 Normalized-Cuts | 1997 | [stanford](http://vision.stanford.edu/teaching/cs231b_spring1213/papers/CVPR97_ShiMalik.pdf)
 Bilateral-Filter | 1998 | [link](https://users.soe.ucsc.edu/~manduchi/Papers/ICCV98.pdf)
-SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
 Mattes-Mutual-Information | 2001 | [harvard](https://ui.adsabs.harvard.edu/abs/2001SPIE.4322.1609M/abstract)
 Elastic Distortion | 2003 | [cmu](http://www.cs.cmu.edu/~bhiksha/courses/deeplearning/Fall.2016/pdfs/Simard.pdf)
 IFT | 2004 | [PAMI](https://pubmed.ncbi.nlm.nih.gov/15382683/)
 Non-Local-Means | 2005 | [paper](https://www.iro.umontreal.ca/~mignotte/IFT6150/Articles/Buades-NonLocal.pdf)
-HOG | 2005 | [paper](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
-SURF | 2006 | [paper](http://people.ee.ethz.ch/~surf/eccv06.pdf)
-FAST | 2006 | [paper](https://www.edwardrosten.com/work/rosten_2006_machine.pdf)
 t-SNE visualization | 2008 | [link](https://jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf)
 Histogram-Modification-Framework | 2009 | [IEEE](https://ieeexplore.ieee.org/document/4895264/)
 gPb | 2010 | [Berkeley](https://people.eecs.berkeley.edu/~malik/papers/arbelaezMFM-pami2010.pdf)
 linemod | 2012 | [link](http://campar.in.tum.de/pub/hinterstoisser2011pami/hinterstoisser2011pami.pdf)
 Objectness | 2012 | [PAMI](https://ieeexplore.ieee.org/document/6133291)
 NumPy-Nature | 2020 | [Nature](https://www.nature.com/articles/s41586-020-2649-2)
-Laws-Filters | 1980 | [link](https://www.deepdyve.com/lp/spie/rapid-texture-identification-WCydw7kuTL)
-LBP | 2002 | [link](http://www.cse.msu.edu/~rossarun/BiometricsTextBook/Papers/Face/Ojala_LBP_PAMI02.pdf)
-VGG-Texture-Classification | 2005 | [VGG](https://www.robots.ox.ac.uk/~vgg/publications/2005/Varma05/varma05.pdf)
-Deep Filter Banks | 2015 | [CVPR](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Cimpoi_Deep_Filter_Banks_2015_CVPR_paper.pdf)
 
-## One Class Classification
-
-Paper Name | Published time | Link
---- | --- | ---
-Deep OCC | 2018 | [1801.05365v2](https://arxiv.org/abs/1801.05365v2)
-OC-CNN | 2019 | [1901.08688v1](https://arxiv.org/abs/1901.08688v1)
-
-## Attention and Transformer
+## Attention, Transformer, Federated Learning, Self-Supervised Learning, One Class Classification
 
 Paper Name | Published time | Link
 --- | --- | ---
@@ -45,11 +39,6 @@ Attention | 2017 | [1706.03762](https://arxiv.org/abs/1706.03762)
 DETR | 2020 | [2005.12872](https://arxiv.org/abs/2005.12872.pdf)
 ViT | 2020 | [2010.11929](https://openreview.net/pdf?id=YicbFdNTTy)
 Vision-Transformers-Survey | 2021 | [2101.01169](https://arxiv.org/abs/2101.01169.pdf)
-
-## Deep learning Interpretability, Federated Learning, Self-Supervised Learning
-
-Paper Name | Published time | Link
---- | --- | ---
 Rethinking-Generalization | 2016 | [1611.03530](https://arxiv.org/abs/1611.03530)
 Data-HFC-CNN | 2019 | [1905.13545](https://arxiv.org/abs/1905.13545)
 Contrastive-Loss-Function | 2006 | [LeCun](http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf)
@@ -64,6 +53,8 @@ ML-Stuck-in-a-Rut | 2019 | [HotOS-2019](https://dl.acm.org/doi/pdf/10.1145/33175
 Self-supervised-representation-learning-revisited | 2019 | [1901.09005](https://arxiv.org/abs/1901.09005)
 Momentum-Contrast | 2019 | [1911.05722](https://arxiv.org/abs/1911.05722)
 SimCLR | 2020 | [2002.05079](https://arxiv.org/abs/2002.05079)
+Deep OCC | 2018 | [1801.05365v2](https://arxiv.org/abs/1801.05365v2)
+OC-CNN | 2019 | [1901.08688v1](https://arxiv.org/abs/1901.08688v1)
 
 ## Classification models and algorithms
 
