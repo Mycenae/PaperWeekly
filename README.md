@@ -15,6 +15,7 @@ HOG | 2005 | [paper](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pd
 SURF | 2006 | [paper](http://people.ee.ethz.ch/~surf/eccv06.pdf)
 FAST | 2006 | [paper](https://www.edwardrosten.com/work/rosten_2006_machine.pdf)
 DPM | 2008 | [paper](http://cs.brown.edu/people/pfelzens/papers/latent.pdf)
+BRIEF | 2010 | [paper](https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf)
 VGG-Texture-Classification | 2005 | [VGG](https://www.robots.ox.ac.uk/~vgg/publications/2005/Varma05/varma05.pdf)
 Deep Filter Banks | 2015 | [CVPR](https://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Cimpoi_Deep_Filter_Banks_2015_CVPR_paper.pdf)
 Live-Wire-1992 | 1992 | [link](https://scholarsarchive.byu.edu/cgi/viewcontent.cgi?article=1712&context=facpub)
