@@ -10,6 +10,7 @@ findContours | 1985 | [link](https://www.sciencedirect.com/science/article/pii/0
 cornerHarris | 1988 | [link](http://www.bmva.org/bmvc/1988/avc-88-023.pdf)
 GoodFeaturesToTrack | 1993 | [IEEE](https://ieeexplore.ieee.org/document/323794)
 SIFT-1999 | 1999 | [iccv99](http://www.cs.ubc.ca/~lowe/papers/iccv99.pdf)
+Haar | 2001 [paper](http://wearables.cc.gatech.edu/paper_of_week/viola01rapid.pdf)
 LBP | 2002 | [link](http://www.cse.msu.edu/~rossarun/BiometricsTextBook/Papers/Face/Ojala_LBP_PAMI02.pdf)
 HOG | 2005 | [paper](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf)
 SURF | 2006 | [paper](http://people.ee.ethz.ch/~surf/eccv06.pdf)
