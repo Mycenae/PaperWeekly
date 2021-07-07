@@ -59,6 +59,7 @@ Momentum-Contrast | 2019 | [1911.05722](https://arxiv.org/abs/1911.05722)
 SimCLR | 2020 | [2002.05079](https://arxiv.org/abs/2002.05079)
 Deep OCC | 2018 | [1801.05365v2](https://arxiv.org/abs/1801.05365v2)
 OC-CNN | 2019 | [1901.08688v1](https://arxiv.org/abs/1901.08688v1)
+Nature-DL-for-AI | 2021 | [paper](https://cacm.acm.org/magazines/2021/7/253464-deep-learning-for-ai/fulltext)
 
 ## Classification models and algorithms
 
