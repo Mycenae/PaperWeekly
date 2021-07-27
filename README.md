@@ -5,6 +5,7 @@
 Paper Name | Published time | Link
 --- | --- | ---
 ORB-SLAM | 2015 | [1502.00956](https://arxiv.org/abs/1502.00956)
+ORB-SLAM2 | 2016 | [1610.06475](https://arxiv.org/abs/1610.06475)
 cartographer | 2016 | [link](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45466.pdf)
 
 ## Classical Image Features, Image Processing and Pattern Recognition
