@@ -184,7 +184,7 @@ ArcFace | 2018 | [1801.07698](https://arxiv.org/abs/1801.07698)
 MobileFaceNet | 2018 | [1804.07573](https://arxiv.org/abs/1804.07573)
 RetinaFace | 2019 | [1905.00641](https://arxiv.org/abs/1905.00641)
 
-## Inference Framework and Pruning, Quantization, Compression, AutoML
+## Inference Framework and Pruning, Quantization, Compression, AutoML, TPU
 
 Name | Published time | Link
 --- | --- | ---
@@ -199,6 +199,7 @@ TVM | 2018 | [1802.04799](https://arxiv.org/abs/1802.04799)
 Integer-Arithmetic-Inference | 2018 | [1712.05877](https://arxiv.org/abs/1712.05877)
 Quantization | 2018 | [1806.08342](https://arxiv.org/abs/1806.08342)
 Auto-Keras | 2018 | [1806.10282](https://arxiv.org/abs/1806.10282)
+TPU | 2017 | [1704.04760](https://arxiv.org/abs/1704.04760)
 
 ## Image Registration & Optical Flow
 
