@@ -1,10 +1,11 @@
 # PaperWeekly
 
-## Design Space Exploration
+## CPU Design and Design Space Exploration
 
 Paper Name | Published time | Link
 --- | --- | ---
 DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf)
+gem5 | 2011 | [link](https://dl.acm.org/doi/10.1145/2024716.2024718)
 
 ## SLAM
 
