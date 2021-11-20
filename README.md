@@ -6,6 +6,7 @@ Paper Name | Published time | Link
 --- | --- | ---
 DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf)
 gem5 | 2011 | [link](https://dl.acm.org/doi/10.1145/2024716.2024718)
+RISC5 | 2017 | [link](https://carrv.github.io/2017/papers/roelke-risc5-carrv2017.pdf)
 BOOM | 2015 | [link](https://digitalassets.lib.berkeley.edu/techreports/ucb/text/EECS-2015-167.pdf)
 BOOMv2 | 2017 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2017/EECS-2017-157.pdf)
 SonicBOOM | 2020 | [link](https://carrv.github.io/2020/papers/CARRV2020_paper_15_Zhao.pdf)
