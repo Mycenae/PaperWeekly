@@ -10,6 +10,7 @@ RISC5 | 2017 | [link](https://carrv.github.io/2017/papers/roelke-risc5-carrv2017
 BOOM | 2015 | [link](https://digitalassets.lib.berkeley.edu/techreports/ucb/text/EECS-2015-167.pdf)
 BOOMv2 | 2017 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2017/EECS-2017-157.pdf)
 SonicBOOM | 2020 | [link](https://carrv.github.io/2020/papers/CARRV2020_paper_15_Zhao.pdf)
+BOOM-Explorer | 2021 | [link](http://www.cse.cuhk.edu.hk/~byu/papers/C122-ICCAD2021-DSE-BOOM.pdf)
 
 ## SLAM
 
