@@ -11,7 +11,7 @@ BOOM | 2015 | [link](https://digitalassets.lib.berkeley.edu/techreports/ucb/text
 BOOMv2 | 2017 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2017/EECS-2017-157.pdf)
 SonicBOOM | 2020 | [link](https://carrv.github.io/2020/papers/CARRV2020_paper_15_Zhao.pdf)
 BOOM-Explorer | 2021 | [link](http://www.cse.cuhk.edu.hk/~byu/papers/C122-ICCAD2021-DSE-BOOM.pdf)
-New-Golden-Age ｜ 2019 ｜ [link](https://cacm.acm.org/magazines/2019/2/234352-a-new-golden-age-for-computer-architecture/fulltext)
+New-Golden-Age | 2019 | [link](https://cacm.acm.org/magazines/2019/2/234352-a-new-golden-age-for-computer-architecture/fulltext)
 
 ## SLAM
 
