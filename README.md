@@ -5,6 +5,7 @@
 Paper Name | Published time | Link
 --- | --- | ---
 DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf)
+GARNET | 2009 | [link](https://ieeexplore.ieee.org/document/4919636)
 gem5 | 2011 | [link](https://dl.acm.org/doi/10.1145/2024716.2024718)
 Rocket-Chip-Generator | 2016 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-17.pdf)
 RISC5 | 2017 | [link](https://carrv.github.io/2017/papers/roelke-risc5-carrv2017.pdf)
