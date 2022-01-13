@@ -16,6 +16,7 @@ SonicBOOM | 2020 | [link](https://carrv.github.io/2020/papers/CARRV2020_paper_15
 BOOM-Explorer | 2021 | [link](http://www.cse.cuhk.edu.hk/~byu/papers/C122-ICCAD2021-DSE-BOOM.pdf)
 New-Golden-Age | 2019 | [link](https://cacm.acm.org/magazines/2019/2/234352-a-new-golden-age-for-computer-architecture/fulltext)
 Computers-as-GPT-Decline | 2018 | [link](https://ide.mit.edu/sites/default/files/publications/SSRN-id3287769.pdf)
+ML-EDA-Survey | 2021 | [2102.03357](https://arxiv.org/abs/2102.03357)
 
 ## SLAM
 
