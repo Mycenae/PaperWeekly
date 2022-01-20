@@ -12,7 +12,7 @@ Rocket-Chip-Generator | 2016 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpt
 RISC5 | 2017 | [link](https://carrv.github.io/2017/papers/roelke-risc5-carrv2017.pdf)
 BOOM | 2015 | [link](https://digitalassets.lib.berkeley.edu/techreports/ucb/text/EECS-2015-167.pdf)
 BOOMv2 | 2017 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2017/EECS-2017-157.pdf)
-HyperMapper-2.0 ｜ 2018 ｜ [1801.05236](https://arxiv.org/abs/1810.05236)
+HyperMapper-2.0 | 2018 | [1801.05236](https://arxiv.org/abs/1810.05236)
 SonicBOOM | 2020 | [link](https://carrv.github.io/2020/papers/CARRV2020_paper_15_Zhao.pdf)
 BOOM-Explorer | 2021 | [link](http://www.cse.cuhk.edu.hk/~byu/papers/C122-ICCAD2021-DSE-BOOM.pdf)
 New-Golden-Age | 2019 | [link](https://cacm.acm.org/magazines/2019/2/234352-a-new-golden-age-for-computer-architecture/fulltext)
