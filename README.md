@@ -23,6 +23,7 @@ New-Golden-Age | 2019 | [link](https://cacm.acm.org/magazines/2019/2/234352-a-ne
 Computers-as-GPT-Decline | 2018 | [link](https://ide.mit.edu/sites/default/files/publications/SSRN-id3287769.pdf)
 Apollo | 2021 | [2102.01723](https://arxiv.org/abs/2102.01723)
 ML-EDA-Survey | 2021 | [2102.03357](https://arxiv.org/abs/2102.03357)
+OpenBox | 2021 | [2106.00421](https://arxiv.org/abs/2106.00421)
 
 ## SLAM
 
