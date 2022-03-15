@@ -8,6 +8,7 @@ DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf
 GARNET | 2009 | [link](https://ieeexplore.ieee.org/document/4919636)
 gem5 | 2011 | [link](https://dl.acm.org/doi/10.1145/2024716.2024718)
 DSE-MDE | 2014 | [link](http://ceur-ws.org/Vol-1340/paper6.pdf)
+BayesOptLoop | 2016 | [link](https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf)
 SLAM-DSE | 2017 | [link](https://ieeexplore.ieee.org/document/7989673)
 Exploring-Exploration | 2017 | [link](https://ieeexplore.ieee.org/document/7738470)
 Rocket-Chip-Generator | 2016 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-17.pdf)
