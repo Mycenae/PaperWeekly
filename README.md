@@ -7,6 +7,7 @@ Paper Name | Published time | Link
 DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf)
 GARNET | 2009 | [link](https://ieeexplore.ieee.org/document/4919636)
 gem5 | 2011 | [link](https://dl.acm.org/doi/10.1145/2024716.2024718)
+hyperopt | 2013 | [link](http://proceedings.mlr.press/v28/bergstra13.pdf)
 DSE-MDE | 2014 | [link](http://ceur-ws.org/Vol-1340/paper6.pdf)
 BayesOptLoop | 2016 | [link](https://www.cs.ox.ac.uk/people/nando.defreitas/publications/BayesOptLoop.pdf)
 SLAM-DSE | 2017 | [link](https://ieeexplore.ieee.org/document/7989673)
