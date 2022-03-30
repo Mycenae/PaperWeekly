@@ -20,6 +20,7 @@ BOOMv2 | 2017 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2017/EECS-201
 Google-Vizier | 2017 | [link](https://dl.acm.org/doi/pdf/10.1145/3097983.3098043)
 HyperMapper-2.0 | 2018 | [1801.05236](https://arxiv.org/abs/1810.05236)
 ML-DSE-Manycore | 2019 | [link](https://ieeexplore.ieee.org/document/9142057)
+MMBO | 2019 | [1905.02370](https://arxiv.org/abs/1905.02370)
 SonicBOOM | 2020 | [link](https://carrv.github.io/2020/papers/CARRV2020_paper_15_Zhao.pdf)
 BOOM-Explorer | 2021 | [link](http://www.cse.cuhk.edu.hk/~byu/papers/C122-ICCAD2021-DSE-BOOM.pdf)
 New-Golden-Age | 2019 | [link](https://cacm.acm.org/magazines/2019/2/234352-a-new-golden-age-for-computer-architecture/fulltext)
