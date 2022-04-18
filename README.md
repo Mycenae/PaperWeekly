@@ -32,6 +32,7 @@ Apollo | 2021 | [2102.01723](https://arxiv.org/abs/2102.01723)
 ML-EDA-Survey | 2021 | [2102.03357](https://arxiv.org/abs/2102.03357)
 OpenBox | 2021 | [2106.00421](https://arxiv.org/abs/2106.00421)
 DSE-Accelerators | 2021 | [link](https://hal.inria.fr/hal-03119732/document)
+NAAS | 2021 | [MIT](https://tinyml.mit.edu/projects/naas/)
 
 ## SLAM
 
