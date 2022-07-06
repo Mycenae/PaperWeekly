@@ -1,6 +1,6 @@
 # PaperWeekly
 
-## CPU Design and Design Space Exploration
+## Chip Design and Design Space Exploration and Multi-Objective Optimization
 
 Paper Name | Published time | Link
 --- | --- | ---
@@ -41,6 +41,12 @@ OpenBox | 2021 | [2106.00421](https://arxiv.org/abs/2106.00421)
 DSE-Accelerators | 2021 | [link](https://hal.inria.fr/hal-03119732/document)
 NeuroMeter | 2021 | [link](https://tianqitang.github.io/files/tang_hpca2021.pdf)
 NAAS | 2021 | [MIT](https://tinyml.mit.edu/projects/naas/)
+
+## Nerual Rendering
+
+Paper Name | Published time | Link
+--- | --- | ---
+NeRF | 2020 | [2003.08934](https://arxiv.org/abs/2003.08934)
 
 ## SLAM
 
