@@ -7,6 +7,7 @@ Paper Name | Published time | Link
 Murphi | 1992 | [link](https://dl.acm.org/doi/10.5555/645461.654859)
 SimPoint | 2002 | [link](http://www-cse.ucsd.edu/~calder/papers/ASPLOS-02-SimPoint.pdf)
 Using-SimPoint | 2003 | [link](https://dl.acm.org/doi/10.1145/885651.781076)
+SimPoints-SPEC-CPU-2006 | 2008 | [link](https://lca.ece.utexas.edu/pubs/arun-iccd.pdf)
 DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf)
 GARNET | 2009 | [link](https://ieeexplore.ieee.org/document/4919636)
 gem5 | 2011 | [link](https://dl.acm.org/doi/10.1145/2024716.2024718)
