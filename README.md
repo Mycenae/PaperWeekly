@@ -25,6 +25,7 @@ BOOMv2 | 2017 | [link](http://www2.eecs.berkeley.edu/Pubs/TechRpts/2017/EECS-201
 Google-Vizier | 2017 | [link](https://dl.acm.org/doi/pdf/10.1145/3097983.3098043)
 HyperMapper-2.0 | 2018 | [1801.05236](https://arxiv.org/abs/1810.05236)
 Random-Scalarization | 2018 | [1805.12168](https://arxiv.org/abs/1805.12168)
+HFP8 | 2019 | [NIPS2019](https://papers.nips.cc/paper/8736-hybrid-8-bit-floating-point-hfp8-training-and-inference-for-deep-neural-networks)
 MOEA-tutorial | 2018 | [link](https://link.springer.com/content/pdf/10.1007%2Fs11047-018-9685-y.pdf)
 ML-DSE-Manycore | 2019 | [link](https://ieeexplore.ieee.org/document/9142057)
 MMBO | 2019 | [1905.02370](https://arxiv.org/abs/1905.02370)
