@@ -48,6 +48,7 @@ OpenBox | 2021 | [2106.00421](https://arxiv.org/abs/2106.00421)
 DSE-Accelerators | 2021 | [link](https://hal.inria.fr/hal-03119732/document)
 NeuroMeter | 2021 | [link](https://tianqitang.github.io/files/tang_hpca2021.pdf)
 NAAS | 2021 | [MIT](https://tinyml.mit.edu/projects/naas/)
+ELFie | 2021 | [link](https://heirman.net/papers/patil2021elfies.pdf)
 Alibaba-ICCAD2022-contest | 2022 | [ICCAD](http://iccad-contest.org/Problems/CADContest_2022_Problem_C_20220801.pdf)
 
 ## Nerual Rendering
