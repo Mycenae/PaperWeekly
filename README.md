@@ -5,6 +5,7 @@
 Paper Name | Published time | Link
 --- | --- | ---
 Murphi | 1992 | [link](https://dl.acm.org/doi/10.5555/645461.654859)
+SimOS | 1995 | [link](https://ieeexplore.ieee.org/document/473612)
 SimPoint | 2002 | [link](http://www-cse.ucsd.edu/~calder/papers/ASPLOS-02-SimPoint.pdf)
 SimpleScalar | 2002 | [link](https://ieeexplore.ieee.org/document/982917)
 Using-SimPoint | 2003 | [link](https://dl.acm.org/doi/10.1145/885651.781076)
