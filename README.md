@@ -17,7 +17,7 @@ Boundary-Line-Reuse-Latency | 2005 | [link](https://users.elis.ugent.be/~leeckho
 Interval-Analysis | 2006 | [link](https://dl.acm.org/doi/10.1145/1168857.1168880)
 SimPoints-SPEC-CPU-2006 | 2008 | [link](https://lca.ece.utexas.edu/pubs/arun-iccd.pdf)
 DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf)
-GPGPU-Sim ｜ 2009 | [link](https://www.ece.ubc.ca/~aamodt/papers/gpgpusim.ispass09.pdf)
+GPGPU-Sim | 2009 | [link](https://www.ece.ubc.ca/~aamodt/papers/gpgpusim.ispass09.pdf)
 GARNET | 2009 | [link](https://ieeexplore.ieee.org/document/4919636)
 gem5 | 2011 | [link](https://dl.acm.org/doi/10.1145/2024716.2024718)
 hyperopt | 2013 | [link](http://proceedings.mlr.press/v28/bergstra13.pdf)
