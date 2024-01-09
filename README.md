@@ -59,6 +59,12 @@ ELFie | 2021 | [link](https://heirman.net/papers/patil2021elfies.pdf)
 Gem5-FS-RISCV | 2021 | [link](https://carrv.github.io/2021/papers/CARRV2021_paper_7_Yuen.pdf)
 Alibaba-ICCAD2022-contest | 2022 | [ICCAD](http://iccad-contest.org/Problems/CADContest_2022_Problem_C_20220801.pdf)
 
+## GPU Latency Hiding
+
+Paper Name | Published time | Link
+-----------|----------------|-----
+GPU-Latency-Hiding-Ch2 | 2016 | [link](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-143.pdf)
+
 ## Nerual Rendering
 
 Paper Name | Published time | Link
