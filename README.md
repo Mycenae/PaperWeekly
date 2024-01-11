@@ -64,6 +64,7 @@ Alibaba-ICCAD2022-contest | 2022 | [ICCAD](http://iccad-contest.org/Problems/CAD
 Paper Name | Published time | Link
 -----------|----------------|-----
 GPU-Latency-Hiding-Ch2 | 2016 | [link](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-143.pdf)
+GPU-Latency-Hiding-Ch3 | 2016 | [link](https://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-143.pdf)
 
 ## Nerual Rendering
 
