@@ -14,6 +14,7 @@ SimPoint-HowTo | 2004 | [link](https://cseweb.ucsd.edu/~calder/papers/SIGMETRICS
 QEMU | 2005 | [link](https://www.usenix.org/publications/library/proceedings/usenix05/tech/freenix/full_papers/bellard/bellard.pdf)
 SimPoint-3.0 | 2005 | [link](http://www.cse.ucsd.edu/~calder/papers/MOBS-05-SimPoint3.pdf)
 Boundary-Line-Reuse-Latency | 2005 | [link](https://users.elis.ugent.be/~leeckhou/papers/blrl.pdf)
+Computational-Thinking | 2006 | [link](https://www.cs.cmu.edu/~15110-s13/Wing06-ct.pdf)
 Interval-Analysis | 2006 | [link](https://dl.acm.org/doi/10.1145/1168857.1168880)
 SimPoints-SPEC-CPU-2006 | 2008 | [link](https://lca.ece.utexas.edu/pubs/arun-iccd.pdf)
 DSE-ACO | 2006 | [link](http://cseweb.ucsd.edu/~kastner/papers/dac06-ant_dse.pdf)
